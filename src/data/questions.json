@@ -588,5 +588,455 @@
     "options": ["윌리엄 포크너", "존 스타인벡", "루이즈 글릭", "없다"],
     "correctAnswerIndex": 3,
     "additionalCommentary": "노벨문학상을 두 번 수상한 작가는 없습니다."
+  },
+  {
+    "id": "q57",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "생물학",
+    "questionText": "지구상에서 가장 큰 동물은?",
+    "options": ["코끼리", "흰수염고래", "기린", "상어"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "흰수염고래는 지구상에서 가장 큰 동물입니다."
+  },
+  {
+    "id": "q58",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "화학",
+    "questionText": "물의 끓는점은 몇 도씨입니까?",
+    "options": ["0도", "50도", "100도", "200도"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "물은 1기압에서 100도씨에서 끓습니다."
+  },
+  {
+    "id": "q59",
+    "difficulty": 3,
+    "mainCategory": "과학",
+    "subCategory": "지구과학",
+    "questionText": "What is the main gas in the Earth's atmosphere?",
+    "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Argon"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Nitrogen makes up about 78% of Earth's atmosphere."
+  },
+  {
+    "id": "q60",
+    "difficulty": 4,
+    "mainCategory": "과학",
+    "subCategory": "물리학",
+    "questionText": "빛의 속도를 초당 약 몇 km로 표현합니까?",
+    "options": ["3,000", "30,000", "300,000", "3,000,000"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "빛의 속도는 약 300,000 km/s입니다."
+  },
+  {
+    "id": "q61",
+    "difficulty": 5,
+    "mainCategory": "과학",
+    "subCategory": "천문학",
+    "questionText": "Which planet has the most moons in the Solar System?",
+    "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "As of 2023, Saturn has the most confirmed moons."
+  },
+  {
+    "id": "q62",
+    "difficulty": 1,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "삼국시대에 한반도를 통일한 나라는?",
+    "options": ["고구려", "백제", "신라", "가야"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "신라는 삼국시대에 한반도를 통일했습니다."
+  },
+  {
+    "id": "q63",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who was the first President of the United States?",
+    "options": ["Abraham Lincoln", "George Washington", "Thomas Jefferson", "John Adams"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "George Washington was the first U.S. President."
+  },
+  {
+    "id": "q64",
+    "difficulty": 3,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "조선의 마지막 왕은 누구입니까?",
+    "options": ["순종", "고종", "영조", "정조"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "조선의 마지막 왕은 순종입니다."
+  },
+  {
+    "id": "q65",
+    "difficulty": 4,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "In which year did World War I begin?",
+    "options": ["1912", "1914", "1916", "1918"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "World War I began in 1914."
+  },
+  {
+    "id": "q66",
+    "difficulty": 5,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who was the British Prime Minister during most of World War II?",
+    "options": ["Neville Chamberlain", "Winston Churchill", "Clement Attlee", "Stanley Baldwin"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Winston Churchill led Britain through most of WWII."
+  },
+  {
+    "id": "q67",
+    "difficulty": 1,
+    "mainCategory": "지리",
+    "subCategory": "한국지리",
+    "questionText": "대한민국의 가장 큰 섬은?",
+    "options": ["울릉도", "제주도", "마라도", "독도"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "제주도는 대한민국에서 가장 큰 섬입니다."
+  },
+  {
+    "id": "q68",
+    "difficulty": 2,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which is the largest continent by area?",
+    "options": ["Africa", "Asia", "Europe", "North America"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Asia is the largest continent by area."
+  },
+  {
+    "id": "q69",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "아프리카에서 가장 긴 강은?",
+    "options": ["나일강", "콩고강", "잠베지강", "오렌지강"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "나일강은 아프리카에서 가장 긴 강입니다."
+  },
+  {
+    "id": "q70",
+    "difficulty": 4,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "What is the capital city of Canada?",
+    "options": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "Ottawa is the capital of Canada."
+  },
+  {
+    "id": "q71",
+    "difficulty": 5,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which country has the most official languages?",
+    "options": ["India", "South Africa", "Switzerland", "Belgium"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "South Africa has 11 official languages."
+  },
+  {
+    "id": "q72",
+    "difficulty": 1,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'별이 빛나는 밤'을 그린 화가는?",
+    "options": ["고흐", "피카소", "샤갈", "르누아르"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "빈센트 반 고흐가 '별이 빛나는 밤'을 그렸습니다."
+  },
+  {
+    "id": "q73",
+    "difficulty": 2,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "Who composed the 'Moonlight Sonata'?",
+    "options": ["Mozart", "Beethoven", "Bach", "Chopin"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Beethoven composed the 'Moonlight Sonata'."
+  },
+  {
+    "id": "q74",
+    "difficulty": 3,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "르네상스 시대의 대표적인 화가는?",
+    "options": ["레오나르도 다빈치", "고흐", "피카소", "샤갈"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "레오나르도 다빈치는 르네상스 시대의 대표적인 화가입니다."
+  },
+  {
+    "id": "q75",
+    "difficulty": 4,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "Which composer became deaf later in life but continued to compose?",
+    "options": ["Mozart", "Beethoven", "Brahms", "Handel"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Beethoven continued to compose after becoming deaf."
+  },
+  {
+    "id": "q76",
+    "difficulty": 5,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'게르니카'를 그린 스페인 화가는 누구입니까?",
+    "options": ["피카소", "고야", "달리", "미로"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'게르니카'는 파블로 피카소의 대표작입니다."
+  },
+  {
+    "id": "q77",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "Which fruit is known as the 'king of fruits'?",
+    "options": ["Apple", "Banana", "Durian", "Mango"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "Durian is often called the 'king of fruits'."
+  },
+  {
+    "id": "q78",
+    "difficulty": 2,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "올림픽은 몇 년마다 개최됩니까?",
+    "options": ["2년", "3년", "4년", "5년"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "올림픽은 4년마다 개최됩니다."
+  },
+  {
+    "id": "q79",
+    "difficulty": 3,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "Which country is famous for sushi?",
+    "options": ["China", "Japan", "Korea", "Thailand"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Japan is famous for sushi."
+  },
+  {
+    "id": "q80",
+    "difficulty": 4,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "Which country won the FIFA World Cup in 2018?",
+    "options": ["Brazil", "Germany", "France", "Argentina"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "France won the 2018 FIFA World Cup."
+  },
+  {
+    "id": "q81",
+    "difficulty": 5,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "세계에서 가장 비싼 향신료는?",
+    "options": ["바닐라", "사프란", "계피", "후추"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "사프란은 세계에서 가장 비싼 향신료로 알려져 있습니다."
+  },
+  {
+    "id": "q82",
+    "difficulty": 1,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "Who wrote 'Harry Potter'?",
+    "options": ["J.K. Rowling", "Stephen King", "George Orwell", "Agatha Christie"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "J.K. Rowling wrote the 'Harry Potter' series."
+  },
+  {
+    "id": "q83",
+    "difficulty": 2,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'홍길동전'을 쓴 작가는?",
+    "options": ["허균", "이순신", "김시습", "박지원"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'홍길동전'은 허균이 쓴 고전 소설입니다."
+  },
+  {
+    "id": "q84",
+    "difficulty": 3,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "Who wrote 'To Kill a Mockingbird'?",
+    "options": ["Harper Lee", "Mark Twain", "F. Scott Fitzgerald", "Ernest Hemingway"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Harper Lee wrote 'To Kill a Mockingbird'."
+  },
+  {
+    "id": "q85",
+    "difficulty": 4,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'오만과 편견'의 작가는 누구입니까?",
+    "options": ["제인 오스틴", "샬럿 브론테", "에밀리 브론테", "조지 엘리엇"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'오만과 편견'은 제인 오스틴이 쓴 소설입니다."
+  },
+  {
+    "id": "q86",
+    "difficulty": 5,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "Who won the Nobel Prize in Literature in 2021?",
+    "options": ["Abdulrazak Gurnah", "Kazuo Ishiguro", "Bob Dylan", "Olga Tokarczuk"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Abdulrazak Gurnah won the Nobel Prize in Literature in 2021."
+  },
+  {
+    "id": "q87",
+    "difficulty": 1,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'도깨비'에서 도깨비 신부의 이름은?",
+    "options": ["지은탁", "유인나", "김신", "박중헌"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "지은탁은 '도깨비'의 도깨비 신부입니다."
+  },
+  {
+    "id": "q88",
+    "difficulty": 2,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "Which drama features the character 'Park Sae-ro-yi'?",
+    "options": ["Itaewon Class", "Sky Castle", "Reply 1988", "Vincenzo"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Park Sae-ro-yi is the main character in 'Itaewon Class'."
+  },
+  {
+    "id": "q89",
+    "difficulty": 3,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'미생'의 주인공 이름은?",
+    "options": ["장그래", "안영이", "오상식", "김동식"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'미생'의 주인공은 장그래입니다."
+  },
+  {
+    "id": "q90",
+    "difficulty": 4,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "Which drama is about a hotel for ghosts?",
+    "options": ["Hotel Del Luna", "Goblin", "Crash Landing on You", "Vagabond"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'Hotel Del Luna' is about a hotel for ghosts."
+  },
+  {
+    "id": "q91",
+    "difficulty": 5,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'킹덤'의 배경이 되는 시대는?",
+    "options": ["고려시대", "조선시대", "대한제국", "일제강점기"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'킹덤'은 조선시대를 배경으로 한 좀비 드라마입니다."
+  },
+  {
+    "id": "q92",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "What is H2O commonly known as?",
+    "options": ["Salt", "Water", "Oxygen", "Hydrogen"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "H2O is the chemical formula for water."
+  },
+  {
+    "id": "q93",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "세종대왕이 창제한 문자는?",
+    "options": ["한자", "한글", "영어", "일본어"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "세종대왕은 한글을 창제하였습니다."
+  },
+  {
+    "id": "q94",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which desert is the largest in the world?",
+    "options": ["Sahara", "Gobi", "Kalahari", "Arabian"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "The Sahara is the largest hot desert in the world."
+  },
+  {
+    "id": "q95",
+    "difficulty": 4,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'사계'를 작곡한 이탈리아 작가는?",
+    "options": ["비발디", "모차르트", "바흐", "베토벤"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "비발디는 '사계'를 작곡한 이탈리아 작곡가입니다."
+  },
+  {
+    "id": "q96",
+    "difficulty": 5,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'일리아스'와 '오디세이아'를 쓴 고대 그리스 시인은?",
+    "options": ["호메로스", "소포클레스", "에우리피데스", "헤시오도스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "호메로스는 '일리아스'와 '오디세이아'를 쓴 시인입니다."
+  },
+  {
+    "id": "q97",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "Which sport uses a bat and ball and is popular in England, Australia, and India?",
+    "options": ["Baseball", "Cricket", "Football", "Tennis"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Cricket is popular in England, Australia, and India."
+  },
+  {
+    "id": "q98",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "화학",
+    "questionText": "NaCl은 어떤 물질의 화학식입니까?",
+    "options": ["설탕", "소금", "물", "알코올"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "NaCl은 소금(염화나트륨)의 화학식입니다."
+  },
+  {
+    "id": "q99",
+    "difficulty": 3,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "Who painted the ceiling of the Sistine Chapel?",
+    "options": ["Michelangelo", "Da Vinci", "Raphael", "Donatello"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Michelangelo painted the ceiling of the Sistine Chapel."
+  },
+  {
+    "id": "q100",
+    "difficulty": 4,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "에베레스트 산의 높이는 약 몇 미터입니까?",
+    "options": ["5,848m", "6,848m", "7,848m", "8,848m"],
+    "correctAnswerIndex": 3,
+    "additionalCommentary": "에베레스트 산의 높이는 약 8,848m입니다."
+  },
+  {
+    "id": "q101",
+    "difficulty": 5,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who was the first emperor of China?",
+    "options": ["Qin Shi Huang", "Han Wudi", "Tang Taizong", "Wu Zetian"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Qin Shi Huang was the first emperor of unified China."
   }
 ] 
