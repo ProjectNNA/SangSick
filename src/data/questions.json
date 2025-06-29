@@ -614,10 +614,10 @@
     "difficulty": 3,
     "mainCategory": "과학",
     "subCategory": "지구과학",
-    "questionText": "What is the main gas in the Earth's atmosphere?",
-    "options": ["Oxygen", "Nitrogen", "Carbon Dioxide", "Argon"],
+    "questionText": "지구 대기 중 가장 많은 기체는 무엇입니까?",
+    "options": ["산소", "질소", "이산화탄소", "아르곤"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Nitrogen makes up about 78% of Earth's atmosphere."
+    "additionalCommentary": "질소는 지구 대기의 약 78%를 차지합니다."
   },
   {
     "id": "q60",
@@ -634,10 +634,10 @@
     "difficulty": 5,
     "mainCategory": "과학",
     "subCategory": "천문학",
-    "questionText": "Which planet has the most moons in the Solar System?",
-    "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "questionText": "태양계에서 위성이 가장 많은 행성은?",
+    "options": ["목성", "토성", "천왕성", "해왕성"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "As of 2023, Saturn has the most confirmed moons."
+    "additionalCommentary": "2023년 기준으로 토성이 가장 많은 위성을 가지고 있습니다."
   },
   {
     "id": "q62",
@@ -654,10 +654,10 @@
     "difficulty": 2,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who was the first President of the United States?",
-    "options": ["Abraham Lincoln", "George Washington", "Thomas Jefferson", "John Adams"],
+    "questionText": "미국의 첫 번째 대통령은 누구입니까?",
+    "options": ["에이브러햄 링컨", "조지 워싱턴", "토머스 제퍼슨", "존 애덤스"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "George Washington was the first U.S. President."
+    "additionalCommentary": "조지 워싱턴은 미국의 첫 번째 대통령입니다."
   },
   {
     "id": "q64",
@@ -674,20 +674,20 @@
     "difficulty": 4,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "In which year did World War I begin?",
-    "options": ["1912", "1914", "1916", "1918"],
+    "questionText": "제1차 세계대전이 시작된 해는?",
+    "options": ["1912년", "1914년", "1916년", "1918년"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "World War I began in 1914."
+    "additionalCommentary": "제1차 세계대전은 1914년에 시작되었습니다."
   },
   {
     "id": "q66",
     "difficulty": 5,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who was the British Prime Minister during most of World War II?",
-    "options": ["Neville Chamberlain", "Winston Churchill", "Clement Attlee", "Stanley Baldwin"],
+    "questionText": "제2차 세계대전 중 대부분의 기간 동안 영국 총리를 지낸 사람은?",
+    "options": ["네빌 체임벌린", "윈스턴 처칠", "클레멘트 애틀리", "스탠리 볼드윈"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Winston Churchill led Britain through most of WWII."
+    "additionalCommentary": "윈스턴 처칠은 제2차 세계대전 중 대부분의 기간 동안 영국을 이끌었습니다."
   },
   {
     "id": "q67",
@@ -704,10 +704,10 @@
     "difficulty": 2,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which is the largest continent by area?",
-    "options": ["Africa", "Asia", "Europe", "North America"],
+    "questionText": "면적이 가장 큰 대륙은?",
+    "options": ["아프리카", "아시아", "유럽", "북아메리카"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Asia is the largest continent by area."
+    "additionalCommentary": "아시아는 면적이 가장 큰 대륙입니다."
   },
   {
     "id": "q69",
@@ -724,20 +724,20 @@
     "difficulty": 4,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "What is the capital city of Canada?",
-    "options": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    "questionText": "캐나다의 수도는?",
+    "options": ["토론토", "밴쿠버", "오타와", "몬트리올"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "Ottawa is the capital of Canada."
+    "additionalCommentary": "오타와는 캐나다의 수도입니다."
   },
   {
     "id": "q71",
     "difficulty": 5,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which country has the most official languages?",
-    "options": ["India", "South Africa", "Switzerland", "Belgium"],
+    "questionText": "공식 언어가 가장 많은 나라는?",
+    "options": ["인도", "남아프리카공화국", "스위스", "벨기에"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "South Africa has 11 official languages."
+    "additionalCommentary": "남아프리카공화국은 11개의 공식 언어를 가지고 있습니다."
   },
   {
     "id": "q72",
@@ -754,10 +754,10 @@
     "difficulty": 2,
     "mainCategory": "예술",
     "subCategory": "음악",
-    "questionText": "Who composed the 'Moonlight Sonata'?",
-    "options": ["Mozart", "Beethoven", "Bach", "Chopin"],
+    "questionText": "'월광 소나타'를 작곡한 사람은?",
+    "options": ["모차르트", "베토벤", "바흐", "쇼팽"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Beethoven composed the 'Moonlight Sonata'."
+    "additionalCommentary": "베토벤이 '월광 소나타'를 작곡했습니다."
   },
   {
     "id": "q74",
@@ -774,10 +774,10 @@
     "difficulty": 4,
     "mainCategory": "예술",
     "subCategory": "음악",
-    "questionText": "Which composer became deaf later in life but continued to compose?",
-    "options": ["Mozart", "Beethoven", "Brahms", "Handel"],
+    "questionText": "나중에 귀가 멀어졌지만 계속 작곡한 작곡가는?",
+    "options": ["모차르트", "베토벤", "브람스", "헨델"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Beethoven continued to compose after becoming deaf."
+    "additionalCommentary": "베토벤은 귀가 멀어진 후에도 계속 작곡했습니다."
   },
   {
     "id": "q76",
@@ -794,10 +794,10 @@
     "difficulty": 1,
     "mainCategory": "일반상식",
     "subCategory": "음식",
-    "questionText": "Which fruit is known as the 'king of fruits'?",
-    "options": ["Apple", "Banana", "Durian", "Mango"],
+    "questionText": "'과일의 왕'으로 알려진 과일은?",
+    "options": ["사과", "바나나", "두리안", "망고"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "Durian is often called the 'king of fruits'."
+    "additionalCommentary": "두리안은 '과일의 왕'이라고 불립니다."
   },
   {
     "id": "q78",
@@ -814,20 +814,20 @@
     "difficulty": 3,
     "mainCategory": "일반상식",
     "subCategory": "음식",
-    "questionText": "Which country is famous for sushi?",
-    "options": ["China", "Japan", "Korea", "Thailand"],
+    "questionText": "스시로 유명한 나라는?",
+    "options": ["중국", "일본", "한국", "태국"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Japan is famous for sushi."
+    "additionalCommentary": "일본은 스시로 유명합니다."
   },
   {
     "id": "q80",
     "difficulty": 4,
     "mainCategory": "일반상식",
     "subCategory": "스포츠",
-    "questionText": "Which country won the FIFA World Cup in 2018?",
-    "options": ["Brazil", "Germany", "France", "Argentina"],
+    "questionText": "2018년 FIFA 월드컵에서 우승한 나라는?",
+    "options": ["브라질", "독일", "프랑스", "아르헨티나"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "France won the 2018 FIFA World Cup."
+    "additionalCommentary": "프랑스가 2018년 FIFA 월드컵에서 우승했습니다."
   },
   {
     "id": "q81",
@@ -844,10 +844,10 @@
     "difficulty": 1,
     "mainCategory": "문학",
     "subCategory": "현대문학",
-    "questionText": "Who wrote 'Harry Potter'?",
-    "options": ["J.K. Rowling", "Stephen King", "George Orwell", "Agatha Christie"],
+    "questionText": "'해리 포터'를 쓴 작가는?",
+    "options": ["J.K. 롤링", "스티븐 킹", "조지 오웰", "아가사 크리스티"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "J.K. Rowling wrote the 'Harry Potter' series."
+    "additionalCommentary": "J.K. 롤링이 '해리 포터' 시리즈를 썼습니다."
   },
   {
     "id": "q83",
@@ -864,10 +864,10 @@
     "difficulty": 3,
     "mainCategory": "문학",
     "subCategory": "현대문학",
-    "questionText": "Who wrote 'To Kill a Mockingbird'?",
-    "options": ["Harper Lee", "Mark Twain", "F. Scott Fitzgerald", "Ernest Hemingway"],
+    "questionText": "'앵무새 죽이기'를 쓴 작가는?",
+    "options": ["하퍼 리", "마크 트웨인", "F. 스콧 피츠제럴드", "어니스트 헤밍웨이"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Harper Lee wrote 'To Kill a Mockingbird'."
+    "additionalCommentary": "하퍼 리가 '앵무새 죽이기'를 썼습니다."
   },
   {
     "id": "q85",
@@ -884,10 +884,10 @@
     "difficulty": 5,
     "mainCategory": "문학",
     "subCategory": "현대문학",
-    "questionText": "Who won the Nobel Prize in Literature in 2021?",
-    "options": ["Abdulrazak Gurnah", "Kazuo Ishiguro", "Bob Dylan", "Olga Tokarczuk"],
+    "questionText": "2021년 노벨문학상을 수상한 작가는?",
+    "options": ["압둘라자크 구르나", "카즈오 이시구로", "밥 딜런", "올가 토카르추크"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Abdulrazak Gurnah won the Nobel Prize in Literature in 2021."
+    "additionalCommentary": "압둘라자크 구르나가 2021년 노벨문학상을 수상했습니다."
   },
   {
     "id": "q87",
@@ -904,10 +904,10 @@
     "difficulty": 2,
     "mainCategory": "드라마",
     "subCategory": "한국드라마",
-    "questionText": "Which drama features the character 'Park Sae-ro-yi'?",
-    "options": ["Itaewon Class", "Sky Castle", "Reply 1988", "Vincenzo"],
+    "questionText": "'박새로이'라는 캐릭터가 등장하는 드라마는?",
+    "options": ["이태원 클라쓰", "스카이캐슬", "응답하라 1988", "빈센조"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Park Sae-ro-yi is the main character in 'Itaewon Class'."
+    "additionalCommentary": "박새로이는 '이태원 클라쓰'의 주인공입니다."
   },
   {
     "id": "q89",
@@ -924,10 +924,10 @@
     "difficulty": 4,
     "mainCategory": "드라마",
     "subCategory": "한국드라마",
-    "questionText": "Which drama is about a hotel for ghosts?",
-    "options": ["Hotel Del Luna", "Goblin", "Crash Landing on You", "Vagabond"],
+    "questionText": "귀신을 위한 호텔에 대한 드라마는?",
+    "options": ["호텔 델루나", "도깨비", "사랑의 불시착", "배가본드"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "'Hotel Del Luna' is about a hotel for ghosts."
+    "additionalCommentary": "'호텔 델루나'는 귀신을 위한 호텔에 대한 드라마입니다."
   },
   {
     "id": "q91",
@@ -944,10 +944,10 @@
     "difficulty": 1,
     "mainCategory": "과학",
     "subCategory": "일반상식",
-    "questionText": "What is H2O commonly known as?",
-    "options": ["Salt", "Water", "Oxygen", "Hydrogen"],
+    "questionText": "H2O는 일반적으로 무엇으로 알려져 있습니까?",
+    "options": ["소금", "물", "산소", "수소"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "H2O is the chemical formula for water."
+    "additionalCommentary": "H2O는 물의 화학식입니다."
   },
   {
     "id": "q93",
@@ -964,10 +964,10 @@
     "difficulty": 3,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which desert is the largest in the world?",
-    "options": ["Sahara", "Gobi", "Kalahari", "Arabian"],
+    "questionText": "세계에서 가장 큰 사막은?",
+    "options": ["사하라", "고비", "칼라하리", "아라비아"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "The Sahara is the largest hot desert in the world."
+    "additionalCommentary": "사하라는 세계에서 가장 큰 사막입니다."
   },
   {
     "id": "q95",
@@ -994,10 +994,10 @@
     "difficulty": 1,
     "mainCategory": "일반상식",
     "subCategory": "스포츠",
-    "questionText": "Which sport uses a bat and ball and is popular in England, Australia, and India?",
-    "options": ["Baseball", "Cricket", "Football", "Tennis"],
+    "questionText": "방망이와 공을 사용하며 영국, 호주, 인도에서 인기 있는 스포츠는?",
+    "options": ["야구", "크리켓", "축구", "테니스"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Cricket is popular in England, Australia, and India."
+    "additionalCommentary": "크리켓은 영국, 호주, 인도에서 인기 있는 스포츠입니다."
   },
   {
     "id": "q98",
@@ -1014,10 +1014,10 @@
     "difficulty": 3,
     "mainCategory": "예술",
     "subCategory": "미술",
-    "questionText": "Who painted the ceiling of the Sistine Chapel?",
-    "options": ["Michelangelo", "Da Vinci", "Raphael", "Donatello"],
+    "questionText": "시스티나 성당의 천장을 그린 화가는?",
+    "options": ["미켈란젤로", "다빈치", "라파엘로", "도나텔로"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Michelangelo painted the ceiling of the Sistine Chapel."
+    "additionalCommentary": "미켈란젤로가 시스티나 성당의 천장을 그렸습니다."
   },
   {
     "id": "q100",
@@ -1034,20 +1034,20 @@
     "difficulty": 5,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who was the first emperor of China?",
-    "options": ["Qin Shi Huang", "Han Wudi", "Tang Taizong", "Wu Zetian"],
+    "questionText": "중국의 첫 번째 황제는 누구입니까?",
+    "options": ["진시황", "한무제", "당태종", "측천무후"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Qin Shi Huang was the first emperor of unified China."
+    "additionalCommentary": "진시황은 통일된 중국의 첫 번째 황제입니다."
   },
   {
     "id": "q102",
     "difficulty": 1,
     "mainCategory": "과학",
     "subCategory": "생물학",
-    "questionText": "What is the basic unit of life?",
-    "options": ["Atom", "Molecule", "Cell", "Organ"],
+    "questionText": "생명의 기본 단위는?",
+    "options": ["원자", "분자", "세포", "기관"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "The cell is the basic unit of life in all living organisms."
+    "additionalCommentary": "세포는 모든 생물의 기본 단위입니다."
   },
   {
     "id": "q103",
@@ -1064,10 +1064,10 @@
     "difficulty": 3,
     "mainCategory": "과학",
     "subCategory": "지구과학",
-    "questionText": "Which layer of the Earth is liquid?",
-    "options": ["Crust", "Mantle", "Outer Core", "Inner Core"],
+    "questionText": "지구의 어느 층이 액체입니까?",
+    "options": ["지각", "맨틀", "외핵", "내핵"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "The Earth's outer core is liquid."
+    "additionalCommentary": "지구의 외핵은 액체입니다."
   },
   {
     "id": "q105",
@@ -1084,10 +1084,10 @@
     "difficulty": 5,
     "mainCategory": "과학",
     "subCategory": "천문학",
-    "questionText": "What is the name of the first artificial satellite?",
-    "options": ["Apollo", "Sputnik", "Voyager", "Hubble"],
+    "questionText": "최초의 인공위성의 이름은?",
+    "options": ["아폴로", "스푸트니크", "보이저", "허블"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Sputnik 1 was the first artificial satellite, launched by the Soviet Union in 1957."
+    "additionalCommentary": "스푸트니크 1호는 1957년 소련이 발사한 최초의 인공위성입니다."
   },
   {
     "id": "q107",
@@ -1104,10 +1104,10 @@
     "difficulty": 2,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who discovered America in 1492?",
-    "options": ["Christopher Columbus", "Vasco da Gama", "Ferdinand Magellan", "James Cook"],
+    "questionText": "1492년에 아메리카를 발견한 사람은?",
+    "options": ["크리스토퍼 콜럼버스", "바스코 다 가마", "페르디난드 마젤란", "제임스 쿡"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Christopher Columbus reached the Americas in 1492."
+    "additionalCommentary": "크리스토퍼 콜럼버스는 1492년에 아메리카에 도달했습니다."
   },
   {
     "id": "q109",
@@ -1124,10 +1124,10 @@
     "difficulty": 4,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who was the first female Prime Minister of the UK?",
-    "options": ["Margaret Thatcher", "Theresa May", "Angela Merkel", "Indira Gandhi"],
+    "questionText": "영국의 첫 번째 여성 총리는?",
+    "options": ["마거릿 대처", "테레사 메이", "앙겔라 메르켈", "인디라 간디"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Margaret Thatcher was the UK's first female Prime Minister."
+    "additionalCommentary": "마거릿 대처는 영국의 첫 번째 여성 총리입니다."
   },
   {
     "id": "q111",
@@ -1154,10 +1154,10 @@
     "difficulty": 2,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "What is the largest ocean on Earth?",
-    "options": ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+    "questionText": "지구에서 가장 큰 바다는?",
+    "options": ["대서양", "인도양", "태평양", "북극해"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "The Pacific Ocean is the largest ocean on Earth."
+    "additionalCommentary": "태평양은 지구에서 가장 큰 바다입니다."
   },
   {
     "id": "q114",
@@ -1174,10 +1174,10 @@
     "difficulty": 4,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which country is both in Europe and Asia?",
-    "options": ["Turkey", "Spain", "Egypt", "Morocco"],
+    "questionText": "유럽과 아시아에 모두 위치한 나라는?",
+    "options": ["터키", "스페인", "이집트", "모로코"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Turkey is a transcontinental country in both Europe and Asia."
+    "additionalCommentary": "터키는 유럽과 아시아에 걸쳐 있는 대륙간 국가입니다."
   },
   {
     "id": "q116",
@@ -1194,10 +1194,10 @@
     "difficulty": 1,
     "mainCategory": "예술",
     "subCategory": "미술",
-    "questionText": "Who painted the Mona Lisa?",
-    "options": ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"],
+    "questionText": "'모나리자'를 그린 화가는?",
+    "options": ["고흐", "피카소", "레오나르도 다빈치", "미켈란젤로"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "Leonardo da Vinci painted the Mona Lisa."
+    "additionalCommentary": "레오나르도 다빈치가 '모나리자'를 그렸습니다."
   },
   {
     "id": "q118",
@@ -1214,10 +1214,10 @@
     "difficulty": 3,
     "mainCategory": "예술",
     "subCategory": "미술",
-    "questionText": "Which artist is famous for the painting 'The Persistence of Memory'?",
-    "options": ["Salvador Dalí", "Pablo Picasso", "Claude Monet", "Edvard Munch"],
+    "questionText": "'기억의 지속'이라는 그림으로 유명한 화가는?",
+    "options": ["살바도르 달리", "파블로 피카소", "클로드 모네", "에드바르 뭉크"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Salvador Dalí painted 'The Persistence of Memory'."
+    "additionalCommentary": "살바도르 달리가 '기억의 지속'을 그렸습니다."
   },
   {
     "id": "q120",
@@ -1254,10 +1254,10 @@
     "difficulty": 2,
     "mainCategory": "일반상식",
     "subCategory": "스포츠",
-    "questionText": "Which sport is known as 'the king of sports'?",
-    "options": ["Basketball", "Soccer", "Tennis", "Baseball"],
+    "questionText": "'스포츠의 왕'으로 알려진 스포츠는?",
+    "options": ["농구", "축구", "테니스", "야구"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Soccer (football) is often called the king of sports."
+    "additionalCommentary": "축구는 '스포츠의 왕'이라고 불립니다."
   },
   {
     "id": "q124",
@@ -1274,10 +1274,10 @@
     "difficulty": 4,
     "mainCategory": "일반상식",
     "subCategory": "스포츠",
-    "questionText": "Which country hosted the 2016 Summer Olympics?",
-    "options": ["China", "Brazil", "UK", "Russia"],
+    "questionText": "2016년 하계 올림픽을 개최한 나라는?",
+    "options": ["중국", "브라질", "영국", "러시아"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Brazil hosted the 2016 Summer Olympics in Rio de Janeiro."
+    "additionalCommentary": "브라질이 리우데자네이루에서 2016년 하계 올림픽을 개최했습니다."
   },
   {
     "id": "q126",
@@ -1304,10 +1304,10 @@
     "difficulty": 2,
     "mainCategory": "문학",
     "subCategory": "고전",
-    "questionText": "Who wrote 'Pride and Prejudice'?",
-    "options": ["Jane Austen", "Emily Brontë", "Charlotte Brontë", "George Eliot"],
+    "questionText": "'오만과 편견'을 쓴 작가는?",
+    "options": ["제인 오스틴", "에밀리 브론테", "샬럿 브론테", "조지 엘리엇"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Jane Austen wrote 'Pride and Prejudice'."
+    "additionalCommentary": "제인 오스틴이 '오만과 편견'을 썼습니다."
   },
   {
     "id": "q129",
@@ -1324,10 +1324,10 @@
     "difficulty": 4,
     "mainCategory": "문학",
     "subCategory": "고전",
-    "questionText": "Who wrote 'The Odyssey'?",
-    "options": ["Homer", "Virgil", "Sophocles", "Euripides"],
+    "questionText": "'오디세이아'를 쓴 작가는?",
+    "options": ["호메로스", "베르길리우스", "소포클레스", "에우리피데스"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Homer wrote 'The Odyssey'."
+    "additionalCommentary": "호메로스가 '오디세이아'를 썼습니다."
   },
   {
     "id": "q131",
@@ -1354,10 +1354,10 @@
     "difficulty": 2,
     "mainCategory": "드라마",
     "subCategory": "한국드라마",
-    "questionText": "Which drama is about a lawyer who becomes a mafia consigliere?",
-    "options": ["Vincenzo", "Itaewon Class", "Sky Castle", "Signal"],
+    "questionText": "변호사가 마피아 고문이 되는 드라마는?",
+    "options": ["빈센조", "이태원 클라쓰", "스카이캐슬", "시그널"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "'Vincenzo' is about a lawyer who becomes a mafia consigliere."
+    "additionalCommentary": "'빈센조'는 변호사가 마피아 고문이 되는 드라마입니다."
   },
   {
     "id": "q134",
@@ -1374,10 +1374,10 @@
     "difficulty": 4,
     "mainCategory": "드라마",
     "subCategory": "한국드라마",
-    "questionText": "Which drama is set in a law firm and features the character 'Woo Young-woo'?",
-    "options": ["Extraordinary Attorney Woo", "Vincenzo", "Misaeng", "Hotel Del Luna"],
+    "questionText": "로펌을 배경으로 하고 '우영우'라는 캐릭터가 등장하는 드라마는?",
+    "options": ["이상한 변호사 우영우", "빈센조", "미생", "호텔 델루나"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "'Extraordinary Attorney Woo' is set in a law firm and features Woo Young-woo."
+    "additionalCommentary": "'이상한 변호사 우영우'는 로펌을 배경으로 하고 우영우라는 캐릭터가 등장하는 드라마입니다."
   },
   {
     "id": "q136",
@@ -1394,10 +1394,10 @@
     "difficulty": 1,
     "mainCategory": "과학",
     "subCategory": "일반상식",
-    "questionText": "What planet do we live on?",
-    "options": ["Mars", "Venus", "Earth", "Jupiter"],
+    "questionText": "우리가 살고 있는 행성은?",
+    "options": ["화성", "금성", "지구", "목성"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "We live on planet Earth."
+    "additionalCommentary": "우리는 지구에 살고 있습니다."
   },
   {
     "id": "q138",
@@ -1414,20 +1414,20 @@
     "difficulty": 3,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which river flows through Paris?",
-    "options": ["Seine", "Thames", "Danube", "Rhine"],
+    "questionText": "파리를 흐르는 강은?",
+    "options": ["센강", "템즈강", "다뉴브강", "라인강"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "The Seine River flows through Paris."
+    "additionalCommentary": "센강이 파리를 흐릅니다."
   },
   {
     "id": "q140",
     "difficulty": 4,
     "mainCategory": "예술",
     "subCategory": "음악",
-    "questionText": "Who composed the opera 'Carmen'?",
-    "options": ["Bizet", "Mozart", "Verdi", "Puccini"],
+    "questionText": "오페라 '카르멘'을 작곡한 사람은?",
+    "options": ["비제", "모차르트", "베르디", "푸치니"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Georges Bizet composed the opera 'Carmen'."
+    "additionalCommentary": "조르주 비제가 오페라 '카르멘'을 작곡했습니다."
   },
   {
     "id": "q141",
@@ -1444,20 +1444,20 @@
     "difficulty": 1,
     "mainCategory": "일반상식",
     "subCategory": "스포츠",
-    "questionText": "Which sport is played at Wimbledon?",
-    "options": ["Tennis", "Golf", "Soccer", "Basketball"],
+    "questionText": "윔블던에서 열리는 스포츠는?",
+    "options": ["테니스", "골프", "축구", "농구"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Wimbledon is famous for tennis."
+    "additionalCommentary": "윔블던은 테니스로 유명합니다."
   },
   {
     "id": "q143",
     "difficulty": 2,
     "mainCategory": "과학",
     "subCategory": "화학",
-    "questionText": "What is the chemical symbol for gold?",
+    "questionText": "금의 화학 기호는?",
     "options": ["Au", "Ag", "Fe", "Cu"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "The chemical symbol for gold is Au."
+    "additionalCommentary": "금의 화학 기호는 Au입니다."
   },
   {
     "id": "q144",
@@ -1474,10 +1474,10 @@
     "difficulty": 4,
     "mainCategory": "지리",
     "subCategory": "세계지리",
-    "questionText": "Which is the smallest country in the world?",
-    "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+    "questionText": "세계에서 가장 작은 나라는?",
+    "options": ["모나코", "바티칸 시국", "산마리노", "리히텐슈타인"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Vatican City is the smallest country in the world."
+    "additionalCommentary": "바티칸 시국은 세계에서 가장 작은 나라입니다."
   },
   {
     "id": "q146",
@@ -1494,10 +1494,10 @@
     "difficulty": 1,
     "mainCategory": "역사",
     "subCategory": "세계사",
-    "questionText": "Who was the first man to walk on the moon?",
-    "options": ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"],
+    "questionText": "달에 첫 번째로 발을 디딘 사람은?",
+    "options": ["버즈 올드린", "유리 가가린", "닐 암스트롱", "마이클 콜린스"],
     "correctAnswerIndex": 2,
-    "additionalCommentary": "Neil Armstrong was the first man to walk on the moon."
+    "additionalCommentary": "닐 암스트롱이 달에 첫 번째로 발을 디뎠습니다."
   },
   {
     "id": "q148",
@@ -1514,20 +1514,20 @@
     "difficulty": 3,
     "mainCategory": "문학",
     "subCategory": "현대문학",
-    "questionText": "Who wrote 'The Old Man and the Sea'?",
-    "options": ["Ernest Hemingway", "F. Scott Fitzgerald", "John Steinbeck", "Mark Twain"],
+    "questionText": "'노인과 바다'를 쓴 작가는?",
+    "options": ["어니스트 헤밍웨이", "F. 스콧 피츠제럴드", "존 스타인벡", "마크 트웨인"],
     "correctAnswerIndex": 0,
-    "additionalCommentary": "Ernest Hemingway wrote 'The Old Man and the Sea'."
+    "additionalCommentary": "어니스트 헤밍웨이가 '노인과 바다'를 썼습니다."
   },
   {
     "id": "q150",
     "difficulty": 4,
     "mainCategory": "일반상식",
     "subCategory": "음식",
-    "questionText": "Which country is famous for maple syrup?",
-    "options": ["USA", "Canada", "France", "Australia"],
+    "questionText": "메이플 시럽으로 유명한 나라는?",
+    "options": ["미국", "캐나다", "프랑스", "호주"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "Canada is famous for maple syrup."
+    "additionalCommentary": "캐나다는 메이플 시럽으로 유명합니다."
   },
   {
     "id": "q151",
