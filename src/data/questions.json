@@ -1,0 +1,592 @@
+[
+  {
+    "id": "q1",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "천문학",
+    "questionText": "태양계에서 가장 큰 행성은 무엇입니까?",
+    "options": [
+      "토성",
+      "목성",
+      "천왕성",
+      "해왕성"
+    ],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "목성은 태양계의 가장 큰 행성으로, 강력한 중력과 많은 위성을 가지고 있습니다."
+  },
+  {
+    "id": "q2",
+    "difficulty": 1,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "제2차 세계대전은 어느 해에 종료되었습니까?",
+    "options": [
+      "1943년",
+      "1944년",
+      "1945년",
+      "1946년"
+    ],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "제2차 세계대전은 1945년 8월 일본의 항복으로 공식 종료되었습니다."
+  },
+  {
+    "id": "q3",
+    "difficulty": 4,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "셰익스피어의 4대 비극에 포함되지 않는 작품은?",
+    "options": [
+      "햄릿",
+      "오셀로",
+      "리어왕",
+      "로미오와 줄리엣"
+    ],
+    "correctAnswerIndex": 3,
+    "additionalCommentary": "셰익스피어의 4대 비극은 '햄릿', '오셀로', '리어왕', '맥베스'입니다. '로미오와 줄리엣'은 비극이지만 4대 비극에는 포함되지 않습니다."
+  },
+  {
+    "id": "q4",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "다음 중 남아메리카 대륙에 위치하지 않은 국가는?",
+    "options": [
+      "콜롬비아",
+      "에콰도르",
+      "파나마",
+      "베네수엘라"
+    ],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "파나마는 중앙아메리카에 위치하고 있으며, 남아메리카와 북아메리카를 연결하는 지역에 있습니다."
+  },
+  {
+    "id": "q5",
+    "difficulty": 5,
+    "mainCategory": "과학",
+    "subCategory": "물리학",
+    "questionText": "빛의 이중성을 설명하는 실험을 수행한 과학자는?",
+    "options": [
+      "토마스 영",
+      "알베르트 아인슈타인",
+      "닐스 보어",
+      "막스 플랑크"
+    ],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "토마스 영은 1801년 이중 슬릿 실험을 통해 빛의 파동성을 증명했으며, 이후 광전효과 등의 현상을 통해 빛의 입자성도 밝혀져 빛의 이중성이 확립되었습니다."
+  },
+  {
+    "id": "q6",
+    "difficulty": 2,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'봄'으로 유명한 사계 작곡가는?",
+    "options": [
+      "모차르트",
+      "베토벤",
+      "바흐",
+      "비발디"
+    ],
+    "correctAnswerIndex": 3,
+    "additionalCommentary": "안토니오 비발디는 '사계'라는 바이올린 협주곡을 작곡했으며, 그 중 '봄'은 가장 잘 알려진 클래식 작품 중 하나입니다."
+  },
+  {
+    "id": "q7",
+    "difficulty": 3,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "드라마 '도깨비'에서 도깨비 신부가 해야 하는 일은?",
+    "options": ["그의 이름을 부른다", "거울을 깬다", "가슴의 검을 뽑는다", "그를 키스한다"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "도깨비 신부는 도깨비의 가슴에 꽂힌 검을 뽑아야 그의 불멸이 끝납니다."
+  },
+  {
+    "id": "q8",
+    "difficulty": 1,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'이태원 클라쓰'에서 박새로이가 운영하는 가게의 이름은?",
+    "options": ["단밤", "새벽", "밤하늘", "달빛"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'이태원 클라쓰'의 주인공 박새로이는 '단밤'이라는 가게를 운영합니다."
+  },
+  {
+    "id": "q9",
+    "difficulty": 3,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'호텔 델루나'의 여자 주인공을 연기한 배우는?",
+    "options": ["수지", "아이유", "신민아", "박보영"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "아이유(이지은)가 '호텔 델루나'의 장만월 역을 맡았습니다."
+  },
+  {
+    "id": "q10",
+    "difficulty": 2,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'스위트홈'에서 등장인물들이 맞서는 위협은?",
+    "options": ["저주", "바이러스", "자연재해", "외계인"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'스위트홈'의 생존자들은 저주로 인한 괴물들과 맞서 싸웁니다."
+  },
+  {
+    "id": "q11",
+    "difficulty": 3,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'킹덤'은 어느 시대를 배경으로 한 좀비 드라마인가요?",
+    "options": ["고려시대", "조선시대", "대한제국", "일제강점기"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'킹덤'은 조선시대를 배경으로 한 좀비 스릴러 드라마입니다."
+  },
+  {
+    "id": "q12",
+    "difficulty": 1,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'오징어 게임'에서 최후의 1인이 받는 상금은?",
+    "options": ["23.4억 원", "34.5억 원", "45.6억 원", "56.7억 원"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "'오징어 게임'의 최종 우승자는 45.6억 원의 상금을 받습니다."
+  },
+  {
+    "id": "q13",
+    "difficulty": 2,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'피노키오'에서 주인공 최인하가 거짓말을 하면 나타나는 증상은?",
+    "options": ["재채기", "딸꾹질", "코가 길어진다", "기절"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'피노키오'의 최인하는 거짓말을 하면 딸꾹질을 합니다."
+  },
+  {
+    "id": "q14",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "조선시대에 한글을 창제한 왕은 누구입니까?",
+    "options": ["세종대왕", "태종", "정조", "광해군"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "세종대왕은 1443년에 한글(훈민정음)을 창제하였습니다."
+  },
+  {
+    "id": "q15",
+    "difficulty": 3,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "한국전쟁의 정전협정이 체결된 해는?",
+    "options": ["1948년", "1950년", "1953년", "1960년"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "한국전쟁은 1953년 7월 27일 정전협정이 체결되어 휴전 상태가 되었습니다."
+  },
+  {
+    "id": "q16",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "지구에서 가장 큰 바다는?",
+    "options": ["대서양", "인도양", "북극해", "태평양"],
+    "correctAnswerIndex": 3,
+    "additionalCommentary": "태평양은 지구에서 가장 넓은 바다입니다."
+  },
+  {
+    "id": "q17",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "한국에서 생일에 주로 먹는 국은?",
+    "options": ["된장국", "미역국", "김치찌개", "육개장"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "한국에서는 생일에 미역국을 먹는 전통이 있습니다."
+  },
+  {
+    "id": "q18",
+    "difficulty": 2,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 가장 높은 산은?",
+    "options": ["에베레스트", "킬리만자로", "알프스", "안데스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "에베레스트 산(8,848m)은 세계에서 가장 높은 산입니다."
+  },
+  {
+    "id": "q19",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "물의 화학식은?",
+    "options": ["CO2", "H2O", "O2", "NaCl"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "물의 화학식은 H2O입니다."
+  },
+  {
+    "id": "q20",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "축구 경기에서 한 팀의 선수는 몇 명입니까?",
+    "options": ["9명", "10명", "11명", "12명"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "축구는 한 팀당 11명의 선수가 경기에 출전합니다."
+  },
+  {
+    "id": "q21",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "태양계에서 가장 가까운 별은?",
+    "options": ["알파 센타우리", "시리우스", "베텔게우스", "프로키온"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "태양계에서 가장 가까운 별은 알파 센타우리입니다."
+  },
+  {
+    "id": "q22",
+    "difficulty": 4,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "프랑스 혁명은 어느 해에 시작되었습니까?",
+    "options": ["1776년", "1789년", "1812년", "1848년"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "프랑스 혁명은 1789년에 시작되었습니다."
+  },
+  {
+    "id": "q23",
+    "difficulty": 1,
+    "mainCategory": "지리",
+    "subCategory": "한국지리",
+    "questionText": "대한민국의 수도는?",
+    "options": ["부산", "인천", "서울", "대구"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "대한민국의 수도는 서울입니다."
+  },
+  {
+    "id": "q24",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "빛의 속도는 약 몇 km/s입니까?",
+    "options": ["3,000", "30,000", "300,000", "3,000,000"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "빛의 속도는 약 300,000 km/s입니다."
+  },
+  {
+    "id": "q25",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "김치의 주재료는?",
+    "options": ["배추", "감자", "고구마", "오이"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "김치는 주로 배추로 만듭니다."
+  },
+  {
+    "id": "q26",
+    "difficulty": 2,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "올림픽은 몇 년마다 개최됩니까?",
+    "options": ["2년", "3년", "4년", "5년"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "올림픽은 4년마다 개최됩니다."
+  },
+  {
+    "id": "q27",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "생물학",
+    "questionText": "사람의 몸에서 산소를 운반하는 혈액 속 세포는?",
+    "options": ["백혈구", "적혈구", "혈소판", "림프구"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "적혈구는 혈액 내에서 산소를 운반하는 역할을 합니다."
+  },
+  {
+    "id": "q28",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "화학",
+    "questionText": "물은 어떤 두 원소로 이루어져 있습니까?",
+    "options": ["수소와 산소", "탄소와 산소", "질소와 수소", "탄소와 질소"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "물(H2O)은 수소와 산소로 이루어져 있습니다."
+  },
+  {
+    "id": "q29",
+    "difficulty": 3,
+    "mainCategory": "과학",
+    "subCategory": "지구과학",
+    "questionText": "지구의 대기 중 가장 많은 기체는?",
+    "options": ["산소", "이산화탄소", "질소", "아르곤"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "지구 대기의 약 78%는 질소로 이루어져 있습니다."
+  },
+  {
+    "id": "q30",
+    "difficulty": 4,
+    "mainCategory": "과학",
+    "subCategory": "물리학",
+    "questionText": "상대성 이론을 발표한 과학자는 누구입니까?",
+    "options": ["뉴턴", "아인슈타인", "갈릴레이", "파스칼"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "알베르트 아인슈타인은 특수 및 일반 상대성 이론을 발표한 물리학자입니다."
+  },
+  {
+    "id": "q31",
+    "difficulty": 5,
+    "mainCategory": "과학",
+    "subCategory": "천문학",
+    "questionText": "태양계에서 가장 큰 위성을 가진 행성은?",
+    "options": ["목성", "토성", "천왕성", "해왕성"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "목성의 위성 가니메데는 태양계에서 가장 큰 위성입니다."
+  },
+  {
+    "id": "q32",
+    "difficulty": 1,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "대한민국의 건국일은 언제입니까?",
+    "options": ["1945년 8월 15일", "1948년 8월 15일", "1950년 6월 25일", "1919년 3월 1일"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "대한민국은 1948년 8월 15일에 건국되었습니다."
+  },
+  {
+    "id": "q33",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "로마 제국의 첫 번째 황제는 누구입니까?",
+    "options": ["줄리어스 시저", "아우구스투스", "네로", "트라야누스"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "아우구스투스는 로마 제국의 첫 번째 황제입니다."
+  },
+  {
+    "id": "q34",
+    "difficulty": 3,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "고려를 건국한 왕의 이름은?",
+    "options": ["태조 왕건", "세종대왕", "광개토대왕", "문종"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "고려는 태조 왕건이 918년에 건국하였습니다."
+  },
+  {
+    "id": "q35",
+    "difficulty": 4,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "프랑스 혁명 당시 사용된 단두대의 이름은?",
+    "options": ["기요틴", "길로틴", "단두대", "참수대"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "기요틴(guillotine)은 프랑스 혁명 당시 사용된 단두대입니다."
+  },
+  {
+    "id": "q36",
+    "difficulty": 5,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "중세 유럽에서 흑사병이 처음 발생한 해는?",
+    "options": ["1347년", "1492년", "1066년", "1215년"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "흑사병은 1347년에 유럽에 처음 전파되었습니다."
+  },
+  {
+    "id": "q37",
+    "difficulty": 1,
+    "mainCategory": "지리",
+    "subCategory": "한국지리",
+    "questionText": "한반도의 최남단에 위치한 섬은?",
+    "options": ["울릉도", "제주도", "마라도", "독도"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "마라도는 한반도의 최남단에 위치한 섬입니다."
+  },
+  {
+    "id": "q38",
+    "difficulty": 2,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "아프리카 대륙에서 가장 큰 나라는?",
+    "options": ["이집트", "나이지리아", "알제리", "남아프리카공화국"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "알제리는 아프리카 대륙에서 가장 넓은 나라입니다."
+  },
+  {
+    "id": "q39",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 가장 긴 강은?",
+    "options": ["아마존강", "나일강", "양쯔강", "미시시피강"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "나일강은 세계에서 가장 긴 강으로 알려져 있습니다."
+  },
+  {
+    "id": "q40",
+    "difficulty": 4,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 가장 인구가 많은 도시는? (2023년 기준)",
+    "options": ["도쿄", "상하이", "델리", "베이징"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "2023년 기준 세계에서 가장 인구가 많은 도시는 인도 델리입니다."
+  },
+  {
+    "id": "q41",
+    "difficulty": 5,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 해발고도가 가장 높은 수도는?",
+    "options": ["키토", "라파스", "카트만두", "보고타"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "볼리비아의 라파스는 세계에서 가장 높은 해발고도의 수도입니다."
+  },
+  {
+    "id": "q42",
+    "difficulty": 1,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'모나리자'를 그린 화가는?",
+    "options": ["고흐", "피카소", "레오나르도 다빈치", "미켈란젤로"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "'모나리자'는 레오나르도 다빈치가 그린 작품입니다."
+  },
+  {
+    "id": "q43",
+    "difficulty": 2,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'운명' 교향곡을 작곡한 사람은?",
+    "options": ["모차르트", "베토벤", "하이든", "슈베르트"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'운명' 교향곡(5번)은 루트비히 판 베토벤이 작곡했습니다."
+  },
+  {
+    "id": "q44",
+    "difficulty": 3,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'별이 빛나는 밤'을 그린 화가는?",
+    "options": ["고흐", "피카소", "샤갈", "르누아르"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'별이 빛나는 밤'은 빈센트 반 고흐의 대표작입니다."
+  },
+  {
+    "id": "q45",
+    "difficulty": 4,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'마술피리' 오페라를 작곡한 사람은?",
+    "options": ["모차르트", "베토벤", "바흐", "헨델"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'마술피리'는 볼프강 아마데우스 모차르트가 작곡한 오페라입니다."
+  },
+  {
+    "id": "q46",
+    "difficulty": 5,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'게르니카'를 그린 화가는 누구입니까?",
+    "options": ["피카소", "고흐", "달리", "마티스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'게르니카'는 파블로 피카소의 대표적인 반전 작품입니다."
+  },
+  {
+    "id": "q47",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "초밥의 주재료는?",
+    "options": ["쌀", "밀가루", "보리", "옥수수"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "초밥은 쌀로 만든 밥에 생선이나 해산물을 얹어 만듭니다."
+  },
+  {
+    "id": "q48",
+    "difficulty": 2,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "야구에서 한 팀이 수비할 때 그라운드에 있는 선수 수는?",
+    "options": ["7명", "8명", "9명", "10명"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "야구는 한 팀당 9명의 선수가 수비를 합니다."
+  },
+  {
+    "id": "q49",
+    "difficulty": 3,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "프랑스의 대표적인 빵은?",
+    "options": ["베이글", "바게트", "크루아상", "치아바타"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "바게트는 프랑스를 대표하는 길고 얇은 빵입니다."
+  },
+  {
+    "id": "q50",
+    "difficulty": 4,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "올림픽에서 가장 많은 금메달을 딴 국가는? (2020년 기준)",
+    "options": ["미국", "중국", "러시아", "일본"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "2020년 도쿄 올림픽 기준 미국이 가장 많은 금메달을 획득했습니다."
+  },
+  {
+    "id": "q51",
+    "difficulty": 5,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "세계에서 가장 비싼 커피로 알려진 것은?",
+    "options": ["블루마운틴", "코나커피", "루왁커피", "예가체프"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "루왁커피는 사향고양이의 소화과정을 거친 원두로 만든 커피로, 세계에서 가장 비싼 커피 중 하나입니다."
+  },
+  {
+    "id": "q52",
+    "difficulty": 1,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "'해리 포터' 시리즈의 작가는?",
+    "options": ["J.K. 롤링", "스티븐 킹", "조지 오웰", "아가사 크리스티"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'해리 포터' 시리즈는 J.K. 롤링이 쓴 판타지 소설입니다."
+  },
+  {
+    "id": "q53",
+    "difficulty": 2,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'동물농장'을 쓴 작가는?",
+    "options": ["조지 오웰", "어니스트 헤밍웨이", "마크 트웨인", "찰스 디킨스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'동물농장'은 조지 오웰이 쓴 풍자 소설입니다."
+  },
+  {
+    "id": "q54",
+    "difficulty": 3,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "'1984' 소설의 주인공 이름은?",
+    "options": ["윈스턴 스미스", "줄리아", "오브라이언", "브라이언 존스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'1984'의 주인공은 윈스턴 스미스입니다."
+  },
+  {
+    "id": "q55",
+    "difficulty": 4,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'죄와 벌'을 쓴 러시아 작가는?",
+    "options": ["톨스토이", "도스토옙스키", "체호프", "푸시킨"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'죄와 벌'은 표도르 도스토옙스키가 쓴 소설입니다."
+  },
+  {
+    "id": "q56",
+    "difficulty": 5,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "노벨문학상을 두 번 수상한 유일한 작가는?",
+    "options": ["윌리엄 포크너", "존 스타인벡", "루이즈 글릭", "없다"],
+    "correctAnswerIndex": 3,
+    "additionalCommentary": "노벨문학상을 두 번 수상한 작가는 없습니다."
+  }
+] 
