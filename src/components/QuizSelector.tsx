@@ -47,7 +47,7 @@ const QuizSelector: React.FC<QuizSelectorProps> = ({
   // Apply filters when they change
   useEffect(() => {
     onFilterChange({ difficulty, mainCategory, subCategory });
-  }, [difficulty, mainCategory, subCategory, onFilterChange]);
+  }, [difficulty, mainCategory, subCategory]);
 
   // Helper function to render difficulty stars for selection
   const renderDifficultyOptions = () => {

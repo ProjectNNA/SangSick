@@ -1,3 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-size-16px: 16px;
+  --font-size-20px: 20px;
+  --font-size-26px: 26px;
+  --font-size-36px: 36px;
+}

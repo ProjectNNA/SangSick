@@ -1,9 +1,10 @@
-import React, {
+import {
   createContext,
   useContext,
   useReducer,
   ReactNode,
   useCallback,
+  useMemo,
 } from "react";
 import { Question, QuizState, QuizFilter } from "../types/quiz";
 
@@ -28,6 +29,8 @@ const initialState: QuizState = {
   showCorrectAnswer: true, // We now always show the correct answer
   attemptCount: 0,
   quizStarted: false,
+  correctAnswers: 0,
+  quizCompleted: false,
   filters: {
     difficulty: null,
     mainCategory: null,
@@ -48,6 +51,9 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
       };
     case "FILTER_QUESTIONS": {
       const { difficulty, mainCategory, subCategory } = action.payload;
+
+      console.log("Filtering with:", { difficulty, mainCategory, subCategory });
+      console.log("Total questions available:", state.questions.length);
 
       const filtered = state.questions.filter((q) => {
         const difficultyMatch =
@@ -70,6 +76,8 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
         hasAnswered: false,
         showCorrectAnswer: true,
         attemptCount: 0,
+        correctAnswers: 0,
+        quizCompleted: false,
       };
     }
     case "SET_QUESTION_COUNT":
@@ -91,13 +99,28 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
         currentQuestionIndex: 0,
         selectedAnswerIndex: null,
         hasAnswered: false,
+        correctAnswers: 0,
+        quizCompleted: false,
       };
     case "SELECT_ANSWER": {
+      const currentQuestion =
+        state.filteredQuestions[state.currentQuestionIndex];
+      const isCorrect =
+        currentQuestion &&
+        action.payload === currentQuestion.correctAnswerIndex;
+      const newCorrectAnswers = isCorrect
+        ? state.correctAnswers + 1
+        : state.correctAnswers;
+      const isLastQuestion =
+        state.currentQuestionIndex === state.filteredQuestions.length - 1;
+
       return {
         ...state,
         selectedAnswerIndex: action.payload,
         hasAnswered: true,
         showCorrectAnswer: true,
+        correctAnswers: newCorrectAnswers,
+        quizCompleted: isLastQuestion,
       };
     }
     case "NEXT_QUESTION":
@@ -114,6 +137,8 @@ function quizReducer(state: QuizState, action: QuizAction): QuizState {
         selectedAnswerIndex: null,
         hasAnswered: false,
         quizStarted: false,
+        correctAnswers: 0,
+        quizCompleted: false,
       };
     default:
       return state;
@@ -173,21 +198,29 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: "RESET_QUIZ" });
   }, []);
 
-  // Debug state changes
-  React.useEffect(() => {
-    console.log("QuizContext state updated:", state);
-  }, [state]);
-
-  const value = {
-    state,
-    loadQuestions,
-    filterQuestions,
-    selectAnswer,
-    setQuestionCount,
-    startQuiz,
-    nextQuestion,
-    resetQuiz,
-  };
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(
+    () => ({
+      state,
+      loadQuestions,
+      filterQuestions,
+      selectAnswer,
+      setQuestionCount,
+      startQuiz,
+      nextQuestion,
+      resetQuiz,
+    }),
+    [
+      state,
+      loadQuestions,
+      filterQuestions,
+      selectAnswer,
+      setQuestionCount,
+      startQuiz,
+      nextQuestion,
+      resetQuiz,
+    ]
+  );
 
   return <QuizContext.Provider value={value}>{children}</QuizContext.Provider>;
 };

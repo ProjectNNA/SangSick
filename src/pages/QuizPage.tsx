@@ -62,7 +62,13 @@ const QuizPage: React.FC = () => {
   }
 
   return (
-    <div className="py-12 px-6">
+    <div className="py-12 px-6 relative">
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-4 right-4 bg-gray-200 hover:bg-blue-600 hover:text-white text-gray-800 font-semibold px-6 py-2 rounded-lg shadow transition-colors z-10"
+      >
+        메인 메뉴로
+      </button>
       <div className="mb-6 text-center">
         <span className="inline-block px-6 py-3 bg-gray-100 rounded-full text-gray-700 font-medium text-16px">
           문제 {currentQuestionIndex + 1} / {filteredQuestions.length}

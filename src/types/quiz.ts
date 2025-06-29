@@ -25,5 +25,7 @@ export interface QuizState {
   showCorrectAnswer: boolean;
   attemptCount: number;
   quizStarted: boolean;
+  correctAnswers: number;
+  quizCompleted: boolean;
   filters: QuizFilter;
 } 
