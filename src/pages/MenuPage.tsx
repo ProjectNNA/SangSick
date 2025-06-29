@@ -175,7 +175,7 @@ const MenuPage: React.FC = () => {
   return (
     <div className="bg-gray-50 flex flex-col items-center">
       <div className="bg-white shadow-xl rounded-lg p-8 max-w-lg w-full mx-auto mt-4">
-        <h1 className="text-36px font-bold text-center text-blue-600 mb-4">
+        <h1 className="text-5xl font-bold text-center text-blue-600 mb-4">
           퀴즈 퀴즈 페스티벌
         </h1>
         <p className="text-20px text-gray-700 mb-6 text-center">
@@ -184,9 +184,9 @@ const MenuPage: React.FC = () => {
 
         {showFilters && (
           <div className="bg-blue-50 p-6 rounded-lg mb-6">
-            <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 justify-between">
+            <div className="flex flex-col gap-6">
               {/* 난이도 */}
-              <div className="flex-1 min-w-0">
+              <div className="flex flex-col w-full">
                 <label className="block text-gray-700 text-20px font-medium mb-2">
                   난이도
                 </label>
@@ -204,7 +204,7 @@ const MenuPage: React.FC = () => {
                 </select>
               </div>
               {/* 카테고리 */}
-              <div className="flex-1 min-w-0">
+              <div className="flex flex-col w-full">
                 <label className="block text-gray-700 text-20px font-medium mb-2">
                   카테고리
                 </label>
@@ -222,7 +222,7 @@ const MenuPage: React.FC = () => {
                 </select>
               </div>
               {/* 서브 카테고리 */}
-              <div className="flex-1 min-w-0">
+              <div className="flex flex-col w-full">
                 <label className="block text-gray-700 text-20px font-medium mb-2">
                   서브 카테고리
                 </label>
@@ -241,7 +241,7 @@ const MenuPage: React.FC = () => {
                 </select>
               </div>
               {/* 문제 수 */}
-              <div className="flex-1 min-w-0">
+              <div className="flex flex-col w-full">
                 <label className="block text-gray-700 text-20px font-medium mb-2">
                   문제 수
                 </label>

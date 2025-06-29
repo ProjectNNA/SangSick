@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuiz } from "../context/QuizContext";
 import { updateGameStats } from "../utils/statsUtils";
@@ -7,9 +7,16 @@ const ResultsPage: React.FC = () => {
   const navigate = useNavigate();
   const { state, resetQuiz } = useQuiz();
 
+  // Guard to prevent duplicate stats update
+  const hasUpdatedStats = useRef(false);
+
   // Calculate score and save statistics
   useEffect(() => {
-    if (state.quizCompleted && state.filteredQuestions.length > 0) {
+    if (
+      state.quizCompleted &&
+      state.filteredQuestions.length > 0 &&
+      !hasUpdatedStats.current
+    ) {
       const score = Math.round(
         (state.correctAnswers / state.filteredQuestions.length) * 100
       );
@@ -21,6 +28,7 @@ const ResultsPage: React.FC = () => {
         state.filteredQuestions.length,
         score
       );
+      hasUpdatedStats.current = true;
     }
   }, [
     state.quizCompleted,
