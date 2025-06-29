@@ -5,15 +5,27 @@ import { Question } from "../types/quiz";
 
 const MenuPage: React.FC = () => {
   const { state, setQuestionCount, startQuiz, filterQuestions } = useQuiz();
-  const [selectedCount, setSelectedCount] = useState(3);
   const [difficulty, setDifficulty] = useState<number | null>(null);
   const [mainCategory, setMainCategory] = useState<string | null>(null);
   const [subCategory, setSubCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [subCategories, setSubCategories] = useState<string[]>([]);
-  const [filteredQuestions, setFilteredQuestions] = useState<Question[]>(
-    state.questions
+  const defaultFilter = {
+    difficulty: null,
+    mainCategory: null,
+    subCategory: null,
+  };
+  const getDefaultFilteredQuestions = (questions: Question[]) =>
+    questions.filter((q) => true); // All questions, or use filter logic if needed
+
+  const [filteredQuestions, setFilteredQuestions] = useState<Question[]>(() =>
+    getDefaultFilteredQuestions(state.questions)
   );
+  const initialCount =
+    getDefaultFilteredQuestions(state.questions).length >= 5
+      ? 5
+      : getDefaultFilteredQuestions(state.questions).length;
+  const [selectedCount, setSelectedCount] = useState(initialCount);
   const [showFilters, setShowFilters] = useState(false);
   const [pendingStart, setPendingStart] = useState(false);
   const navigate = useNavigate();

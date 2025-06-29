@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import { useQuiz } from "../context/QuizContext";
 import { GameStats, GameMode, initialGameStats } from "../data/gameStats";
-import { loadGameStats } from "../utils/statsUtils";
+import { loadGameStats, resetGameStats } from "../utils/statsUtils";
 
 const StatisticsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -73,6 +73,14 @@ const StatisticsPage: React.FC = () => {
     }
 
     return badges;
+  };
+
+  // Handler for resetting stats
+  const handleResetStats = () => {
+    if (window.confirm("정말로 모든 게임 통계를 초기화하시겠습니까?")) {
+      resetGameStats();
+      window.location.reload();
+    }
   };
 
   return (
@@ -274,6 +282,16 @@ const StatisticsPage: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* Reset Button below all components */}
+      <div className="flex justify-center mt-10">
+        <button
+          onClick={handleResetStats}
+          className="bg-red-600 hover:bg-red-700 text-white text-xs px-6 py-2 rounded-full shadow-lg border border-red-800"
+          title="게임 통계 초기화"
+        >
+          통계 초기화
+        </button>
       </div>
     </div>
   );
