@@ -457,7 +457,7 @@
     "questionText": "'운명' 교향곡을 작곡한 사람은?",
     "options": ["모차르트", "베토벤", "하이든", "슈베르트"],
     "correctAnswerIndex": 1,
-    "additionalCommentary": "'운명' 교향곡(5번)은 루트비히 판 베토벤이 작곡했습니다."
+    "additionalCommentary": "'운명' 교향곡(5번)은 루트빈 판 베토벤이 작곡했습니다."
   },
   {
     "id": "q44",
@@ -1038,5 +1038,505 @@
     "options": ["Qin Shi Huang", "Han Wudi", "Tang Taizong", "Wu Zetian"],
     "correctAnswerIndex": 0,
     "additionalCommentary": "Qin Shi Huang was the first emperor of unified China."
+  },
+  {
+    "id": "q102",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "생물학",
+    "questionText": "What is the basic unit of life?",
+    "options": ["Atom", "Molecule", "Cell", "Organ"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "The cell is the basic unit of life in all living organisms."
+  },
+  {
+    "id": "q103",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "화학",
+    "questionText": "수소의 원자번호는 얼마입니까?",
+    "options": ["1", "2", "8", "12"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "수소의 원자번호는 1입니다."
+  },
+  {
+    "id": "q104",
+    "difficulty": 3,
+    "mainCategory": "과학",
+    "subCategory": "지구과학",
+    "questionText": "Which layer of the Earth is liquid?",
+    "options": ["Crust", "Mantle", "Outer Core", "Inner Core"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "The Earth's outer core is liquid."
+  },
+  {
+    "id": "q105",
+    "difficulty": 4,
+    "mainCategory": "과학",
+    "subCategory": "물리학",
+    "questionText": "아인슈타인의 유명한 방정식 E=mc^2에서 c는 무엇을 의미합니까?",
+    "options": ["빛의 속도", "질량", "에너지", "시간"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "c는 빛의 속도를 의미합니다."
+  },
+  {
+    "id": "q106",
+    "difficulty": 5,
+    "mainCategory": "과학",
+    "subCategory": "천문학",
+    "questionText": "What is the name of the first artificial satellite?",
+    "options": ["Apollo", "Sputnik", "Voyager", "Hubble"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Sputnik 1 was the first artificial satellite, launched by the Soviet Union in 1957."
+  },
+  {
+    "id": "q107",
+    "difficulty": 1,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "조선시대의 대표적인 과학자는 누구입니까?",
+    "options": ["장영실", "이순신", "세종대왕", "허준"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "장영실은 조선시대의 대표적인 과학자입니다."
+  },
+  {
+    "id": "q108",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who discovered America in 1492?",
+    "options": ["Christopher Columbus", "Vasco da Gama", "Ferdinand Magellan", "James Cook"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Christopher Columbus reached the Americas in 1492."
+  },
+  {
+    "id": "q109",
+    "difficulty": 3,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "대한민국 임시정부가 수립된 도시는?",
+    "options": ["서울", "상하이", "도쿄", "평양"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "대한민국 임시정부는 상하이에서 수립되었습니다."
+  },
+  {
+    "id": "q110",
+    "difficulty": 4,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who was the first female Prime Minister of the UK?",
+    "options": ["Margaret Thatcher", "Theresa May", "Angela Merkel", "Indira Gandhi"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Margaret Thatcher was the UK's first female Prime Minister."
+  },
+  {
+    "id": "q111",
+    "difficulty": 5,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "고대 이집트의 피라미드를 건설한 왕조는?",
+    "options": ["제1왕조", "제4왕조", "제12왕조", "제18왕조"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "제4왕조가 기자의 대피라미드를 건설했습니다."
+  },
+  {
+    "id": "q112",
+    "difficulty": 1,
+    "mainCategory": "지리",
+    "subCategory": "한국지리",
+    "questionText": "서울을 가로지르는 강의 이름은?",
+    "options": ["한강", "낙동강", "금강", "섬진강"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "한강은 서울을 가로지르는 대표적인 강입니다."
+  },
+  {
+    "id": "q113",
+    "difficulty": 2,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "What is the largest ocean on Earth?",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "The Pacific Ocean is the largest ocean on Earth."
+  },
+  {
+    "id": "q114",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "아시아에서 가장 인구가 많은 나라는?",
+    "options": ["일본", "중국", "인도", "인도네시아"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "중국은 아시아에서 가장 인구가 많은 나라입니다."
+  },
+  {
+    "id": "q115",
+    "difficulty": 4,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which country is both in Europe and Asia?",
+    "options": ["Turkey", "Spain", "Egypt", "Morocco"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Turkey is a transcontinental country in both Europe and Asia."
+  },
+  {
+    "id": "q116",
+    "difficulty": 5,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 가장 깊은 호수는?",
+    "options": ["카스피해", "바이칼호", "수페리어호", "빅토리아호"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "바이칼호는 세계에서 가장 깊은 호수입니다."
+  },
+  {
+    "id": "q117",
+    "difficulty": 1,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "Who painted the Mona Lisa?",
+    "options": ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "Leonardo da Vinci painted the Mona Lisa."
+  },
+  {
+    "id": "q118",
+    "difficulty": 2,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'운명' 교향곡을 작곡한 사람은?",
+    "options": ["모차르트", "베토벤", "하이든", "슈베르트"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "'운명' 교향곡(5번)은 베토벤이 작곡했습니다."
+  },
+  {
+    "id": "q119",
+    "difficulty": 3,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "Which artist is famous for the painting 'The Persistence of Memory'?",
+    "options": ["Salvador Dalí", "Pablo Picasso", "Claude Monet", "Edvard Munch"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Salvador Dalí painted 'The Persistence of Memory'."
+  },
+  {
+    "id": "q120",
+    "difficulty": 4,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "바흐의 국적은 어디입니까?",
+    "options": ["이탈리아", "독일", "프랑스", "오스트리아"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "요한 세바스티안 바흐는 독일 출신의 작곡가입니다."
+  },
+  {
+    "id": "q121",
+    "difficulty": 5,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'비너스의 탄생'을 그린 화가는?",
+    "options": ["보티첼리", "다빈치", "미켈란젤로", "라파엘로"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'비너스의 탄생'은 산드로 보티첼리가 그린 작품입니다."
+  },
+  {
+    "id": "q122",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "김치의 주재료는 무엇입니까?",
+    "options": ["배추", "감자", "고구마", "오이"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "김치는 주로 배추로 만듭니다."
+  },
+  {
+    "id": "q123",
+    "difficulty": 2,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "Which sport is known as 'the king of sports'?",
+    "options": ["Basketball", "Soccer", "Tennis", "Baseball"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Soccer (football) is often called the king of sports."
+  },
+  {
+    "id": "q124",
+    "difficulty": 3,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "프랑스의 대표적인 빵은?",
+    "options": ["베이글", "바게트", "크루아상", "치아바타"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "바게트는 프랑스를 대표하는 빵입니다."
+  },
+  {
+    "id": "q125",
+    "difficulty": 4,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "Which country hosted the 2016 Summer Olympics?",
+    "options": ["China", "Brazil", "UK", "Russia"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Brazil hosted the 2016 Summer Olympics in Rio de Janeiro."
+  },
+  {
+    "id": "q126",
+    "difficulty": 5,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "일본의 전통 음식 중 하나로, 생선을 얹은 밥을 무엇이라고 합니까?",
+    "options": ["스시", "라멘", "우동", "덴푸라"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "스시는 생선을 얹은 밥으로 일본의 대표적인 전통 음식입니다."
+  },
+  {
+    "id": "q127",
+    "difficulty": 1,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "'어린 왕자'의 작가는 누구입니까?",
+    "options": ["생텍쥐페리", "헤밍웨이", "톨스토이", "도스토옙스키"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'어린 왕자'는 생텍쥐페리가 쓴 소설입니다."
+  },
+  {
+    "id": "q128",
+    "difficulty": 2,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "Who wrote 'Pride and Prejudice'?",
+    "options": ["Jane Austen", "Emily Brontë", "Charlotte Brontë", "George Eliot"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Jane Austen wrote 'Pride and Prejudice'."
+  },
+  {
+    "id": "q129",
+    "difficulty": 3,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "'1984'의 주인공 이름은?",
+    "options": ["윈스턴 스미스", "줄리아", "오브라이언", "브라이언 존스"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'1984'의 주인공은 윈스턴 스미스입니다."
+  },
+  {
+    "id": "q130",
+    "difficulty": 4,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "Who wrote 'The Odyssey'?",
+    "options": ["Homer", "Virgil", "Sophocles", "Euripides"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Homer wrote 'The Odyssey'."
+  },
+  {
+    "id": "q131",
+    "difficulty": 5,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "노벨문학상을 2020년에 수상한 작가는?",
+    "options": ["루이즈 글릭", "카즈오 이시구로", "올가 토카르추크", "밥 딜런"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "루이즈 글릭은 2020년 노벨문학상 수상자입니다."
+  },
+  {
+    "id": "q132",
+    "difficulty": 1,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'오징어 게임'에서 주인공의 이름은?",
+    "options": ["성기훈", "조상우", "한미녀", "황준호"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "성기훈은 '오징어 게임'의 주인공입니다."
+  },
+  {
+    "id": "q133",
+    "difficulty": 2,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "Which drama is about a lawyer who becomes a mafia consigliere?",
+    "options": ["Vincenzo", "Itaewon Class", "Sky Castle", "Signal"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'Vincenzo' is about a lawyer who becomes a mafia consigliere."
+  },
+  {
+    "id": "q134",
+    "difficulty": 3,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'응답하라 1988'의 배경이 되는 도시는?",
+    "options": ["서울", "부산", "대구", "광주"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'응답하라 1988'의 배경은 서울입니다."
+  },
+  {
+    "id": "q135",
+    "difficulty": 4,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "Which drama is set in a law firm and features the character 'Woo Young-woo'?",
+    "options": ["Extraordinary Attorney Woo", "Vincenzo", "Misaeng", "Hotel Del Luna"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'Extraordinary Attorney Woo' is set in a law firm and features Woo Young-woo."
+  },
+  {
+    "id": "q136",
+    "difficulty": 5,
+    "mainCategory": "드라마",
+    "subCategory": "한국드라마",
+    "questionText": "'도깨비'에서 도깨비의 본명은?",
+    "options": ["김신", "지은탁", "유인나", "박중헌"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'도깨비'의 본명은 김신입니다."
+  },
+  {
+    "id": "q137",
+    "difficulty": 1,
+    "mainCategory": "과학",
+    "subCategory": "일반상식",
+    "questionText": "What planet do we live on?",
+    "options": ["Mars", "Venus", "Earth", "Jupiter"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "We live on planet Earth."
+  },
+  {
+    "id": "q138",
+    "difficulty": 2,
+    "mainCategory": "역사",
+    "subCategory": "한국사",
+    "questionText": "광개토대왕은 어느 나라의 왕입니까?",
+    "options": ["고구려", "백제", "신라", "가야"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "광개토대왕은 고구려의 왕입니다."
+  },
+  {
+    "id": "q139",
+    "difficulty": 3,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which river flows through Paris?",
+    "options": ["Seine", "Thames", "Danube", "Rhine"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "The Seine River flows through Paris."
+  },
+  {
+    "id": "q140",
+    "difficulty": 4,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "Who composed the opera 'Carmen'?",
+    "options": ["Bizet", "Mozart", "Verdi", "Puccini"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Georges Bizet composed the opera 'Carmen'."
+  },
+  {
+    "id": "q141",
+    "difficulty": 5,
+    "mainCategory": "문학",
+    "subCategory": "고전",
+    "questionText": "'파우스트'를 쓴 독일 작가는?",
+    "options": ["괴테", "카프카", "헤세", "브레히트"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'파우스트'는 요한 볼프강 폰 괴테가 쓴 소설입니다."
+  },
+  {
+    "id": "q142",
+    "difficulty": 1,
+    "mainCategory": "일반상식",
+    "subCategory": "스포츠",
+    "questionText": "Which sport is played at Wimbledon?",
+    "options": ["Tennis", "Golf", "Soccer", "Basketball"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Wimbledon is famous for tennis."
+  },
+  {
+    "id": "q143",
+    "difficulty": 2,
+    "mainCategory": "과학",
+    "subCategory": "화학",
+    "questionText": "What is the chemical symbol for gold?",
+    "options": ["Au", "Ag", "Fe", "Cu"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "The chemical symbol for gold is Au."
+  },
+  {
+    "id": "q144",
+    "difficulty": 3,
+    "mainCategory": "예술",
+    "subCategory": "미술",
+    "questionText": "'절규'를 그린 노르웨이 화가는?",
+    "options": ["뭉크", "고흐", "피카소", "르누아르"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "'절규'는 에드바르 뭉크가 그린 작품입니다."
+  },
+  {
+    "id": "q145",
+    "difficulty": 4,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "Which is the smallest country in the world?",
+    "options": ["Monaco", "Vatican City", "San Marino", "Liechtenstein"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Vatican City is the smallest country in the world."
+  },
+  {
+    "id": "q146",
+    "difficulty": 5,
+    "mainCategory": "과학",
+    "subCategory": "천문학",
+    "questionText": "태양계에서 가장 뜨거운 행성은?",
+    "options": ["수성", "금성", "지구", "화성"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "금성은 태양계에서 가장 뜨거운 행성입니다."
+  },
+  {
+    "id": "q147",
+    "difficulty": 1,
+    "mainCategory": "역사",
+    "subCategory": "세계사",
+    "questionText": "Who was the first man to walk on the moon?",
+    "options": ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "Michael Collins"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "Neil Armstrong was the first man to walk on the moon."
+  },
+  {
+    "id": "q148",
+    "difficulty": 2,
+    "mainCategory": "예술",
+    "subCategory": "음악",
+    "questionText": "'사계'를 작곡한 작가는?",
+    "options": ["비발디", "모차르트", "바흐", "베토벤"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "비발디는 '사계'를 작곡한 이탈리아 작곡가입니다."
+  },
+  {
+    "id": "q149",
+    "difficulty": 3,
+    "mainCategory": "문학",
+    "subCategory": "현대문학",
+    "questionText": "Who wrote 'The Old Man and the Sea'?",
+    "options": ["Ernest Hemingway", "F. Scott Fitzgerald", "John Steinbeck", "Mark Twain"],
+    "correctAnswerIndex": 0,
+    "additionalCommentary": "Ernest Hemingway wrote 'The Old Man and the Sea'."
+  },
+  {
+    "id": "q150",
+    "difficulty": 4,
+    "mainCategory": "일반상식",
+    "subCategory": "음식",
+    "questionText": "Which country is famous for maple syrup?",
+    "options": ["USA", "Canada", "France", "Australia"],
+    "correctAnswerIndex": 1,
+    "additionalCommentary": "Canada is famous for maple syrup."
+  },
+  {
+    "id": "q151",
+    "difficulty": 5,
+    "mainCategory": "지리",
+    "subCategory": "세계지리",
+    "questionText": "세계에서 가장 긴 산맥은?",
+    "options": ["알프스", "로키산맥", "안데스산맥", "히말라야"],
+    "correctAnswerIndex": 2,
+    "additionalCommentary": "안데스산맥은 세계에서 가장 긴 산맥입니다."
   }
 ] 
