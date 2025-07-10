@@ -1,53 +1,50 @@
-# 퀴즈 퀴즈 페스티벌 (Quiz Quiz Festival)
+# 상식퀴즈 (Common Sense Quiz)
 
-A simple quiz web application built with React, TypeScript, Vite, and Tailwind CSS.
+A React-based quiz application that tests users' knowledge across various subjects including science, history, geography, literature, and sports.
 
 ## Features
 
-- Multiple-choice questions with immediate feedback
-- Filter questions by difficulty (stars) and category
-- Clean and responsive UI with Tailwind CSS
+- Interactive quiz interface with 10 random questions per session
+- 10-second time limit per question
+- User authentication with Supabase
+- Dark/Light mode toggle
+- Responsive design
+- Score tracking
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js
-- npm
-
-### Installation
+## Setup
 
 1. Clone the repository
-
-   ```bash
-   git clone https://github.com/your-username/quiz-quiz-festival.git
-   cd quiz-quiz-festival
-   ```
-
-2. Install dependencies
-
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Start the development server
+3. Set up environment variables:
+   - Copy `.env.example` to `.env`
+   - Add your Supabase credentials:
+     ```
+     VITE_SUPABASE_URL=your_supabase_project_url
+     VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+     ```
 
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
-4. Open your browser and navigate to the URL shown in the terminal (typically http://localhost:5173)
+## Environment Variables
 
-## Project Structure
+The application requires the following environment variables:
 
-- `src/components` - React components
-- `src/context` - React context for state management
-- `src/data` - JSON data for quiz questions
-- `src/types` - TypeScript type definitions
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
 
-## Future Enhancements
+These should be set in a `.env` file in the root directory. The `.env` file is already added to `.gitignore` to keep your credentials secure.
 
-- Add Firebase authentication
-- Store questions and user data in Firestore
-- Add scoring and timer functionality
-- Add quiz history and review screens
+## Tech Stack
+
+- React 18
+- Vite
+- Tailwind CSS
+- Supabase (Authentication & Database)
+- ESLint
