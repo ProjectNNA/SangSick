@@ -173,7 +173,8 @@ export default function QuizGame({ onComplete }) {
               </span>
             </div>
             <div className="text-yellow-500 text-lg">
-              {currentQuestion?.difficultyStars}
+              {/* Auto-generate stars from difficulty (1-5) */}
+              {"★".repeat(currentQuestion?.difficulty || 1)}{"☆".repeat(5 - (currentQuestion?.difficulty || 1))}
             </div>
           </div>
           

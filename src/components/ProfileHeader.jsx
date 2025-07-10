@@ -102,7 +102,7 @@ export default function ProfileHeader({ user, onLogout }) {
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen((open) => !open)}
-              className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-gray-100"
               aria-haspopup="true"
               aria-expanded={menuOpen}
             >

@@ -32,13 +32,13 @@ export default function AdminPage({ user }) {
   }
 
   // Filter questions based on search query
-  const filterQuestions = (query) => {
+  const filterQuestions = (query, questionsToFilter = allQuestions) => {
     if (!query.trim()) {
-      setQuestions(allQuestions)
+      setQuestions(questionsToFilter)
       return
     }
     
-    const filtered = allQuestions.filter(question => 
+    const filtered = questionsToFilter.filter(question => 
       question.question.toLowerCase().includes(query.toLowerCase()) ||
       question.category.toLowerCase().includes(query.toLowerCase()) ||
       question.subcategory?.toLowerCase().includes(query.toLowerCase()) ||
@@ -103,7 +103,7 @@ export default function AdminPage({ user }) {
       
       const updatedQuestions = allQuestions.filter(q => q.id !== questionId)
       setAllQuestions(updatedQuestions)
-      setQuestions(questions.filter(q => q.id !== questionId))
+      filterQuestions(searchQuery, updatedQuestions) // Re-apply current search with updated data
       alert('문제가 삭제되었습니다.')
     } catch (error) {
       console.error('Error deleting question:', error)
@@ -141,7 +141,7 @@ export default function AdminPage({ user }) {
         q.id === updatedQuestion.id ? { ...q, ...updatedQuestion } : q
       )
       setAllQuestions(updatedAllQuestions)
-      filterQuestions(searchQuery) // Re-apply current search
+      filterQuestions(searchQuery, updatedAllQuestions) // Re-apply current search with updated data
       
       setShowEditModal(false)
       setEditingQuestion(null)
@@ -249,6 +249,20 @@ function EditQuestionModal({ question, onSave, onClose }) {
     explanation: question.explanation || '',
     reflection: question.reflection || ''
   })
+
+  // Update form data when question prop changes
+  useEffect(() => {
+    setFormData({
+      question: question.question || '',
+      options: [...(question.options || ['', '', '', ''])],
+      correctAnswer: question.correctAnswer || 0,
+      category: question.category || '',
+      subcategory: question.subcategory || '',
+      difficulty: question.difficulty || 1,
+      explanation: question.explanation || '',
+      reflection: question.reflection || ''
+    })
+  }, [question])
 
   const handleOptionChange = (index, value) => {
     const newOptions = [...formData.options]
@@ -377,9 +391,11 @@ function EditQuestionModal({ question, onSave, onClose }) {
                 onChange={(e) => setFormData({ ...formData, difficulty: parseInt(e.target.value) })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               >
-                <option value={1}>1 (쉬움)</option>
-                <option value={2}>2 (보통)</option>
-                <option value={3}>3 (어려움)</option>
+                <option value={1}>1 (매우 쉬움)</option>
+                <option value={2}>2 (쉬움)</option>
+                <option value={3}>3 (보통)</option>
+                <option value={4}>4 (어려움)</option>
+                <option value={5}>5 (매우 어려움)</option>
               </select>
             </div>
           </div>
