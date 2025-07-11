@@ -1,5 +1,4 @@
 import { supabase } from './supabase'
-import type { UserRole } from '../types'
 
 /**
  * Get user's role from the database

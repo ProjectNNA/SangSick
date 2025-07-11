@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { updateAnswerStatistics } from '../utils/statistics'
 import { 
   useSmartQuestionSelection,
   usePrefetchQuizQuestions
@@ -8,7 +7,7 @@ import {
   useRecordQuestionAttemptMutation,
   useCompleteQuizMutation
 } from '../queries/userQueries'
-import type { Question, QuizResults, QuizGameProps, QuestionAttempt } from '../types'
+import type { QuizResults, QuizGameProps, QuestionAttempt } from '../types'
 
 export default function QuizGame({ onComplete, user }: QuizGameProps) {
   // 🚀 Use Smart Question Selection with TanStack Query
@@ -161,28 +160,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
     onComplete(quizResults)
   }
 
-  // 🆕 Calculate category performance breakdown
-  const calculateCategoryBreakdown = (attempts: QuestionAttempt[]) => {
-    const breakdown: Record<string, any> = {}
-    
-    attempts.forEach(attempt => {
-      const category = attempt.question.category
-      if (!breakdown[category]) {
-        breakdown[category] = {
-          correct: 0,
-          total: 0,
-          points: 0
-        }
-      }
-      breakdown[category].total++
-      if (attempt.isCorrect) {
-        breakdown[category].correct++
-        breakdown[category].points += attempt.question.difficulty * 10
-      }
-    })
-    
-    return breakdown
-  }
+
 
   const getAnswerButtonClass = (answerIndex: number) => {
     if (!showResult) {

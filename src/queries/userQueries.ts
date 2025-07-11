@@ -74,7 +74,7 @@ export function useCompleteQuizMutation() {
       const { completeQuizSession } = await import('../lib/quizTracking')
       return await completeQuizSession(sessionId, quizResults)
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       if (data?.user_id) {
         // Invalidate all user-related queries for this user
         queryClient.invalidateQueries({ 
@@ -118,7 +118,7 @@ export function useRecordQuestionAttemptMutation() {
         responseTimeMs
       )
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       // Optimistically update recent sessions cache
       queryClient.setQueryData(
         userQueryKeys.recentSessions(variables.userId, 10),

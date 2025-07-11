@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { updateUserRole } from '../lib/roleUtils'
+import { useDebounce } from '../lib/hooks'
 import type { AdminPageProps, Question } from '../types'
 
 interface User {
@@ -20,6 +21,7 @@ interface EditQuestionModalProps {
 
 interface QuestionsTabProps {
   questions: Question[];
+  allQuestions: Question[];
   searchQuery: string;
   onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDelete: (questionId: number) => void;
@@ -50,6 +52,9 @@ export default function AdminPage({ user }: AdminPageProps) {
   const [showEditModal, setShowEditModal] = useState(false)
 
   const questionsPerPage = 20
+  
+  // Debounce search query to prevent excessive database calls
+  const debouncedSearchQuery = useDebounce(searchQuery, 500)
 
   // Load questions with pagination
   const loadQuestions = async (page = 1, search = '') => {
@@ -177,13 +182,17 @@ export default function AdminPage({ user }: AdminPageProps) {
     }
   }
 
-  // Handle search
+  // Handle search - now uses debouncing to prevent excessive queries
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
     setSearchQuery(query)
     setCurrentPage(1) // Reset to first page
-    loadQuestions(1, query)
   }
+
+  // Effect to handle debounced search
+  useEffect(() => {
+    loadQuestions(currentPage, debouncedSearchQuery)
+  }, [debouncedSearchQuery, currentPage])
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -228,11 +237,12 @@ export default function AdminPage({ user }: AdminPageProps) {
         {activeTab === 'questions' && (
           <QuestionsTab
             questions={questions}
+            allQuestions={allQuestions}
             searchQuery={searchQuery}
             onSearch={handleSearch}
             onDelete={handleDeleteQuestion}
             onEdit={handleEditQuestion}
-            onRefresh={() => loadQuestions(currentPage, searchQuery)}
+            onRefresh={() => loadQuestions(currentPage, debouncedSearchQuery)}
             currentPage={currentPage}
             totalPages={totalPages}
             totalQuestions={totalQuestions}
@@ -372,8 +382,7 @@ function EditQuestionModal({ question, onSave, onClose }: EditQuestionModalProps
                   value={formData.category}
                   onChange={(e) => setFormData(prev => ({ 
                     ...prev, 
-                    category: e.target.value,
-                    subcategory: subcategories[e.target.value]?.[0] || ''
+                    category: e.target.value
                   }))}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                   required
@@ -388,16 +397,17 @@ function EditQuestionModal({ question, onSave, onClose }: EditQuestionModalProps
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   서브카테고리 *
                 </label>
-                <select
+                <input
+                  type="text"
                   value={formData.subcategory}
                   onChange={(e) => setFormData(prev => ({ ...prev, subcategory: e.target.value }))}
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  placeholder="서브카테고리를 입력하세요"
                   required
-                >
-                  {(subcategories[formData.category] || []).map(sub => (
-                    <option key={sub} value={sub}>{sub}</option>
-                  ))}
-                </select>
+                />
+                <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  예: {(subcategories[formData.category] || []).slice(0, 3).join(', ')} 등
+                </div>
               </div>
             </div>
 
@@ -528,6 +538,7 @@ function EditQuestionModal({ question, onSave, onClose }: EditQuestionModalProps
 // Questions Tab Component
 function QuestionsTab({ 
   questions, 
+  allQuestions,
   searchQuery, 
   onSearch, 
   onDelete, 
@@ -538,6 +549,16 @@ function QuestionsTab({
   totalQuestions, 
   onPageChange 
 }: QuestionsTabProps) {
+  // Calculate difficulty distribution
+  const difficultyDistribution = useMemo(() => {
+    const distribution = [1, 2, 3, 4, 5].map(difficulty => {
+      const count = allQuestions.filter(q => q.difficulty === difficulty).length;
+      const percentage = allQuestions.length > 0 ? (count / allQuestions.length * 100).toFixed(1) : '0';
+      return { difficulty, count, percentage };
+    });
+    return distribution;
+  }, [allQuestions]);
+
   return (
     <div>
       {/* Search and Actions */}
@@ -557,6 +578,41 @@ function QuestionsTab({
         >
           새로고침
         </button>
+      </div>
+
+      {/* Difficulty Distribution */}
+      <div className="mb-6 bg-white dark:bg-gray-900 rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          난이도별 문제 분포
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {difficultyDistribution.map(({ difficulty, count, percentage }) => (
+            <div key={difficulty} className="text-center">
+              <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-indigo-200 dark:border-indigo-700">
+                <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
+                  {count}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  {percentage}%
+                </div>
+                <div className="flex justify-center items-center space-x-1">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {difficulty}★
+                  </span>
+                </div>
+                <div className="text-yellow-500 text-lg">
+                  {"★".repeat(difficulty)}{"☆".repeat(5 - difficulty)}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {difficulty * 10}점
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 text-center">
+          전체 {allQuestions.length}개 문제 중 난이도별 분포
+        </div>
       </div>
 
       {/* Results Summary */}

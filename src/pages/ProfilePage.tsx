@@ -1,21 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import Avatar from '../components/Avatar'
 import AvatarEditor from '../components/AvatarEditor'
 import { 
-  getUserQuizStats, 
   calculateUserLevel,
   getLevelProgress
 } from '../lib/quizTracking'
+import { useQuizStats } from '../lib/hooks'
 
-export default function ProfilePage({ user }) {
+export default function ProfilePage({ user }: { user: any }) {
   const [nickname, setNickname] = useState(user.user_metadata?.nickname || '')
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showAvatarEditor, setShowAvatarEditor] = useState(false)
   const [currentAvatar, setCurrentAvatar] = useState(user.user_metadata?.avatar_url || null)
-  const [quizStats, setQuizStats] = useState(null)
-  const [statsLoading, setStatsLoading] = useState(true)
+  
+  // Use optimized hook to prevent duplicate queries
+  const { quizStats, loading: statsLoading } = useQuizStats(user)
 
   const handleSave = async () => {
     setLoading(true)
@@ -41,28 +42,9 @@ export default function ProfilePage({ user }) {
     setIsEditing(false)
   }
 
-  const handleAvatarUpdate = (newAvatarUrl) => {
+  const handleAvatarUpdate = (newAvatarUrl: string) => {
     setCurrentAvatar(newAvatarUrl)
   }
-
-  // Fetch basic quiz statistics
-  useEffect(() => {
-    const fetchQuizData = async () => {
-      if (!user?.id) return
-      
-      setStatsLoading(true)
-      try {
-        const stats = await getUserQuizStats(user.id)
-        setQuizStats(stats)
-      } catch (error) {
-        console.error('Error fetching quiz data:', error)
-      } finally {
-        setStatsLoading(false)
-      }
-    }
-
-    fetchQuizData()
-  }, [user?.id])
 
   // Calculate user level and progress
   const userLevel = quizStats?.engagement_stats?.total_points 
@@ -123,7 +105,7 @@ export default function ProfilePage({ user }) {
             </p>
             
             {/* Level Progress Bar */}
-            {quizStats?.engagement_stats?.total_points > 0 && (
+            {quizStats?.engagement_stats?.total_points && quizStats.engagement_stats.total_points > 0 && (
               <div className="mt-4 max-w-xs mx-auto">
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-1">
                   <span>다음 레벨까지</span>
@@ -292,7 +274,7 @@ export default function ProfilePage({ user }) {
               <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    {quizStats.engagement_stats?.current_streak > 0 ? (
+                    {quizStats.engagement_stats?.current_streak && quizStats.engagement_stats.current_streak > 0 ? (
                       <>
                         <span className="text-2xl">🔥</span>
                         <div>

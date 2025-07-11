@@ -184,7 +184,7 @@ export const cacheInvalidation = {
   }
 }
 
-// 📊 Connection monitoring (development only)
+// 📊 Connection monitoring (development only) - Privacy Safe
 if (import.meta.env.DEV) {
   let connectionCount = 0
   const originalFrom = supabase.from.bind(supabase)
@@ -198,7 +198,8 @@ if (import.meta.env.DEV) {
 
   supabase.rpc = function(fn: string, args?: any) {
     connectionCount++
-    console.log(`[Supabase] RPC #${connectionCount}: ${fn}`, args)
+    // Only log function name, not sensitive arguments
+    console.log(`[Supabase] RPC #${connectionCount}: ${fn}`)
     return originalRpc(fn, args)
   }
 } 

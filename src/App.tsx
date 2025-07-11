@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './lib/supabase'
-import { getUserRole } from './lib/roleUtils'
-import { QueryProvider } from './components/QueryClientProvider'
+import { useUserRole } from './lib/hooks'
 import WelcomePage from './components/WelcomePage'
 import LoginModal from './components/LoginModal'
-import Layout from './components/Layout'
+import ProfileHeader from './components/ProfileHeader'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StatsPage from './pages/StatsPage'
@@ -15,9 +14,11 @@ import './App.css'
 
 function App() {
   const [user, setUser] = useState<User | null>(null)
-  const [userRole, setUserRole] = useState<'admin' | 'user'>('user')
   const [loading, setLoading] = useState(true)
   const [showLoginModal, setShowLoginModal] = useState(false)
+
+  // Use optimized hook instead of direct API call
+  const { userRole } = useUserRole(user)
 
   useEffect(() => {
     // Get initial session
@@ -37,19 +38,6 @@ function App() {
 
     return () => subscription.unsubscribe()
   }, [])
-
-  // Fetch user role when user changes
-  useEffect(() => {
-    async function fetchUserRole() {
-      if (user?.id) {
-        const role = await getUserRole(user.id)
-        setUserRole((role as 'admin' | 'user') || 'user')
-      } else {
-        setUserRole('user')
-      }
-    }
-    fetchUserRole()
-  }, [user?.id])
 
   const handleLoginClick = () => {
     setShowLoginModal(true)
@@ -73,6 +61,15 @@ function App() {
       return <Navigate to="/" replace />
     }
     
+    // Wait for user role to load before checking admin access
+    if (adminOnly && userRole === null) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+          <div className="text-xl">권한 확인 중...</div>
+        </div>
+      )
+    }
+    
     if (adminOnly && userRole !== 'admin') {
       return <Navigate to="/" replace />
     }
@@ -89,53 +86,52 @@ function App() {
   }
 
   return (
-    <QueryProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-100">
-          {!user ? (
-            <>
-              <WelcomePage onLoginClick={handleLoginClick} />
-              <LoginModal 
-                isOpen={showLoginModal} 
-                onClose={handleLoginClose} 
-                onLoginSuccess={handleLoginSuccess}
+    <Router>
+      <div className="min-h-screen bg-gray-100">
+        {!user ? (
+          <>
+            <WelcomePage onLoginClick={handleLoginClick} />
+            <LoginModal 
+              isOpen={showLoginModal} 
+              onClose={handleLoginClose} 
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </>
+        ) : (
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+            <ProfileHeader user={user} onLogout={handleLogout} />
+            <Routes>
+              <Route path="/" element={<HomePage user={user} />} />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage user={user} />
+                  </ProtectedRoute>
+                } 
               />
-            </>
-          ) : (
-            <Layout user={user} onLogout={handleLogout}>
-              <Routes>
-                <Route path="/" element={<HomePage user={user} />} />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage user={user} />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/stats" 
-                  element={
-                    <ProtectedRoute>
-                      <StatsPage user={user} />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute adminOnly={true}>
-                      <AdminPage user={user} />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Layout>
-          )}
-        </div>
-      </Router>
-    </QueryProvider>
+              <Route 
+                path="/stats" 
+                element={
+                  <ProtectedRoute>
+                    <StatsPage user={user} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute adminOnly={true}>
+                    <AdminPage user={user} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </div>
+        )}
+      </div>
+    </Router>
   )
 }
 

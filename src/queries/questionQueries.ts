@@ -4,7 +4,7 @@ import {
   fetchBalancedRandomQuestions,
   fetchDifficultyBalancedQuestions 
 } from '../lib/fetchQuestions'
-import { updateQuestionStats } from '../lib/updateQuestionStats'
+import { updateQuestionStats } from '../lib/quizTracking'
 import type { Question } from '../types'
 
 // Query Keys Factory for Questions

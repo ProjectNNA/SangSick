@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import { getUserRole } from '../lib/roleUtils'
-import { getUserQuizStats } from '../lib/quizTracking'
-import { calculateUserLevel, getLevelProgress } from '../lib/quizTracking'
-import type { ProfileHeaderProps, QuizStats } from '../types'
+import { useNavigate } from 'react-router-dom'
+import { calculateUserLevel } from '../lib/quizTracking'
+import { useUserRole, useQuizStats } from '../lib/hooks'
+import Avatar from './Avatar'
+import type { ProfileHeaderProps } from '../types'
 
 export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
+  const navigate = useNavigate()
   const [showDropdown, setShowDropdown] = useState(false)
-  const [userRole, setUserRole] = useState<string>('user')
-  const [engagementStats, setEngagementStats] = useState<QuizStats | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('darkMode') === 'true' || 
@@ -17,28 +17,9 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
   })
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // Load user role and engagement stats
-  useEffect(() => {
-    const loadUserData = async () => {
-      if (user?.id) {
-        try {
-          const role = await getUserRole(user.id)
-          setUserRole(role || 'user')
-        } catch (error) {
-          console.error('Error loading user role:', error)
-        }
-
-        try {
-          const stats = await getUserQuizStats(user.id)
-          setEngagementStats(stats)
-        } catch (error) {
-          console.error('Error loading engagement stats:', error)
-        }
-      }
-    }
-
-    loadUserData()
-  }, [user?.id])
+  // Use optimized hooks to prevent duplicate queries
+  const { userRole } = useUserRole(user)
+  const { quizStats: engagementStats } = useQuizStats(user)
 
   // Handle clicks outside menu
   useEffect(() => {
@@ -72,14 +53,25 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
     ? calculateUserLevel(engagementStats.engagement_stats.total_points)
     : 1
 
-  const levelProgress = engagementStats?.engagement_stats?.total_points
-    ? getLevelProgress(engagementStats.engagement_stats.total_points)
-    : { current: 0, next: 100, percentage: 0 }
-
   const currentStreak = engagementStats?.engagement_stats?.current_streak || 0
   const totalPoints = engagementStats?.engagement_stats?.total_points || 0
-  const perfectSessions = engagementStats?.achievements?.perfect_sessions || 0
   const overallAccuracy = engagementStats?.basic_stats?.overall_accuracy || 0
+
+  // Navigation handlers
+  const handleNavigateToProfile = () => {
+    navigate('/profile')
+    setShowDropdown(false)
+  }
+
+  const handleNavigateToStats = () => {
+    navigate('/stats')
+    setShowDropdown(false)
+  }
+
+  const handleNavigateToAdmin = () => {
+    navigate('/admin')
+    setShowDropdown(false)
+  }
 
   return (
     <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
@@ -169,12 +161,11 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 {/* User Avatar */}
-                <div className="w-8 h-8 bg-indigo-600 dark:bg-yellow-400 rounded-full flex items-center justify-center">
-                  <span className="text-white dark:text-gray-900 font-semibold text-sm">
-                    {user?.user_metadata?.nickname?.charAt(0).toUpperCase() || 
-                     user?.email?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
+                <Avatar 
+                  avatarUrl={user?.user_metadata?.avatar_url}
+                  fallback={user?.user_metadata?.nickname || user?.email?.split('@')[0] || 'User'}
+                  size="sm"
+                />
                 
                 {/* User Info (hidden on mobile) */}
                 <div className="hidden sm:block text-left">
@@ -182,7 +173,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                     {user?.user_metadata?.nickname || '사용자'}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {userRole === 'admin' ? '관리자' : '일반 사용자'}
+                    {userRole === null ? '로딩 중...' : userRole === 'admin' ? '관리자' : '일반 사용자'}
                   </div>
                 </div>
 
@@ -198,12 +189,11 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                   {/* User Profile Section */}
                   <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-indigo-600 dark:bg-yellow-400 rounded-full flex items-center justify-center">
-                        <span className="text-white dark:text-gray-900 font-bold">
-                          {user?.user_metadata?.nickname?.charAt(0).toUpperCase() || 
-                           user?.email?.charAt(0).toUpperCase() || 'U'}
-                        </span>
-                      </div>
+                      <Avatar 
+                        avatarUrl={user?.user_metadata?.avatar_url}
+                        fallback={user?.user_metadata?.nickname || user?.email?.split('@')[0] || 'User'}
+                        size="lg"
+                      />
                       <div>
                         <div className="font-semibold text-gray-900 dark:text-white">
                           {user?.user_metadata?.nickname || '사용자'}
@@ -212,7 +202,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                           {user?.email}
                         </div>
                         <div className="text-xs text-indigo-600 dark:text-indigo-400">
-                          {userRole === 'admin' ? '관리자' : '일반 사용자'}
+                          {userRole === null ? '로딩 중...' : userRole === 'admin' ? '관리자' : '일반 사용자'}
                         </div>
                       </div>
                     </div>
@@ -255,37 +245,37 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
 
                   {/* Menu Items */}
                   <div className="py-1">
-                    <a
-                      href="/profile"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    <button
+                      onClick={handleNavigateToProfile}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                     >
                       <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
                       프로필 관리
-                    </a>
+                    </button>
                     
-                    <a
-                      href="/stats"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    <button
+                      onClick={handleNavigateToStats}
+                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                     >
                       <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                       </svg>
                       학습 통계
-                    </a>
+                    </button>
 
                     {userRole === 'admin' && (
-                      <a
-                        href="/admin"
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      <button
+                        onClick={handleNavigateToAdmin}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                       >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         관리자 패널
-                      </a>
+                      </button>
                     )}
 
                     <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>

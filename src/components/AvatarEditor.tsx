@@ -55,7 +55,10 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
   }, [currentAvatar])
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files[0]
+    const files = event.target.files
+    if (!files || files.length === 0) return
+    
+    const file = files[0]
     if (!file) return
 
     try {
@@ -123,10 +126,14 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
 
         // Upload custom image
         const resizedImage = await resizeImage(customImage)
+        if (!resizedImage) {
+          throw new Error('이미지 리사이징에 실패했습니다.')
+        }
+        
         const filename = generateAvatarFilename(user.id)
         
         // Upload to Supabase Storage
-        const { data, error } = await supabase.storage
+        const { error } = await supabase.storage
           .from('avatars')
           .upload(filename, resizedImage, {
             cacheControl: '3600',
@@ -135,7 +142,7 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
         
         if (error) {
           console.error('Storage upload error:', error)
-          if (error.statusCode === '404') {
+          if (error.message.includes('404')) {
             throw new Error('스토리지 버킷이 설정되지 않았습니다. Supabase 대시보드에서 "avatars" 버킷을 생성해주세요.')
           }
           throw error
@@ -163,7 +170,9 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
       await supabase.auth.refreshSession()
 
       // Call the callback to update parent component
-      onAvatarUpdate(avatarUrl)
+      if (avatarUrl) {
+        onAvatarUpdate(avatarUrl)
+      }
       onClose()
       
       alert('아바타가 업데이트되었습니다!')

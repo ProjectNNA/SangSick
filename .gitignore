@@ -32,3 +32,6 @@ dist-ssr
 
 # SQL files (contains sensitive database schema)
 sql/
+
+# Documentation working files (question generation, exports)
+questions/
