@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onLoginSuccess: () => void;
+}
+
+export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginModalProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -9,7 +15,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage('')
@@ -40,7 +46,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }) {
         if (error) throw error
         setMessage('회원가입이 완료되었습니다! 이메일을 확인해주세요.')
       }
-    } catch (error) {
+    } catch (error: any) {
       setMessage(error.message)
     } finally {
       setLoading(false)

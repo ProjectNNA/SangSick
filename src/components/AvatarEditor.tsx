@@ -7,6 +7,7 @@ import {
   createImagePreview, 
   cleanupImagePreview 
 } from '../utils/imageUtils'
+import type { User } from '../types'
 
 // Preset avatars with animals and objects
 const PRESET_AVATARS = [
@@ -22,13 +23,20 @@ const PRESET_AVATARS = [
   { id: 'balloon', emoji: '🎈', name: '풍선' }
 ]
 
-export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onClose }) {
-  const [selectedPreset, setSelectedPreset] = useState(null)
-  const [customImage, setCustomImage] = useState(null)
-  const [previewUrl, setPreviewUrl] = useState(null)
+interface AvatarEditorProps {
+  user: User;
+  currentAvatar?: string;
+  onAvatarUpdate: (avatarUrl: string) => void;
+  onClose: () => void;
+}
+
+export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onClose }: AvatarEditorProps) {
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null)
+  const [customImage, setCustomImage] = useState<File | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [activeTab, setActiveTab] = useState('preset') // 'preset' or 'upload'
-  const fileInputRef = useRef(null)
+  const [activeTab, setActiveTab] = useState<'preset' | 'upload'>('preset')
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   // Initialize current avatar
   useEffect(() => {
@@ -46,7 +54,7 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
     }
   }, [currentAvatar])
 
-  const handleFileSelect = async (event) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0]
     if (!file) return
 
@@ -60,12 +68,12 @@ export default function AvatarEditor({ user, currentAvatar, onAvatarUpdate, onCl
       setCustomImage(file)
       setSelectedPreset(null)
       
-    } catch (error) {
+    } catch (error: any) {
       alert(error.message)
     }
   }
 
-  const handlePresetSelect = (presetId) => {
+  const handlePresetSelect = (presetId: string) => {
     setSelectedPreset(presetId)
     setCustomImage(null)
     if (previewUrl) {

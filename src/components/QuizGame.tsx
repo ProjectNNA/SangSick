@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { fetchRandomQuestions } from '../lib/fetchQuestions.js'
 import { updateQuestionStats } from '../lib/updateQuestionStats.js'
 import { 
@@ -9,6 +9,14 @@ import {
 } from '../utils/statistics.js'
 import { startQuizSession, completeQuizSession, recordQuestionAttempt } from '../lib/quizTracking.js'
 import { supabase } from '../lib/supabase.js'
+import type { Question, QuizResults, User } from '../types'
+
+// ✨ EXAMPLE: Clean auto-generated type syntax (from your database.types.ts)
+// import { Database } from '../types/database.types'
+// type Question = Database['public']['Tables']['questions']['Row']
+// type QuizSession = Database['public']['Tables']['quiz_sessions']['Row'] 
+// type QuestionAttempt = Database['public']['Tables']['question_attempts']['Row']
+// Much cleaner than: Database['public']['Tables']['questions']['Row'] everywhere!
 
 export default function QuizGame({ onComplete, user }) {
   const [questions, setQuestions] = useState([])

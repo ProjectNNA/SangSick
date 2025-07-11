@@ -4,10 +4,11 @@
 **SangSick**은 한국어 기반 상식 퀴즈 애플리케이션으로, **Supabase** 백엔드와 **React + Vite** 프론트엔드를 사용합니다.
 
 ### 🛠️ 기술 스택
-- **Frontend**: React + Vite + Tailwind CSS
+- **Frontend**: React + TypeScript + Vite + Tailwind CSS
 - **Backend**: Supabase (PostgreSQL + Authentication + RLS)
 - **Styling**: Tailwind CSS (다크모드 지원)
 - **Authentication**: Supabase Auth (이메일/비밀번호)
+- **Language**: Full TypeScript with strict type checking
 
 ---
 
@@ -184,32 +185,36 @@ SangSick/
 ├── sql/                    # 데이터베이스 스키마 및 문서
 ├── src/
 │   ├── components/         # 재사용 가능한 컴포넌트
-│   │   ├── ProfileHeader.jsx    # 실시간 참여 위젯들
-│   │   ├── CategoryPerformance.jsx  # 카테고리별 성과 분석
-│   │   ├── TimeInsights.jsx     # 시간 기반 분석
-│   │   ├── Leaderboard.jsx      # 경쟁 리더보드
-│   │   ├── QuizGame.jsx         # 메인 퀴즈 게임
-│   │   ├── Avatar.jsx           # 아바타 관리
-│   │   └── AvatarEditor.jsx     # 아바타 편집기
+│   │   ├── ProfileHeader.tsx    # 실시간 참여 위젯들
+│   │   ├── CategoryPerformance.tsx  # 카테고리별 성과 분석
+│   │   ├── TimeInsights.tsx     # 시간 기반 분석
+│   │   ├── Leaderboard.tsx      # 경쟁 리더보드
+│   │   ├── QuizGame.tsx         # 메인 퀴즈 게임
+│   │   ├── Avatar.tsx           # 아바타 관리
+│   │   └── AvatarEditor.tsx     # 아바타 편집기
 │   ├── pages/              # 메인 페이지들
-│   │   ├── HomePage.jsx         # 홈페이지
-│   │   ├── ProfilePage.jsx      # 개인정보 + 요약 통계
-│   │   ├── StatsPage.jsx        # 상세 통계 대시보드
-│   │   └── AdminPage.jsx        # 관리자 패널
+│   │   ├── HomePage.tsx         # 홈페이지
+│   │   ├── ProfilePage.tsx      # 개인정보 + 요약 통계
+│   │   ├── StatsPage.tsx        # 상세 통계 대시보드
+│   │   └── AdminPage.tsx        # 관리자 패널
 │   ├── lib/                # 유틸리티 및 라이브러리
-│   │   ├── supabase.js          # Supabase 클라이언트
-│   │   ├── quizTracking.js      # 퀴즈 추적 및 통계 함수들
-│   │   ├── roleUtils.js         # 역할 관리
-│   │   └── imageUtils.js        # 이미지 처리
-│   └── utils/              # 기타 유틸리티
+│   │   ├── supabase.ts          # Supabase 클라이언트
+│   │   ├── quizTracking.ts      # 퀴즈 추적 및 통계 함수들
+│   │   ├── roleUtils.ts         # 역할 관리
+│   │   ├── fetchQuestions.ts    # 문제 가져오기
+│   │   └── updateQuestionStats.ts # 문제 통계 업데이트
+│   ├── utils/              # 기타 유틸리티
+│   │   ├── statistics.ts        # 통계 계산
+│   │   └── imageUtils.ts        # 이미지 처리
+│   └── types/              # TypeScript 타입 정의
 └── public/                 # 정적 파일들
 ```
 
 ### 🔑 핵심 파일들
-- **`quizTracking.js`** - 모든 퀴즈 추적 로직의 중심
+- **`quizTracking.ts`** - 모든 퀴즈 추적 로직의 중심
 - **`quiz_sessions_table.sql`** - 완전한 데이터베이스 스키마
-- **`StatsPage.jsx`** - 포괄적인 통계 대시보드
-- **`ProfileHeader.jsx`** - 모든 페이지의 실시간 참여 표시기
+- **`StatsPage.tsx`** - 포괄적인 통계 대시보드
+- **`ProfileHeader.tsx`** - 모든 페이지의 실시간 참여 표시기
 
 ---
 
@@ -223,10 +228,10 @@ SangSick/
 5. **AchievementSystem** → 진행상황 추적 및 이정표 축하
 
 ### 2. **페이지 아키텍처**
-- **HomePage**: 퀴즈 게임 + 환영 메시지
-- **ProfilePage**: 개인정보 관리 + 핵심 통계 요약
-- **StatsPage**: 포괄적인 분석 대시보드 (모든 고급 컴포넌트)
-- **AdminPage**: 문제 관리 + 사용자 역할 관리
+- **HomePage.tsx**: 퀴즈 게임 + 환영 메시지
+- **ProfilePage.tsx**: 개인정보 관리 + 핵심 통계 요약
+- **StatsPage.tsx**: 포괄적인 분석 대시보드 (모든 고급 컴포넌트)
+- **AdminPage.tsx**: 문제 관리 + 사용자 역할 관리
 
 ---
 
@@ -245,6 +250,12 @@ SangSick/
    - 역사적 사실 검증 및 정확성 확보
    - 모바일 UX 최적화를 위한 콘텐츠 길이 조정
    - 교육적 가치와 철학적 영감을 유지하면서 간결성 확보
+8. **🔧 JSX → TSX 마이그레이션 완료** - 전체 프로젝트 TypeScript 전환:
+   - 모든 컴포넌트 파일 .jsx → .tsx 변환 완료
+   - 모든 페이지 파일 .jsx → .tsx 변환 완료
+   - 모든 라이브러리 파일 .js → .ts 변환 완료
+   - TypeScript 설정 및 타입 정의 완료
+   - 엄격한 타입 검사 및 코드 품질 향상
 
 ### 🎯 핵심 성과
 - **완전한 참여 생태계** 구축
@@ -278,11 +289,13 @@ SangSick/
 ## 🚀 기술적 하이라이트
 
 ### Frontend 아키텍처
+- **TypeScript 기반**: 엄격한 타입 검사로 런타임 오류 방지
 - **컴포넌트 기반**: 재사용 가능하고 유지보수 가능한 구조
 - **병렬 도구 호출**: 효율적인 데이터 가져오기를 위한 최적화
 - **반응형 디자인**: 모든 기기에서 완벽한 작동
 - **다크모드 지원**: 완전한 테마 지원
 - **상태 관리**: 효율적인 컴포넌트 간 통신
+- **개발자 경험**: IntelliSense, 자동 완성, 리팩토링 지원
 
 ### Backend 설계
 - **PostgreSQL 함수들**: 비즈니스 로직을 데이터베이스에서 처리
@@ -319,20 +332,21 @@ SangSick/
 4. **Mock 데이터**가 Leaderboard에 사용됨 (실제 사용자 1명)
 
 ### 🔧 구성 파일들
+- **TypeScript**: 엄격한 타입 검사 및 최신 ES 기능 지원
 - **Tailwind**: 다크모드 및 커스텀 색상 구성
-- **Vite**: 빠른 개발 서버 및 빌드
-- **ESLint**: 코드 품질 유지
+- **Vite**: 빠른 개발 서버 및 빌드 (TypeScript 네이티브 지원)
+- **ESLint**: 코드 품질 유지 (TypeScript 규칙 포함)
 - **PostCSS**: CSS 처리 최적화
 
 ---
 
-## 🎯 프로젝트 상태: **완료된 MVP with 고급 기능들**
+## 🎯 프로젝트 상태: **완료된 MVP with 고급 기능들 + TypeScript 전환**
 
 **SangSick**은 이제 **완전한 게임화된 학습 경험**을 제공하는 완성도 높은 애플리케이션입니다. 포괄적인 분석, 경쟁 기능, 개인화된 인사이트를 갖춘 현대적이고 매력적인 퀴즈 플랫폼입니다.
 
-**사용자 참여도 및 재방문율을 크게 높일 고급 기능들이 모두 구현되었습니다!** 🎮🚀
+**TypeScript 마이그레이션 완료**로 코드 품질, 유지보수성, 개발자 경험이 크게 향상되었으며, **사용자 참여도 및 재방문율을 크게 높일 고급 기능들이 모두 구현되었습니다!** 🎮🚀🔧
 
 ---
 
-*Last Updated: 한국어 단어 수 표준화 프로젝트 완료 시점 (2024년 12월)*
-*Next Session: 추가 기능 논의 또는 최적화* 
+*Last Updated: JSX → TSX 마이그레이션 완료 시점 (2025년 7월)*
+*Next Session: TypeScript 기반 추가 기능 개발 또는 성능 최적화* 

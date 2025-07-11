@@ -1,4 +1,5 @@
 // Statistics utility functions for quiz answers
+import type { Question } from '../types'
 
 /**
  * Update answer statistics when a user selects an answer
@@ -7,10 +8,10 @@
  * @param {number} selectedAnswer - Index of the selected answer (0-3)
  * @returns {Array} Updated questions array
  */
-export const updateAnswerStatistics = (questions, questionId, selectedAnswer) => {
+export const updateAnswerStatistics = (questions: Question[], questionId: number, selectedAnswer: number | null): Question[] => {
   return questions.map(question => {
     if (question.id === questionId) {
-      const updatedAnswerCounts = [...question.answerCounts];
+      const updatedAnswerCounts = [...(question.answerCounts || [0, 0, 0, 0, 0])];
       if (selectedAnswer === null || selectedAnswer === undefined) {
         updatedAnswerCounts[4]++; // unanswered
       } else {
@@ -18,7 +19,7 @@ export const updateAnswerStatistics = (questions, questionId, selectedAnswer) =>
       }
       return {
         ...question,
-        totalCount: question.totalCount + 1,
+        totalCount: (question.totalCount || 0) + 1,
         answerCounts: updatedAnswerCounts
       };
     }
@@ -32,7 +33,7 @@ export const updateAnswerStatistics = (questions, questionId, selectedAnswer) =>
  * @param {number} total - Total number of answers for this question
  * @returns {number} Percentage (0-100)
  */
-export const calculatePercentage = (count, total) => {
+export const calculatePercentage = (count: number, total: number): number => {
   if (total === 0) return 0;
   return Math.round((count / total) * 100);
 };
@@ -42,11 +43,13 @@ export const calculatePercentage = (count, total) => {
  * @param {Object} question - Question object with answerCounts and totalCount
  * @returns {Array} Array of percentages for each option
  */
-export const getAnswerPercentages = (question) => {
-  const unanswered = question.answerCounts[4] || 0;
-  const answeredTotal = question.totalCount - unanswered;
+export const getAnswerPercentages = (question: Question): number[] => {
+  const answerCounts = question.answerCounts || [0, 0, 0, 0, 0];
+  const totalCount = question.totalCount || 0;
+  const unanswered = answerCounts[4] || 0;
+  const answeredTotal = totalCount - unanswered;
   if (answeredTotal === 0) return [0, 0, 0, 0];
-  return question.answerCounts.slice(0, 4).map(count =>
+  return answerCounts.slice(0, 4).map((count: number) =>
     Math.round((count / answeredTotal) * 100)
   );
 };
@@ -55,7 +58,7 @@ export const getAnswerPercentages = (question) => {
  * Save statistics to localStorage
  * @param {Array} questions - Questions array with statistics
  */
-export const saveStatistics = (questions) => {
+export const saveStatistics = (questions: Question[]): void => {
   try {
     localStorage.setItem('quizStatistics', JSON.stringify(questions));
   } catch (error) {
@@ -68,26 +71,26 @@ export const saveStatistics = (questions) => {
  * @param {Array} questions - Original questions array
  * @returns {Array} Questions array with loaded statistics
  */
-export const loadStatistics = (questions) => {
+export const loadStatistics = (questions: Question[]): Question[] => {
   try {
     const savedStats = localStorage.getItem('quizStatistics');
     if (savedStats) {
       const statsData = JSON.parse(savedStats);
       
       // Merge saved statistics with current questions
-      return questions.map(question => {
-        const savedQuestion = statsData.find(q => q.id === question.id);
+      return questions.map((question: Question) => {
+        const savedQuestion = statsData.find((q: any) => q.id === question.id);
         if (savedQuestion) {
           return {
             ...question,
             totalCount: savedQuestion.totalCount || 0,
-            answerCounts: savedQuestion.answerCounts || [0, 0, 0, 0]
+            answerCounts: savedQuestion.answerCounts || [0, 0, 0, 0, 0]
           };
         }
         return {
           ...question,
           totalCount: 0,
-          answerCounts: [0, 0, 0, 0]
+          answerCounts: [0, 0, 0, 0, 0]
         };
       });
     }
@@ -96,9 +99,9 @@ export const loadStatistics = (questions) => {
   }
   
   // Return questions with default statistics if loading fails
-  return questions.map(question => ({
+  return questions.map((question: Question) => ({
     ...question,
     totalCount: 0,
-    answerCounts: [0, 0, 0, 0]
+    answerCounts: [0, 0, 0, 0, 0]
   }));
 }; 

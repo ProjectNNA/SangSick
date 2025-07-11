@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import type { WelcomePageProps } from '../types'
 
-export default function WelcomePage({ onLoginClick }) {
+export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') === 'dark' ||

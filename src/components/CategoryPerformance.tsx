@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import { getCategoryEmoji } from '../lib/quizTracking'
+import type { CategoryPerformanceProps } from '../types'
+// ✨ Import auto-generated types for clean syntax
+import { Database } from '../types/database.types'
 
-export default function CategoryPerformance({ categories, onCategoryClick }) {
-  const [expandedCategory, setExpandedCategory] = useState(null)
-  const [sortBy, setSortBy] = useState('accuracy') // 'accuracy', 'attempts', 'points'
+// ✨ Clean auto-generated type syntax (exactly what you wanted!)
+type CategoryPerformanceRow = Database['public']['Tables']['category_performance']['Row']
+type QuestionRow = Database['public']['Tables']['questions']['Row']
+type UserEngagementRow = Database['public']['Tables']['user_engagement_stats']['Row']
+
+export default function CategoryPerformance({ categories, onCategoryClick }: CategoryPerformanceProps) {
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+  const [sortBy, setSortBy] = useState<'accuracy' | 'attempts' | 'points'>('accuracy')
 
   if (!categories || categories.length === 0) {
     return (
@@ -38,7 +46,7 @@ export default function CategoryPerformance({ categories, onCategoryClick }) {
     }
   })
 
-  const getPerformanceLevel = (accuracy) => {
+  const getPerformanceLevel = (accuracy: number) => {
     if (accuracy >= 90) return { level: '마스터', color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-900/20', icon: '👑' }
     if (accuracy >= 80) return { level: '우수', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/20', icon: '🌟' }
     if (accuracy >= 70) return { level: '양호', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20', icon: '📈' }
@@ -46,12 +54,12 @@ export default function CategoryPerformance({ categories, onCategoryClick }) {
     return { level: '개선 필요', color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-900/20', icon: '💪' }
   }
 
-  const getDifficultyStars = (difficulty) => {
+  const getDifficultyStars = (difficulty: number) => {
     const rounded = Math.round(difficulty || 0)
     return '★'.repeat(rounded) + '☆'.repeat(5 - rounded)
   }
 
-  const toggleExpanded = (categoryName) => {
+  const toggleExpanded = (categoryName: string) => {
     setExpandedCategory(expandedCategory === categoryName ? null : categoryName)
   }
 
@@ -67,7 +75,7 @@ export default function CategoryPerformance({ categories, onCategoryClick }) {
           <span className="text-sm text-gray-600 dark:text-gray-300">정렬:</span>
           <select 
             value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
+            onChange={(e) => setSortBy(e.target.value as 'accuracy' | 'attempts' | 'points')}
             className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-1 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
           >
             <option value="accuracy">정답률순</option>

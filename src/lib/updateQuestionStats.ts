@@ -6,7 +6,7 @@ import { supabase } from './supabase'
  * @param {number} selectedAnswer - Index of selected answer (0-3, or null for unanswered)
  * @returns {Promise<boolean>} Success status
  */
-export async function updateQuestionStats(questionId, selectedAnswer) {
+export async function updateQuestionStats(questionId: number, selectedAnswer: number): Promise<boolean> {
   try {
     // Determine which answer index to increment
     let answerIndex = 4 // Default to "unanswered"

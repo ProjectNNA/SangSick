@@ -3,7 +3,7 @@
  */
 
 // Resize image to specified dimensions while maintaining aspect ratio
-export const resizeImage = (file, maxWidth = 150, maxHeight = 150, quality = 0.8) => {
+export const resizeImage = (file: File, maxWidth: number = 150, maxHeight: number = 150, quality: number = 0.8): Promise<Blob | null> => {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -29,7 +29,7 @@ export const resizeImage = (file, maxWidth = 150, maxHeight = 150, quality = 0.8
       canvas.height = height
       
       // Draw and compress the image
-      ctx.drawImage(img, 0, 0, width, height)
+      ctx?.drawImage(img, 0, 0, width, height)
       
       canvas.toBlob(
         (blob) => {
@@ -45,7 +45,7 @@ export const resizeImage = (file, maxWidth = 150, maxHeight = 150, quality = 0.8
 }
 
 // Validate image file type and size
-export const validateImageFile = (file, maxSizeM = 5) => {
+export const validateImageFile = (file: File, maxSizeM: number = 5): boolean => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
   const maxSize = maxSizeM * 1024 * 1024 // Convert to bytes
   
@@ -61,27 +61,27 @@ export const validateImageFile = (file, maxSizeM = 5) => {
 }
 
 // Generate a unique filename for the avatar
-export const generateAvatarFilename = (userId, fileExtension = 'jpg') => {
+export const generateAvatarFilename = (userId: string, fileExtension: string = 'jpg'): string => {
   const timestamp = Date.now()
   return `${userId}/avatar_${timestamp}.${fileExtension}`
 }
 
 // Create a preview URL for the selected image
-export const createImagePreview = (file) => {
+export const createImagePreview = (file: File): string => {
   return URL.createObjectURL(file)
 }
 
 // Cleanup preview URL to prevent memory leaks
-export const cleanupImagePreview = (previewUrl) => {
+export const cleanupImagePreview = (previewUrl: string): void => {
   if (previewUrl && previewUrl.startsWith('blob:')) {
     URL.revokeObjectURL(previewUrl)
   }
 }
 
 // Convert data URL to blob
-export const dataURLtoBlob = (dataURL) => {
+export const dataURLtoBlob = (dataURL: string): Blob => {
   const arr = dataURL.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
+  const mime = arr[0].match(/:(.*?);/)![1]
   const bstr = atob(arr[1])
   let n = bstr.length
   const u8arr = new Uint8Array(n)

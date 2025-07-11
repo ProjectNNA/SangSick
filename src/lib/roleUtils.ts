@@ -1,11 +1,12 @@
 import { supabase } from './supabase'
+import type { UserRole } from '../types'
 
 /**
  * Get user's role from the database
  * @param {string} userId - User ID from auth.users
  * @returns {Promise<string|null>} User's role or null if not found
  */
-export async function getUserRole(userId) {
+export async function getUserRole(userId: string): Promise<string | null> {
   try {
     if (!userId) return null
 
@@ -32,7 +33,7 @@ export async function getUserRole(userId) {
  * @param {string} userId - User ID from auth.users
  * @returns {Promise<boolean>} True if user is admin
  */
-export async function isAdmin(userId) {
+export async function isAdmin(userId: string): Promise<boolean> {
   const role = await getUserRole(userId)
   return role === 'admin'
 }
@@ -42,7 +43,7 @@ export async function isAdmin(userId) {
  * @param {string} userId - User ID from auth.users
  * @returns {Promise<boolean>} Success status
  */
-export async function createDefaultUserRole(userId) {
+export async function createDefaultUserRole(userId: string): Promise<boolean> {
   try {
     const { error } = await supabase
       .from('user_roles')
@@ -69,7 +70,7 @@ export async function createDefaultUserRole(userId) {
  * @param {string} adminUserId - ID of admin making the change
  * @returns {Promise<boolean>} Success status
  */
-export async function updateUserRole(targetUserId, newRole, adminUserId) {
+export async function updateUserRole(targetUserId: string, newRole: 'admin' | 'user', adminUserId: string): Promise<boolean> {
   try {
     // First verify the person making the change is admin
     const isAdminUser = await isAdmin(adminUserId)
@@ -106,7 +107,7 @@ export async function updateUserRole(targetUserId, newRole, adminUserId) {
  * @param {string} adminUserId - ID of admin requesting the data
  * @returns {Promise<Array|null>} Array of users with roles or null
  */
-export async function getAllUsersWithRoles(adminUserId) {
+export async function getAllUsersWithRoles(adminUserId: string): Promise<any[] | null> {
   try {
     // Verify admin access
     const isAdminUser = await isAdmin(adminUserId)

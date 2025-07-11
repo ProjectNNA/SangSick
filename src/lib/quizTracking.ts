@@ -1,4 +1,14 @@
 import { supabase } from './supabase'
+import type { 
+  Question, 
+  QuizResults, 
+  QuizStats, 
+  QuizSession, 
+  CategoryPerformance,
+  QuestionAttempt,
+  EngagementStats,
+  PerformanceRating
+} from '../types'
 
 /**
  * Quiz Session Tracking Utilities
@@ -6,7 +16,7 @@ import { supabase } from './supabase'
  */
 
 // Start a new quiz session
-export const startQuizSession = async (userId) => {
+export const startQuizSession = async (userId: string): Promise<string | null> => {
   try {
     const { data, error } = await supabase
       .from('quiz_sessions')
@@ -29,7 +39,13 @@ export const startQuizSession = async (userId) => {
 }
 
 // 🆕 Record individual question attempt with detailed tracking
-export const recordQuestionAttempt = async (sessionId, userId, questionData, selectedAnswer, responseTimeMs) => {
+export const recordQuestionAttempt = async (
+  sessionId: string, 
+  userId: string, 
+  questionData: Question, 
+  selectedAnswer: number, 
+  responseTimeMs: number
+): Promise<any> => {
   try {
     const { data, error } = await supabase
       .rpc('record_question_attempt', {
@@ -55,10 +71,10 @@ export const recordQuestionAttempt = async (sessionId, userId, questionData, sel
 }
 
 // Update quiz session with progress (called when quiz completes)
-export const completeQuizSession = async (sessionId, quizResults) => {
+export const completeQuizSession = async (sessionId: string, quizResults: QuizResults): Promise<QuizSession | null> => {
   try {
     const endTime = new Date().toISOString()
-    const duration = Math.round((new Date(endTime) - new Date(quizResults.startTime)) / 1000)
+    const duration = Math.round((new Date(endTime).getTime() - new Date(quizResults.startTime).getTime()) / 1000)
 
     const { data, error } = await supabase
       .from('quiz_sessions')
@@ -89,7 +105,7 @@ export const completeQuizSession = async (sessionId, quizResults) => {
 }
 
 // 🆕 Get comprehensive user quiz statistics
-export const getUserQuizStats = async (userId) => {
+export const getUserQuizStats = async (userId: string): Promise<QuizStats> => {
   try {
     const { data, error } = await supabase
       .rpc('get_user_quiz_stats', { target_user_id: userId })
@@ -167,7 +183,7 @@ export const getUserQuizStats = async (userId) => {
 }
 
 // 🆕 Get category performance breakdown
-export const getCategoryPerformance = async (userId) => {
+export const getCategoryPerformance = async (userId: string): Promise<CategoryPerformance[]> => {
   try {
     const { data, error } = await supabase
       .from('category_performance')
@@ -185,7 +201,7 @@ export const getCategoryPerformance = async (userId) => {
 }
 
 // 🆕 Get user engagement stats
-export const getUserEngagementStats = async (userId) => {
+export const getUserEngagementStats = async (userId: string): Promise<EngagementStats> => {
   try {
     const { data, error } = await supabase
       .from('user_engagement_stats')
@@ -217,7 +233,7 @@ export const getUserEngagementStats = async (userId) => {
 }
 
 // Get recent quiz sessions for detailed history
-export const getRecentQuizSessions = async (userId, limit = 10) => {
+export const getRecentQuizSessions = async (userId: string, limit: number = 10): Promise<QuizSession[]> => {
   try {
     const { data, error } = await supabase
       .from('quiz_sessions')
@@ -237,7 +253,7 @@ export const getRecentQuizSessions = async (userId, limit = 10) => {
 }
 
 // Get quiz performance trends (last 30 days)
-export const getQuizTrends = async (userId) => {
+export const getQuizTrends = async (userId: string): Promise<any> => {
   try {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
@@ -260,7 +276,7 @@ export const getQuizTrends = async (userId) => {
 }
 
 // 🆕 Calculate user level based on total points (EXPONENTIAL GROWTH)
-export const calculateUserLevel = (totalPoints) => {
+export const calculateUserLevel = (totalPoints: number): number => {
   // Exponential thresholds: each level doubles the requirement
   const levelThresholds = [
     0,     // Level 1: 0-99 points (100 needed)
@@ -288,7 +304,7 @@ export const calculateUserLevel = (totalPoints) => {
 }
 
 // 🆕 Get level progress (points needed for next level) - EXPONENTIAL SYSTEM
-export const getLevelProgress = (totalPoints) => {
+export const getLevelProgress = (totalPoints: number) => {
   const currentLevel = calculateUserLevel(totalPoints)
   
   // Same exponential thresholds as calculateUserLevel
@@ -338,7 +354,7 @@ export const getLevelProgress = (totalPoints) => {
 }
 
 // 🆕 Calculate current streak based on consecutive correct answers
-export const calculateCurrentStreak = (attempts) => {
+export const calculateCurrentStreak = (attempts: any[]): number => {
   if (!attempts || attempts.length === 0) return 0
   
   let streak = 0
@@ -353,13 +369,13 @@ export const calculateCurrentStreak = (attempts) => {
 }
 
 // Calculate accuracy rate for a quiz session
-export const calculateAccuracy = (correctAnswers, totalQuestions) => {
+export const calculateAccuracy = (correctAnswers: number, totalQuestions: number): number => {
   if (totalQuestions === 0) return 0
   return Math.round((correctAnswers / totalQuestions) * 100)
 }
 
 // Format duration in seconds to readable string
-export const formatDuration = (seconds) => {
+export const formatDuration = (seconds: number): string => {
   if (seconds < 60) {
     return `${seconds}초`
   }
@@ -369,7 +385,7 @@ export const formatDuration = (seconds) => {
 }
 
 // Get performance rating based on score
-export const getPerformanceRating = (score) => {
+export const getPerformanceRating = (score: number): PerformanceRating => {
   if (score >= 80) return { rating: '우수', color: 'text-green-600', emoji: '🏆' }
   if (score >= 60) return { rating: '양호', color: 'text-blue-600', emoji: '👍' }
   if (score >= 40) return { rating: '보통', color: 'text-yellow-600', emoji: '👌' }
@@ -378,11 +394,11 @@ export const getPerformanceRating = (score) => {
 }
 
 // Calculate score from correct answers and question difficulties
-export const calculateQuizScore = (questions, userAnswers) => {
+export const calculateQuizScore = (questions: Question[], userAnswers: number[]) => {
   let score = 0
   let correctCount = 0
 
-  questions.forEach((question, index) => {
+  questions.forEach((question: Question, index: number) => {
     if (userAnswers[index] === question.correctAnswer) {
       score += question.difficulty * 10
       correctCount++
@@ -393,7 +409,7 @@ export const calculateQuizScore = (questions, userAnswers) => {
 }
 
 // 🆕 Get category emoji for display
-export const getCategoryEmoji = (category) => {
+export const getCategoryEmoji = (category: string): string => {
   const categoryEmojis = {
     '과학': '🔬',
     '역사': '🏛️',
@@ -402,11 +418,11 @@ export const getCategoryEmoji = (category) => {
     '스포츠': '⚽',
     '예술': '🎭'
   }
-  return categoryEmojis[category] || '📚'
+  return (categoryEmojis as Record<string, string>)[category] || '📚'
 }
 
 // 🆕 Format response time for display
-export const formatResponseTime = (ms) => {
+export const formatResponseTime = (ms: number): string => {
   if (ms < 1000) return `${ms}ms`
   return `${(ms / 1000).toFixed(1)}초`
 } 

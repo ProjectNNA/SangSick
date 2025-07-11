@@ -9,24 +9,25 @@ import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StatsPage from './pages/StatsPage'
 import AdminPage from './pages/AdminPage'
+import type { User } from './types'
 import './App.css'
 
 function App() {
-  const [user, setUser] = useState(null)
-  const [userRole, setUserRole] = useState('user')
+  const [user, setUser] = useState<User | null>(null)
+  const [userRole, setUserRole] = useState<'admin' | 'user'>('user')
   const [loading, setLoading] = useState(true)
   const [showLoginModal, setShowLoginModal] = useState(false)
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
+      setUser(session?.user as User | null ?? null)
       setLoading(false)
     })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
+      setUser(session?.user as User | null ?? null)
       // Log the event for debugging
       if (event === 'USER_UPDATED') {
         console.log('User metadata updated:', session?.user)
@@ -41,7 +42,7 @@ function App() {
     async function fetchUserRole() {
       if (user?.id) {
         const role = await getUserRole(user.id)
-        setUserRole(role)
+        setUserRole((role as 'admin' | 'user') || 'user')
       } else {
         setUserRole('user')
       }
@@ -66,7 +67,7 @@ function App() {
   }
 
   // Protected Route Component
-  const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode; adminOnly?: boolean }) => {
     if (!user) {
       return <Navigate to="/" replace />
     }

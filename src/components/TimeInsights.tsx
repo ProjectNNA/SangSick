@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { formatResponseTime } from '../lib/quizTracking'
+import type { TimeInsightsProps } from '../types'
 
-export default function TimeInsights({ timeData, engagementStats }) {
+export default function TimeInsights({ timeData, engagementStats }: TimeInsightsProps) {
   const [selectedTimeframe, setSelectedTimeframe] = useState('day') // 'day', 'week', 'month'
   
   if (!timeData && !engagementStats) {
@@ -32,7 +33,7 @@ export default function TimeInsights({ timeData, engagementStats }) {
   const averageSessionDuration = timeData?.average_session_duration_minutes || 0
 
   // Response time categories
-  const getResponseTimeCategory = (timeMs) => {
+  const getResponseTimeCategory = (timeMs: number) => {
     if (timeMs < 3000) return { label: '매우 빠름', color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/20', icon: '🚀' }
     if (timeMs < 8000) return { label: '빠름', color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20', icon: '⚡' }
     if (timeMs < 15000) return { label: '보통', color: 'text-yellow-600 dark:text-yellow-400', bg: 'bg-yellow-50 dark:bg-yellow-900/20', icon: '🤔' }
@@ -41,7 +42,7 @@ export default function TimeInsights({ timeData, engagementStats }) {
   }
 
   // Time of day analysis
-  const getTimeOfDayAnalysis = (hour) => {
+  const getTimeOfDayAnalysis = (hour: number) => {
     if (hour >= 6 && hour < 12) return { period: '오전', emoji: '🌅', color: 'from-yellow-400 to-orange-500' }
     if (hour >= 12 && hour < 18) return { period: '오후', emoji: '☀️', color: 'from-orange-400 to-red-500' }
     if (hour >= 18 && hour < 22) return { period: '저녁', emoji: '🌆', color: 'from-purple-400 to-pink-500' }

@@ -4,20 +4,22 @@ import {
   getRecentQuizSessions, 
   formatDuration, 
   getPerformanceRating,
-  getCategoryPerformance,
-  getUserEngagementStats,
   calculateUserLevel,
   getLevelProgress,
-  getCategoryEmoji,
   formatResponseTime
 } from '../lib/quizTracking'
 import CategoryPerformance from '../components/CategoryPerformance'
 import TimeInsights from '../components/TimeInsights'
 import Leaderboard from '../components/Leaderboard'
+import type { User, QuizStats, QuizSession } from '../types'
 
-export default function StatsPage({ user }) {
-  const [quizStats, setQuizStats] = useState(null)
-  const [recentSessions, setRecentSessions] = useState([])
+interface StatsPageProps {
+  user: User;
+}
+
+export default function StatsPage({ user }: StatsPageProps) {
+  const [quizStats, setQuizStats] = useState<QuizStats | null>(null)
+  const [recentSessions, setRecentSessions] = useState<QuizSession[]>([])
   const [statsLoading, setStatsLoading] = useState(true)
 
   // Fetch quiz statistics on component mount
@@ -267,7 +269,7 @@ export default function StatsPage({ user }) {
           {/* Enhanced Category Performance */}
           <CategoryPerformance 
             categories={quizStats.category_performance}
-            onCategoryClick={(category) => {
+            onCategoryClick={(category: string) => {
               // Could implement category-specific quiz filtering here
               console.log('Category clicked:', category)
             }}
@@ -339,7 +341,7 @@ export default function StatsPage({ user }) {
                 📈 최근 퀴즈 기록
               </h2>
               <div className="space-y-4">
-                {recentSessions.map((session) => {
+                {recentSessions.map((session: QuizSession) => {
                   const performance = getPerformanceRating(session.score)
                   const accuracy = Math.round((session.correct_answers / session.total_questions) * 100)
                   

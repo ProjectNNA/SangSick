@@ -1,5 +1,5 @@
 // Preset avatars mapping
-const PRESET_AVATARS = {
+const PRESET_AVATARS: Record<string, string> = {
   lion: '🦁',
   elephant: '🐘',
   penguin: '🐧',
@@ -12,8 +12,17 @@ const PRESET_AVATARS = {
   balloon: '🎈'
 }
 
-export default function Avatar({ avatarUrl, fallback, size = 'md', onClick }) {
-  const sizeClasses = {
+type AvatarSize = 'sm' | 'md' | 'lg' | 'xl'
+
+interface AvatarProps {
+  avatarUrl?: string;
+  fallback?: string;
+  size?: AvatarSize;
+  onClick?: () => void;
+}
+
+export default function Avatar({ avatarUrl, fallback, size = 'md', onClick }: AvatarProps) {
+  const sizeClasses: Record<AvatarSize, string> = {
     sm: 'w-8 h-8 text-sm',
     md: 'w-10 h-10 text-base',
     lg: 'w-16 h-16 text-2xl',
@@ -47,10 +56,14 @@ export default function Avatar({ avatarUrl, fallback, size = 'md', onClick }) {
         alt="Avatar"
         className={`${sizeClasses[size]} rounded-full object-cover ${hoverClasses}`}
         onClick={onClick}
-        onError={(e) => {
+        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
           // Fallback to initials if image fails to load
-          e.target.style.display = 'none'
-          e.target.nextSibling.style.display = 'flex'
+          const target = e.target as HTMLImageElement
+          target.style.display = 'none'
+          const nextSibling = target.nextSibling as HTMLElement
+          if (nextSibling) {
+            nextSibling.style.display = 'flex'
+          }
         }}
       />
     )

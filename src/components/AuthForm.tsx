@@ -10,7 +10,7 @@ export default function AuthForm() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage('')
@@ -44,7 +44,7 @@ export default function AuthForm() {
         
         setMessage('회원가입이 완료되었습니다! 이메일을 확인해주세요.')
       }
-    } catch (error) {
+    } catch (error: any) {
       setMessage(error.message)
     } finally {
       setLoading(false)

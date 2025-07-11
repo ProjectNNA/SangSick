@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import QuizGame from '../components/QuizGame'
+import type { User, QuizResults } from '../types'
 
-export default function HomePage({ user }) {
+interface HomePageProps {
+  user: User;
+}
+
+export default function HomePage({ user }: HomePageProps) {
   const [gameState, setGameState] = useState('menu') // 'menu', 'playing', 'finished'
   const [score, setScore] = useState(0)
 
@@ -10,7 +15,7 @@ export default function HomePage({ user }) {
     setScore(0)
   }
 
-  const handleQuizComplete = (quizResults) => {
+  const handleQuizComplete = (quizResults: QuizResults | number) => {
     // Handle both old format (just score) and new format (object with details)
     if (typeof quizResults === 'number') {
       setScore(quizResults)
