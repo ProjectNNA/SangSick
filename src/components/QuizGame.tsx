@@ -1,217 +1,176 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { fetchRandomQuestions } from '../lib/fetchQuestions.js'
-import { updateQuestionStats } from '../lib/updateQuestionStats.js'
+import { useState, useEffect } from 'react'
+import { updateAnswerStatistics } from '../utils/statistics'
 import { 
-  updateAnswerStatistics, 
-  getAnswerPercentages, 
-  saveStatistics, 
-  loadStatistics 
-} from '../utils/statistics.js'
-import { startQuizSession, completeQuizSession, recordQuestionAttempt } from '../lib/quizTracking.js'
-import { supabase } from '../lib/supabase.js'
-import type { Question, QuizResults, User } from '../types'
+  useSmartQuestionSelection,
+  usePrefetchQuizQuestions
+} from '../queries/questionQueries'
+import {
+  useRecordQuestionAttemptMutation,
+  useCompleteQuizMutation
+} from '../queries/userQueries'
+import type { Question, QuizResults, QuizGameProps, QuestionAttempt } from '../types'
 
-// ✨ EXAMPLE: Clean auto-generated type syntax (from your database.types.ts)
-// import { Database } from '../types/database.types'
-// type Question = Database['public']['Tables']['questions']['Row']
-// type QuizSession = Database['public']['Tables']['quiz_sessions']['Row'] 
-// type QuestionAttempt = Database['public']['Tables']['question_attempts']['Row']
-// Much cleaner than: Database['public']['Tables']['questions']['Row'] everywhere!
+export default function QuizGame({ onComplete, user }: QuizGameProps) {
+  // 🚀 Use Smart Question Selection with TanStack Query
+  const { 
+    questions, 
+    isLoading: questionsLoading, 
+    error: questionsError,
+    algorithm 
+  } = useSmartQuestionSelection(10)
 
-export default function QuizGame({ onComplete, user }) {
-  const [questions, setQuestions] = useState([])
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState(null)
-  const [timeLeft, setTimeLeft] = useState(10)
-  const [score, setScore] = useState(0)
-  const [showResult, setShowResult] = useState(false)
-  const [isAnswered, setIsAnswered] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [sessionId, setSessionId] = useState(null)
-  const [startTime, setStartTime] = useState(null)
-  const [correctAnswers, setCorrectAnswers] = useState(0)
+  // TanStack Query Mutations
+  const recordAttemptMutation = useRecordQuestionAttemptMutation()
+  const completeQuizMutation = useCompleteQuizMutation()
   
-  // 🆕 Enhanced tracking state
-  const [questionStartTime, setQuestionStartTime] = useState(null)
-  const [responseTimes, setResponseTimes] = useState([])
+  // Prefetch functionality for performance
+  const { prefetchQuestions } = usePrefetchQuizQuestions()
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [score, setScore] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(10)
+  const [showResult, setShowResult] = useState(false)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [gameOver, setGameOver] = useState(false)
+  const [correctAnswers, setCorrectAnswers] = useState(0)
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [startTime, setStartTime] = useState<string | null>(null)
+  const [responseTimes, setResponseTimes] = useState<number[]>([])
   const [currentStreak, setCurrentStreak] = useState(0)
   const [bestStreak, setBestStreak] = useState(0)
-  const [questionAttempts, setQuestionAttempts] = useState([])
+  const [questionAttempts, setQuestionAttempts] = useState<QuestionAttempt[]>([])
+  const [questionStartTime, setQuestionStartTime] = useState<number | null>(null)
 
-  // Function to randomly select 10 questions from all available questions
-  const selectRandomQuestions = (allQuestions, count = 10) => {
-    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random())
-    return shuffled.slice(0, count)
-  }
+  const currentQuestion = questions[currentQuestionIndex] || null
 
-  // Load questions with statistics on component mount
+  // Create session when questions are loaded
   useEffect(() => {
-    const loadQuestions = async () => {
-      setLoading(true)
-      try {
-        // Fetch questions from Supabase
-        const fetched = await fetchRandomQuestions(50) // grab up to 50 then shuffle
-        // Merge local statistics (from localStorage) with fetched data
-        const questionsWithStats = loadStatistics(fetched)
-        const randomQuestions = selectRandomQuestions(questionsWithStats, 10)
-        setQuestions(randomQuestions)
-        
-        // Start quiz session tracking
-        if (user?.id) {
-          const currentTime = new Date().toISOString()
-          setStartTime(currentTime)
-          const newSessionId = await startQuizSession(user.id)
-          setSessionId(newSessionId)
-        }
-      } catch (error) {
-        console.error("Failed to load questions:", error)
-        setQuestions([])
-      } finally {
-        setLoading(false)
-      }
+    if (questions.length > 0 && !sessionId) {
+      const currentTime = new Date().toISOString()
+      const newSessionId = crypto.randomUUID()
+      setStartTime(currentTime)
+      setSessionId(newSessionId)
+      
+      // Prefetch next set of questions for better performance
+      prefetchQuestions('difficulty', 10)
+      
+      console.log(`🎯 Quiz started with ${algorithm} algorithm`)
     }
-    loadQuestions()
-  }, [user?.id])
+  }, [questions.length, sessionId, prefetchQuestions, algorithm])
 
   // 🆕 Start timing when question loads
   useEffect(() => {
-    if (questions.length > 0 && !isAnswered) {
+    if (questionStartTime === null && currentQuestion) {
       setQuestionStartTime(Date.now())
     }
-  }, [currentQuestionIndex, questions, isAnswered])
-
-  const currentQuestion = questions[currentQuestionIndex]
+  }, [currentQuestionIndex, currentQuestion, questionStartTime])
 
   // Timer effect
   useEffect(() => {
-    if (timeLeft > 0 && !isAnswered) {
+    if (timeLeft > 0 && !showResult && !gameOver) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
       return () => clearTimeout(timer)
-    } else if (timeLeft === 0 && !isAnswered) {
-      // Time's up - show result and record as unanswered
-      setIsAnswered(true)
-      setShowResult(true)
-      
-      // Update stats for unanswered question
-      handleAnswerSelect(null)
+    } else if (timeLeft === 0 && !showResult) {
+      handleAnswerSelect(-1) // No answer selected
     }
-  }, [timeLeft, isAnswered])
+  }, [timeLeft, showResult, gameOver])
 
-  const handleAnswerSelect = async (answerIndex) => {
-    if (isAnswered) return
-    
-    // 🆕 Calculate response time
-    const responseTime = questionStartTime ? Date.now() - questionStartTime : 0
+  const handleAnswerSelect = async (answerIndex: number) => {
+    if (showResult || !currentQuestion || !questionStartTime) return
+
+    const responseTime = Date.now() - questionStartTime
     setResponseTimes(prev => [...prev, responseTime])
-    
     setSelectedAnswer(answerIndex)
-    setIsAnswered(true)
     setShowResult(true)
     
-    // 🆕 Record detailed question attempt
     const isCorrect = answerIndex === currentQuestion.correctAnswer
-    if (sessionId && user?.id) {
-      await recordQuestionAttempt(
-        sessionId,
-        user.id,
-        currentQuestion,
-        answerIndex,
-        responseTime
-      )
-    }
-    
-    // 🆕 Update streak tracking
-    if (isCorrect) {
-      const newStreak = currentStreak + 1
-      setCurrentStreak(newStreak)
-      setBestStreak(prev => Math.max(prev, newStreak))
-    } else {
-      setCurrentStreak(0)
-    }
-    
-    // Store question attempt for summary
+
+    // 🎮 Track detailed attempt for later statistics
     setQuestionAttempts(prev => [...prev, {
       question: currentQuestion,
       selectedAnswer: answerIndex,
       isCorrect,
-      responseTime
+      responseTimeMs: responseTime
     }])
-    
-    // Update global statistics in Supabase (legacy support)
-    try {
-      await updateQuestionStats(currentQuestion.id, answerIndex)
+
+    // 🚀 Record the attempt using TanStack Query mutation
+    if (sessionId && user?.id) {
+      recordAttemptMutation.mutate({
+        sessionId,
+        userId: user.id,
+        questionData: currentQuestion,
+        selectedAnswer: answerIndex,
+        responseTimeMs: responseTime
+      })
       
-      // Also update local state for immediate UI feedback
-      const updatedQuestions = updateAnswerStatistics(questions, currentQuestion.id, answerIndex)
-      setQuestions(updatedQuestions)
-    } catch (error) {
-      console.error('Failed to update question stats:', error)
-      // Still update local state even if Supabase update fails
-      const updatedQuestions = updateAnswerStatistics(questions, currentQuestion.id, answerIndex)
-      setQuestions(updatedQuestions)
+      // Note: Questions are now read-only from cache, updateAnswerStatistics 
+      // will be handled by the mutation and cache invalidation
     }
-    
-    // Calculate score based on difficulty and track correct answers
+
     if (answerIndex === currentQuestion.correctAnswer) {
       const points = currentQuestion.difficulty * 10
       setScore(prev => prev + points)
       setCorrectAnswers(prev => prev + 1)
+      setCurrentStreak(prev => {
+        const newStreak = prev + 1
+        setBestStreak(current => Math.max(current, newStreak))
+        return newStreak
+      })
+    } else {
+      setCurrentStreak(0)
     }
+
+    setTimeout(() => {
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1)
+        setSelectedAnswer(null)
+        setShowResult(false)
+        setTimeLeft(10)
+        setQuestionStartTime(null)
+      } else {
+        setGameOver(true)
+        finishQuiz()
+      }
+    }, 2000)
   }
 
-  const handleNextQuestion = async () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1)
-      setSelectedAnswer(null)
-      setTimeLeft(10)
-      setShowResult(false)
-      setIsAnswered(false)
-    } else {
-      // 🆕 Calculate enhanced quiz metrics
-      const averageResponseTime = responseTimes.length > 0 
-        ? Math.round(responseTimes.reduce((sum, time) => sum + time, 0) / responseTimes.length)
-        : 0
-      
-      // Quiz completed - save session data
-      if (sessionId && startTime) {
-        const quizResults = {
-          score,
-          correctAnswers,
-          totalQuestions: questions.length,
-          startTime,
-          // 🆕 Enhanced metrics
-          bestStreak,
-          averageResponseTime
-        }
-        
-        await completeQuizSession(sessionId, quizResults)
-      }
-      
-      // 🆕 Pass enhanced quiz data to completion handler
-      onComplete({
-        score,
-        correctAnswers,
-        totalQuestions: questions.length,
-        accuracy: Math.round((correctAnswers / questions.length) * 100),
-        // Enhanced metrics
-        bestStreak,
-        averageResponseTime,
-        responseTimes,
-        questionAttempts,
-        categoryBreakdown: calculateCategoryBreakdown(questionAttempts)
-      })
+  const finishQuiz = async () => {
+    if (!sessionId || !startTime) return
+
+    const endTime = new Date().toISOString()
+    const averageResponseTime = responseTimes.length > 0 ? 
+      Math.round(responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length) : 0
+
+    const quizResults: QuizResults = {
+      sessionId,
+      score,
+      correctAnswers,
+      totalQuestions: questions.length,
+      startTime,
+      endTime,
+      attempts: questionAttempts,
+      bestStreak,
+      averageResponseTime
     }
+
+    if (user?.id) {
+      // 🚀 Complete quiz using TanStack Query mutation
+      completeQuizMutation.mutate({ sessionId, quizResults })
+    }
+
+    onComplete(quizResults)
   }
 
   // 🆕 Calculate category performance breakdown
-  const calculateCategoryBreakdown = (attempts) => {
-    const breakdown = {}
+  const calculateCategoryBreakdown = (attempts: QuestionAttempt[]) => {
+    const breakdown: Record<string, any> = {}
+    
     attempts.forEach(attempt => {
       const category = attempt.question.category
       if (!breakdown[category]) {
         breakdown[category] = {
-          total: 0,
           correct: 0,
+          total: 0,
           points: 0
         }
       }
@@ -221,43 +180,101 @@ export default function QuizGame({ onComplete, user }) {
         breakdown[category].points += attempt.question.difficulty * 10
       }
     })
+    
     return breakdown
   }
 
-  const getAnswerButtonClass = (answerIndex) => {
-    let baseClass = "w-full p-4 text-left rounded-lg border-2 transition-all duration-200 "
+  const getAnswerButtonClass = (answerIndex: number) => {
     if (!showResult) {
-      return baseClass +
-        "border-gray-200 bg-white text-gray-900 hover:border-indigo-300 hover:bg-indigo-50 " +
-        "dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:border-indigo-400 dark:hover:bg-gray-600"
+      return "w-full text-left p-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-gray-700 transition-all duration-200 text-gray-800 dark:text-gray-200"
     }
-    if (answerIndex === currentQuestion.correctAnswer) {
-      return baseClass + "border-green-500 bg-green-100 text-green-800 dark:border-green-400 dark:bg-green-900 dark:text-green-200"
-    } else if (answerIndex === selectedAnswer) {
-      return baseClass + "border-red-500 bg-red-100 text-red-800 dark:border-red-400 dark:bg-red-900 dark:text-red-200"
-    } else {
-      return baseClass + "border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+    
+    // Show results
+    if (answerIndex === currentQuestion?.correctAnswer) {
+      return "w-full text-left p-4 rounded-lg border-2 border-green-500 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200"
     }
+    
+    if (answerIndex === selectedAnswer && answerIndex !== currentQuestion?.correctAnswer) {
+      return "w-full text-left p-4 rounded-lg border-2 border-red-500 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200"
+    }
+    
+    return "w-full text-left p-4 rounded-lg border-2 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200 opacity-50"
   }
 
-  const getTimerColor = () => {
-    if (timeLeft > 20) return "text-green-600 dark:text-green-400"
-    if (timeLeft > 10) return "text-yellow-600 dark:text-yellow-300"
-    return "text-red-600 dark:text-red-400"
-  }
-
-  if (loading) {
+  // Handle loading states
+  if (questionsLoading) {
     return (
-      <div className="max-w-4xl mx-auto text-center py-10">
-        <p className="text-lg text-gray-600 dark:text-gray-300">문제를 불러오는 중입니다...</p>
+      <div className="max-w-4xl mx-auto p-8">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
+          <div className="text-center py-12">
+            <div className="animate-spin text-6xl mb-4">🎯</div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              퀴즈를 준비하고 있습니다...
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              최적화된 문제를 선별하는 중입니다
+            </p>
+          </div>
+        </div>
       </div>
     )
   }
 
-  if (!currentQuestion) {
+  // Handle error states
+  if (questionsError || questions.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto text-center py-10">
-        <p className="text-lg text-gray-600 dark:text-gray-300">문제가 없습니다.</p>
+      <div className="max-w-4xl mx-auto p-8">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              문제를 불러올 수 없습니다
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              퀴즈 문제를 가져오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+            </p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              다시 시도
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  const getTimerColor = () => {
+    if (timeLeft <= 3) return 'text-red-600 dark:text-red-400'
+    if (timeLeft <= 5) return 'text-yellow-600 dark:text-yellow-400'
+    return 'text-green-600 dark:text-green-400'
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center py-8">
+          <div className="text-xl">문제를 불러오는 중...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (gameOver) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            퀴즈 완료! 🎉
+          </h2>
+          <div className="text-6xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
+            {score}점
+          </div>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+            {correctAnswers}/{questions.length} 문제 정답! (정답률: {Math.round((correctAnswers / questions.length) * 100)}%)
+          </p>
+        </div>
       </div>
     )
   }
@@ -291,88 +308,75 @@ export default function QuizGame({ onComplete, user }) {
       </div>
 
       {/* Question Card */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8 mb-6">
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-4">
-              <span className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 px-3 py-1 rounded-full text-sm font-medium">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden mb-6">
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-700 p-6 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            <div className="flex items-center space-x-2">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-semibold">
                 {currentQuestion?.category}
               </span>
-              <span className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-1 rounded-full text-sm">
+              <span className="bg-white/20 px-3 py-1 rounded-full text-sm">
                 {currentQuestion?.subcategory}
               </span>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="text-yellow-500 text-lg">
-                {/* Auto-generate stars from difficulty (1-5) */}
+            <div className="flex items-center space-x-4">
+              <div className="text-lg font-bold">
                 {"★".repeat(currentQuestion?.difficulty || 1)}{"☆".repeat(5 - (currentQuestion?.difficulty || 1))}
               </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="bg-white/20 px-3 py-1 rounded-full text-sm font-bold">
                 {(currentQuestion?.difficulty || 1) * 10}점
-              </span>
+              </div>
             </div>
           </div>
-          
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+          <h2 className="text-2xl font-bold leading-relaxed">
             {currentQuestion?.question}
           </h2>
         </div>
-
-        {/* Answer Options */}
-        <div className="space-y-3">
-          {currentQuestion?.options.map((option, index) => (
+        
+        <div className="p-6">
+          {currentQuestion?.options.map((option: string, index: number) => (
             <button
               key={index}
               onClick={() => handleAnswerSelect(index)}
-              disabled={isAnswered}
-              className={`${getAnswerButtonClass(index)}`}
+              disabled={showResult}
+              className={getAnswerButtonClass(index)}
             >
-              <span className="font-medium">
-                {String.fromCharCode(65 + index)}. {option}
-              </span>
+              <span className="font-semibold mr-3">{index + 1}.</span>
+              {option}
             </button>
           ))}
         </div>
 
-        {/* Statistics Summary */}
-        {showResult && currentQuestion?.totalCount > 0 && (
-          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-sm text-blue-700 dark:text-blue-300">
+        {/* Results section */}
+        {showResult && currentQuestion?.totalCount && currentQuestion.totalCount > 0 && (
+          <div className="border-t dark:border-gray-700 p-6 bg-gray-50 dark:bg-gray-800">
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
               총 {currentQuestion.totalCount}명이 이 문제를 풀었습니다
-            </div>
-          </div>
-        )}
-
-        {/* Result Display */}
-        {showResult && (
-          <div className="mt-6">
-            <div className="mb-4">
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
-                정답: {currentQuestion.correctAnswer + 1}. {currentQuestion.options[currentQuestion.correctAnswer]}
-              </span>
-            </div>
-            {/* 해설 */}
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
-              <div className="font-bold text-gray-800 dark:text-gray-100 mb-1">해설</div>
-              <div className="text-gray-700 dark:text-gray-200 text-sm">
-                {currentQuestion.explanation}
+            </p>
+            
+            <div className="space-y-3">
+              <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-green-600 dark:text-green-400 text-xl">✓</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    정답: {currentQuestion.correctAnswer + 1}. {currentQuestion.options[currentQuestion.correctAnswer]}
+                  </span>
+                </div>
               </div>
-            </div>
-            {/* 지식의 여운 */}
-            <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 border-l-4 border-indigo-400 dark:border-indigo-600">
-              <div className="font-bold text-gray-800 dark:text-gray-100 mb-1">지식의 여운</div>
-              <div className="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line">
-                "{currentQuestion.reflection}"
+              
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">💡 해설</h4>
+                <p className="text-blue-800 dark:text-blue-200 text-sm leading-relaxed">
+                  {currentQuestion.explanation}
+                </p>
               </div>
-            </div>
-            {/* Next Question Button */}
-            <div className="mt-6 text-center">
-              <button
-                onClick={handleNextQuestion}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition-colors text-lg"
-              >
-                {currentQuestionIndex < questions.length - 1 ? '다음 문제' : '완료'}
-              </button>
+              
+              <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+                <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">🌟 지식의 여운</h4>
+                <p className="text-purple-800 dark:text-purple-200 text-sm italic leading-relaxed">
+                  "{currentQuestion.reflection}"
+                </p>
+              </div>
             </div>
           </div>
         )}

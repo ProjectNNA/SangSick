@@ -41,9 +41,13 @@ The application requires the following environment variables:
 
 These should be set in a `.env` file in the root directory. The `.env` file is already added to `.gitignore` to keep your credentials secure.
 
+## Development Environment
+
+**Note for AI Assistants:** This project is developed on Windows 10 (win32 10.0.26100) using PowerShell. Standard `grep` command is not available by default on Windows systems. Use PowerShell alternatives like `Select-String` or the `grep_search` tool (ripgrep) instead of suggesting raw `grep` commands.
+
 ## Tech Stack
 
-- React 18
+- React 18 + TypeScript
 - Vite
 - Tailwind CSS
 - Supabase (Authentication & Database)

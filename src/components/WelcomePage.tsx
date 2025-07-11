@@ -43,10 +43,14 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
             <span className="text-2xl font-bold text-indigo-700 dark:text-yellow-300 tracking-tight select-none">
               상식퀴즈
             </span>
+          </div>
+
+          {/* Right: Dark mode toggle + Login Button */}
+          <div className="flex items-center space-x-4">
             {/* Dark/Light mode toggle */}
             <button
               onClick={toggleDarkMode}
-              className="ml-2 p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
@@ -60,10 +64,6 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
                 </svg>
               )}
             </button>
-          </div>
-
-          {/* Right: Login Button */}
-          <div className="flex items-center space-x-4">
             <button
               onClick={onLoginClick}
               className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition-colors text-sm font-medium"

@@ -1,89 +1,80 @@
-import { useEffect, useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
 import { getUserRole } from '../lib/roleUtils'
-import { getUserQuizStats, calculateUserLevel, getLevelProgress } from '../lib/quizTracking'
-import Avatar from './Avatar'
+import { getUserQuizStats } from '../lib/quizTracking'
+import { calculateUserLevel, getLevelProgress } from '../lib/quizTracking'
+import type { ProfileHeaderProps, QuizStats } from '../types'
 
-export default function ProfileHeader({ user, onLogout }) {
-  const nickname = user.user_metadata?.nickname || user.email?.split('@')[0]
-  const [darkMode, setDarkMode] = useState(() => {
+export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [userRole, setUserRole] = useState<string>('user')
+  const [engagementStats, setEngagementStats] = useState<QuizStats | null>(null)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark' ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme'))
+      return localStorage.getItem('darkMode') === 'true' || 
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
     }
     return false
   })
-  const [menuOpen, setMenuOpen] = useState(false)
-  const [userRole, setUserRole] = useState('user')
-  const [engagementStats, setEngagementStats] = useState(null)
-  const [statsLoading, setStatsLoading] = useState(true)
-  const menuRef = useRef(null)
-  const navigate = useNavigate()
+  const menuRef = useRef<HTMLDivElement>(null)
 
+  // Load user role and engagement stats
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }, [darkMode])
-
-  // Fetch user role on component mount
-  useEffect(() => {
-    async function fetchUserRole() {
+    const loadUserData = async () => {
       if (user?.id) {
-        const role = await getUserRole(user.id)
-        setUserRole(role)
+        try {
+          const role = await getUserRole(user.id)
+          setUserRole(role || 'user')
+        } catch (error) {
+          console.error('Error loading user role:', error)
+        }
+
+        try {
+          const stats = await getUserQuizStats(user.id)
+          setEngagementStats(stats)
+        } catch (error) {
+          console.error('Error loading engagement stats:', error)
+        }
       }
     }
-    fetchUserRole()
+
+    loadUserData()
   }, [user?.id])
 
-  // Fetch engagement stats for widgets
+  // Handle clicks outside menu
   useEffect(() => {
-    async function fetchEngagementStats() {
-      if (!user?.id) return
-      
-      setStatsLoading(true)
-      try {
-        const stats = await getUserQuizStats(user.id)
-        setEngagementStats(stats)
-      } catch (error) {
-        console.error('Error fetching engagement stats:', error)
-      } finally {
-        setStatsLoading(false)
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
       }
     }
-    fetchEngagementStats()
-  }, [user?.id])
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuOpen(false)
-      }
-    }
-    if (menuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [menuOpen])
+  }, [])
 
-  // Calculate engagement widget data
-  const userLevel = engagementStats?.engagement_stats?.total_points 
+  // Dark mode toggle
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode
+    setIsDarkMode(newDarkMode)
+    localStorage.setItem('darkMode', newDarkMode.toString())
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
+  // Calculate user level and progress
+  const userLevel = engagementStats?.engagement_stats?.total_points
     ? calculateUserLevel(engagementStats.engagement_stats.total_points)
     : 1
-  
+
   const levelProgress = engagementStats?.engagement_stats?.total_points
     ? getLevelProgress(engagementStats.engagement_stats.total_points)
-    : { level: 1, progress: 0, needed: 100, percentage: 0 }
+    : { current: 0, next: 100, percentage: 0 }
 
   const currentStreak = engagementStats?.engagement_stats?.current_streak || 0
   const totalPoints = engagementStats?.engagement_stats?.total_points || 0
@@ -91,14 +82,11 @@ export default function ProfileHeader({ user, onLogout }) {
   const overallAccuracy = engagementStats?.basic_stats?.overall_accuracy || 0
 
   return (
-    <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Left: Logo and App Name */}
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-          >
+    <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo and App Name */}
+          <div className="flex items-center space-x-3">
             <span className="w-10 h-10 block">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" fill="#6366F1"/>
@@ -110,190 +98,214 @@ export default function ProfileHeader({ user, onLogout }) {
                 </g>
               </svg>
             </span>
-            <span className="text-2xl font-bold text-indigo-700 dark:text-yellow-300 tracking-tight select-none">
-              상식퀴즈
-            </span>
-          </button>
-        </div>
-
-        {/* Center: Engagement Widgets */}
-        {statsLoading ? (
-          <div className="hidden md:flex items-center space-x-4">
-            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-20 rounded-full"></div>
-            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-16 rounded-full"></div>
-            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-18 rounded-full"></div>
+            <div>
+              <h1 className="text-xl font-bold text-indigo-700 dark:text-yellow-300 tracking-tight">
+                SangSick
+              </h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 -mt-1">
+                상식 퀴즈 플랫폼
+              </p>
+            </div>
           </div>
-        ) : engagementStats?.basic_stats && (
-          <div className="hidden md:flex items-center space-x-4">
-            {/* Streak Counter */}
-            {currentStreak > 0 && (
-              <button
-                onClick={() => navigate('/stats')}
-                className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
-                title={`현재 ${currentStreak}일 연속 학습 중! 클릭하여 상세 통계 보기`}
-              >
-                <span className="text-lg">🔥</span>
-                <span>{currentStreak}일 연속</span>
-              </button>
-            )}
 
-            {/* Level Badge */}
-            <button
-              onClick={() => navigate('/stats')}
-              className="flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
-              title={`레벨 ${userLevel} (${levelProgress.progress}/${levelProgress.needed} 포인트)`}
-            >
-              <span className="text-lg">🎖️</span>
-              <span>LV.{userLevel}</span>
-              <div className="w-8 bg-white/20 rounded-full h-1.5 ml-1">
-                <div 
-                  className="bg-white h-1.5 rounded-full transition-all duration-300"
-                  style={{ width: `${levelProgress.percentage}%` }}
-                ></div>
+          {/* User Stats Summary (visible on larger screens) */}
+          {engagementStats?.basic_stats && (
+            <div className="hidden md:flex items-center space-x-6 text-sm">
+              <div className="text-center">
+                <div className="font-bold text-indigo-600 dark:text-indigo-400">
+                  Lv.{userLevel}
+                </div>
+                <div className="text-gray-500 dark:text-gray-400">레벨</div>
               </div>
-            </button>
-
-            {/* Achievement Badge */}
-            {perfectSessions > 0 && (
-              <button
-                onClick={() => navigate('/stats')}
-                className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
-                title={`${perfectSessions}개의 완벽한 퀴즈 세션 달성!`}
-              >
-                <span className="text-lg">🏆</span>
-                <span>{perfectSessions}개 완벽</span>
-              </button>
-            )}
-
-            {/* Accuracy Badge */}
-            {overallAccuracy > 0 && (
-              <button
-                onClick={() => navigate('/stats')}
-                className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
-                title={`전체 정답률 ${overallAccuracy}%`}
-              >
-                <span className="text-lg">📊</span>
-                <span>{overallAccuracy}% 정답률</span>
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Mobile: Compact Engagement Indicators */}
-        {statsLoading ? (
-          <div className="flex md:hidden items-center space-x-2">
-            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-5 w-12 rounded"></div>
-            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-5 w-10 rounded"></div>
-          </div>
-        ) : engagementStats?.basic_stats && (
-          <div className="flex md:hidden items-center space-x-2">
-            {/* Mobile Level Badge */}
-            <button
-              onClick={() => navigate('/stats')}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
-              title={`레벨 ${userLevel}`}
-            >
-              LV.{userLevel}
-            </button>
-            
-            {/* Mobile Streak */}
-            {currentStreak > 0 && (
-              <button
-                onClick={() => navigate('/stats')}
-                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
-                title={`${currentStreak}일 연속`}
-              >
-                🔥{currentStreak}
-              </button>
-            )}
-
-            {/* Mobile Achievement Count */}
-            {perfectSessions > 0 && (
-              <button
-                onClick={() => navigate('/stats')}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
-                title={`${perfectSessions}개 완벽`}
-              >
-                🏆{perfectSessions}
-              </button>
-            )}
-          </div>
-        )}
-
-        {/* Right: All icons and user area */}
-        <div className="flex items-center space-x-4">
-          {/* Dark/Light mode toggle */}
-          <button
-            onClick={() => setDarkMode((d) => !d)}
-            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Toggle dark mode"
-          >
-            {darkMode ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <circle cx="12" cy="12" r="5" fill="currentColor" />
-                <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 7.07l-1.41-1.41M6.34 6.34L4.93 4.93m12.02 0l-1.41 1.41M6.34 17.66l-1.41 1.41" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
-              </svg>
-            )}
-          </button>
-          {/* User area: avatar + name, dropdown menu */}
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen((open) => !open)}
-              className="flex items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-900 dark:text-gray-100"
-              aria-haspopup="true"
-              aria-expanded={menuOpen}
-            >
-              <Avatar 
-                avatarUrl={user.user_metadata?.avatar_url}
-                fallback={nickname}
-                size="md"
-              />
-              <span className="text-base font-semibold text-gray-900 dark:text-yellow-200">
-                {nickname}님
-              </span>
-              {/* Down arrow icon */}
-              <svg className={`w-4 h-4 ml-1 transition-transform ${menuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {/* Dropdown menu */}
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 py-2 animate-fade-in">
-                {userRole === 'admin' && (
-                  <button
-                    className="w-full text-left px-4 py-2 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-gray-800 transition-colors"
-                    onClick={() => { setMenuOpen(false); navigate('/admin'); }}
-                  >
-                    관리
-                  </button>
-                )}
-                <button
-                  className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  onClick={() => { setMenuOpen(false); navigate('/stats'); }}
-                >
-                  📊 통계
-                </button>
-                <button
-                  className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  onClick={() => { setMenuOpen(false); navigate('/profile'); }}
-                >
-                  프로필
-                </button>
-                <button
-                  className="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-gray-800 transition-colors"
-                  onClick={() => { setMenuOpen(false); onLogout(); }}
-                >
-                  로그아웃
-                </button>
+              
+              <div className="text-center">
+                <div className="font-bold text-yellow-600 dark:text-yellow-400">
+                  {totalPoints}
+                </div>
+                <div className="text-gray-500 dark:text-gray-400">포인트</div>
               </div>
-            )}
+              
+              {currentStreak > 0 && (
+                <div className="text-center">
+                  <div className="font-bold text-orange-600 dark:text-orange-400">
+                    🔥 {currentStreak}
+                  </div>
+                  <div className="text-gray-500 dark:text-gray-400">연속</div>
+                </div>
+              )}
+              
+              <div className="text-center">
+                <div className="font-bold text-green-600 dark:text-green-400">
+                  {Math.round(overallAccuracy)}%
+                </div>
+                <div className="text-gray-500 dark:text-gray-400">정확도</div>
+              </div>
+            </div>
+          )}
+
+          {/* Right Side - Dark Mode Toggle, User Menu */}
+          <div className="flex items-center space-x-4">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              title={isDarkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            >
+              {isDarkMode ? (
+                <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                </svg>
+              )}
+            </button>
+
+            {/* User Menu */}
+            <div className="relative" ref={menuRef}>
+              <button
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                {/* User Avatar */}
+                <div className="w-8 h-8 bg-indigo-600 dark:bg-yellow-400 rounded-full flex items-center justify-center">
+                  <span className="text-white dark:text-gray-900 font-semibold text-sm">
+                    {user?.user_metadata?.nickname?.charAt(0).toUpperCase() || 
+                     user?.email?.charAt(0).toUpperCase() || 'U'}
+                  </span>
+                </div>
+                
+                {/* User Info (hidden on mobile) */}
+                <div className="hidden sm:block text-left">
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    {user?.user_metadata?.nickname || '사용자'}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    {userRole === 'admin' ? '관리자' : '일반 사용자'}
+                  </div>
+                </div>
+
+                {/* Dropdown Arrow */}
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                  {/* User Profile Section */}
+                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-indigo-600 dark:bg-yellow-400 rounded-full flex items-center justify-center">
+                        <span className="text-white dark:text-gray-900 font-bold">
+                          {user?.user_metadata?.nickname?.charAt(0).toUpperCase() || 
+                           user?.email?.charAt(0).toUpperCase() || 'U'}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 dark:text-white">
+                          {user?.user_metadata?.nickname || '사용자'}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {user?.email}
+                        </div>
+                        <div className="text-xs text-indigo-600 dark:text-indigo-400">
+                          {userRole === 'admin' ? '관리자' : '일반 사용자'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stats Section */}
+                  {engagementStats?.basic_stats && (
+                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                        학습 현황
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div className="text-center p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                          <div className="font-bold text-indigo-600 dark:text-indigo-400">
+                            Lv.{userLevel}
+                          </div>
+                          <div className="text-gray-500 dark:text-gray-400 text-xs">레벨</div>
+                        </div>
+                        <div className="text-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                          <div className="font-bold text-yellow-600 dark:text-yellow-400">
+                            {totalPoints}
+                          </div>
+                          <div className="text-gray-500 dark:text-gray-400 text-xs">포인트</div>
+                        </div>
+                        <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                          <div className="font-bold text-green-600 dark:text-green-400">
+                            {Math.round(overallAccuracy)}%
+                          </div>
+                          <div className="text-gray-500 dark:text-gray-400 text-xs">정확도</div>
+                        </div>
+                        <div className="text-center p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                          <div className="font-bold text-orange-600 dark:text-orange-400">
+                            🔥 {currentStreak}
+                          </div>
+                          <div className="text-gray-500 dark:text-gray-400 text-xs">연속</div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Menu Items */}
+                  <div className="py-1">
+                    <a
+                      href="/profile"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                      프로필 관리
+                    </a>
+                    
+                    <a
+                      href="/stats"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      학습 통계
+                    </a>
+
+                    {userRole === 'admin' && (
+                      <a
+                        href="/admin"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        관리자 패널
+                      </a>
+                    )}
+
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                    
+                    <button
+                      onClick={onLogout}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      로그아웃
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </header>
   )
-} 
+}

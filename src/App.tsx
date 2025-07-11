@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 import { getUserRole } from './lib/roleUtils'
+import { QueryProvider } from './components/QueryClientProvider'
 import WelcomePage from './components/WelcomePage'
 import LoginModal from './components/LoginModal'
 import Layout from './components/Layout'
@@ -88,51 +89,53 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100">
-        {!user ? (
-          <>
-            <WelcomePage onLoginClick={handleLoginClick} />
-            <LoginModal 
-              isOpen={showLoginModal} 
-              onClose={handleLoginClose} 
-              onLoginSuccess={handleLoginSuccess}
-            />
-          </>
-        ) : (
-          <Layout user={user} onLogout={handleLogout}>
-            <Routes>
-              <Route path="/" element={<HomePage user={user} />} />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage user={user} />
-                  </ProtectedRoute>
-                } 
+    <QueryProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-100">
+          {!user ? (
+            <>
+              <WelcomePage onLoginClick={handleLoginClick} />
+              <LoginModal 
+                isOpen={showLoginModal} 
+                onClose={handleLoginClose} 
+                onLoginSuccess={handleLoginSuccess}
               />
-              <Route 
-                path="/stats" 
-                element={
-                  <ProtectedRoute>
-                    <StatsPage user={user} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/admin" 
-                element={
-                  <ProtectedRoute adminOnly={true}>
-                    <AdminPage user={user} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Layout>
-        )}
-      </div>
-    </Router>
+            </>
+          ) : (
+            <Layout user={user} onLogout={handleLogout}>
+              <Routes>
+                <Route path="/" element={<HomePage user={user} />} />
+                <Route 
+                  path="/profile" 
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/stats" 
+                  element={
+                    <ProtectedRoute>
+                      <StatsPage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute adminOnly={true}>
+                      <AdminPage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Layout>
+          )}
+        </div>
+      </Router>
+    </QueryProvider>
   )
 }
 

@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, optimizedQueries, cacheInvalidation } from './supabase'
 import type { 
   Question, 
   QuizResults, 
@@ -38,7 +38,7 @@ export const startQuizSession = async (userId: string): Promise<string | null> =
   }
 }
 
-// 🆕 Record individual question attempt with detailed tracking
+// 🚀 Optimized: Record individual question attempt with detailed tracking
 export const recordQuestionAttempt = async (
   sessionId: string, 
   userId: string, 
@@ -70,7 +70,43 @@ export const recordQuestionAttempt = async (
   }
 }
 
-// Update quiz session with progress (called when quiz completes)
+// 🆕 Batch record multiple question attempts for better performance
+export const batchRecordQuestionAttempts = async (
+  sessionId: string,
+  userId: string,
+  questionAttempts: Array<{
+    question: Question
+    selectedAnswer: number
+    responseTimeMs: number
+  }>
+): Promise<any> => {
+  try {
+    const attempts = questionAttempts.map(attempt => ({
+      sessionId,
+      userId,
+      questionId: attempt.question.id,
+      category: attempt.question.category,
+      subcategory: attempt.question.subcategory || '',
+      difficulty: attempt.question.difficulty,
+      selectedAnswer: attempt.selectedAnswer,
+      correctAnswer: attempt.question.correctAnswer,
+      responseTimeMs: attempt.responseTimeMs
+    }))
+
+    const result = await optimizedQueries.batchRecordQuestionAttempts(attempts)
+    
+    // Invalidate user caches after batch recording
+    cacheInvalidation.invalidateUserCache(userId)
+    
+    console.log('Batch question attempts recorded:', result)
+    return result
+  } catch (error) {
+    console.error('Error in batch recording question attempts:', error)
+    return null
+  }
+}
+
+// 🚀 Optimized: Update quiz session with progress and invalidate caches
 export const completeQuizSession = async (sessionId: string, quizResults: QuizResults): Promise<QuizSession | null> => {
   try {
     const endTime = new Date().toISOString()
@@ -96,6 +132,12 @@ export const completeQuizSession = async (sessionId: string, quizResults: QuizRe
 
     if (error) throw error
 
+    // 🔄 Invalidate user caches after quiz completion
+    const userId = data.user_id
+    if (userId) {
+      cacheInvalidation.invalidateUserCache(userId)
+    }
+
     console.log('Quiz session completed:', data)
     return data
   } catch (error) {
@@ -104,13 +146,10 @@ export const completeQuizSession = async (sessionId: string, quizResults: QuizRe
   }
 }
 
-// 🆕 Get comprehensive user quiz statistics
-export const getUserQuizStats = async (userId: string): Promise<QuizStats> => {
+// 🚀 Optimized: Get comprehensive user quiz statistics with caching
+export const getUserQuizStats = async (userId: string, forceRefresh = false): Promise<QuizStats> => {
   try {
-    const { data, error } = await supabase
-      .rpc('get_user_quiz_stats', { target_user_id: userId })
-
-    if (error) throw error
+    const data = await optimizedQueries.getUserStats(userId, forceRefresh)
 
     // Handle case where user has no quiz attempts
     if (!data || !data.basic_stats || data.basic_stats.total_sessions === 0) {
@@ -182,18 +221,11 @@ export const getUserQuizStats = async (userId: string): Promise<QuizStats> => {
   }
 }
 
-// 🆕 Get category performance breakdown
-export const getCategoryPerformance = async (userId: string): Promise<CategoryPerformance[]> => {
+// 🚀 Optimized: Get category performance breakdown with caching
+export const getCategoryPerformance = async (userId: string, forceRefresh = false): Promise<CategoryPerformance[]> => {
   try {
-    const { data, error } = await supabase
-      .from('category_performance')
-      .select('*')
-      .eq('user_id', userId)
-      .order('total_points', { ascending: false })
-
-    if (error) throw error
-
-    return data || []
+    const data = await optimizedQueries.getCategoryPerformance(userId, forceRefresh)
+    return data
   } catch (error) {
     console.error('Error fetching category performance:', error)
     return []

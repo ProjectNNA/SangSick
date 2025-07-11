@@ -1,50 +1,41 @@
-import { useState, useEffect } from 'react'
 import { 
-  getUserQuizStats, 
-  getRecentQuizSessions, 
   formatDuration, 
   getPerformanceRating,
   calculateUserLevel,
   getLevelProgress,
   formatResponseTime
 } from '../lib/quizTracking'
+import { 
+  useUserStatsQuery, 
+  useCategoryPerformanceQuery, 
+  useRecentSessionsQuery 
+} from '../queries/userQueries'
 import CategoryPerformance from '../components/CategoryPerformance'
 import TimeInsights from '../components/TimeInsights'
 import Leaderboard from '../components/Leaderboard'
-import type { User, QuizStats, QuizSession } from '../types'
+import type { User, QuizSession } from '../types'
 
 interface StatsPageProps {
   user: User;
 }
 
 export default function StatsPage({ user }: StatsPageProps) {
-  const [quizStats, setQuizStats] = useState<QuizStats | null>(null)
-  const [recentSessions, setRecentSessions] = useState<QuizSession[]>([])
-  const [statsLoading, setStatsLoading] = useState(true)
+  // 🚀 Use TanStack Query for optimized data fetching
+  const { 
+    data: quizStats, 
+    isLoading: statsLoading, 
+    error: statsError 
+  } = useUserStatsQuery(user?.id || '')
 
-  // Fetch quiz statistics on component mount
-  useEffect(() => {
-    const fetchQuizData = async () => {
-      if (!user?.id) return
-      
-      setStatsLoading(true)
-      try {
-        const [stats, sessions] = await Promise.all([
-          getUserQuizStats(user.id),
-          getRecentQuizSessions(user.id, 10) // Get more sessions for stats page
-        ])
-        
-        setQuizStats(stats)
-        setRecentSessions(sessions)
-      } catch (error) {
-        console.error('Error fetching quiz data:', error)
-      } finally {
-        setStatsLoading(false)
-      }
-    }
+  const { 
+    data: categoryPerformance = [], 
+    isLoading: categoryLoading 
+  } = useCategoryPerformanceQuery(user?.id || '')
 
-    fetchQuizData()
-  }, [user?.id])
+  const { 
+    data: recentSessions = [], 
+    isLoading: sessionsLoading 
+  } = useRecentSessionsQuery(user?.id || '', 10)
 
   // Calculate user level and progress
   const userLevel = quizStats?.engagement_stats?.total_points 
@@ -55,7 +46,34 @@ export default function StatsPage({ user }: StatsPageProps) {
     ? getLevelProgress(quizStats.engagement_stats.total_points)
     : { level: 1, progress: 0, needed: 100, percentage: 0 }
 
-  if (statsLoading) {
+  // Show error state if any critical data fails to load
+  if (statsError) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
+            <div className="text-center py-8">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                데이터를 불러올 수 없습니다
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                통계 정보를 가져오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
+              </p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                다시 시도
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (statsLoading || categoryLoading || sessionsLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
@@ -268,7 +286,7 @@ export default function StatsPage({ user }: StatsPageProps) {
 
           {/* Enhanced Category Performance */}
           <CategoryPerformance 
-            categories={quizStats.category_performance}
+            categories={categoryPerformance}
             onCategoryClick={(category: string) => {
               // Could implement category-specific quiz filtering here
               console.log('Category clicked:', category)
