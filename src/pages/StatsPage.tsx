@@ -48,21 +48,22 @@ export default function StatsPage({ user }: StatsPageProps) {
 
   // Show error state if any critical data fails to load
   if (statsError) {
-    return (
-      <div className="container mx-auto px-4 py-8">
+      return (
+    <div className="h-full overflow-y-auto">
+      <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-            <div className="text-center py-8">
-              <div className="text-6xl mb-4">⚠️</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 md:p-8">
+            <div className="text-center py-6 md:py-8">
+              <div className="text-4xl md:text-6xl mb-3 md:mb-4">⚠️</div>
+              <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 데이터를 불러올 수 없습니다
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
                 통계 정보를 가져오는 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.
               </p>
               <button 
                 onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                className="px-3 md:px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm md:text-base"
               >
                 다시 시도
               </button>
@@ -70,6 +71,7 @@ export default function StatsPage({ user }: StatsPageProps) {
           </div>
         </div>
       </div>
+    </div>
     )
   }
 
@@ -135,67 +137,68 @@ export default function StatsPage({ user }: StatsPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="h-full overflow-y-auto">
+      <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <div className="text-center mb-4 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-1 md:mb-2">
             📊 퀴즈 통계
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
             상세한 학습 분석과 성과를 확인하세요
           </p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-4 md:space-y-8">
           {/* Overview Stats */}
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 md:p-8">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
+              <h2 className="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white">
                 🎯 종합 통계
               </h2>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 md:space-x-4">
                 {quizStats.engagement_stats?.current_streak > 0 && (
-                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold">
                     🔥 {quizStats.engagement_stats.current_streak}일 연속
                   </div>
                 )}
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-bold">
                   LV.{userLevel}
                 </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-lg">
-                <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-400">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+              <div className="text-center p-3 md:p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-lg">
+                <div className="text-2xl md:text-4xl font-bold text-indigo-600 dark:text-indigo-400">
                   {quizStats.basic_stats.completed_sessions || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                <div className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1 md:mt-2">
                   총 완료 세션
                 </div>
               </div>
               
-              <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
-                <div className="text-4xl font-bold text-green-600 dark:text-green-400">
+              <div className="text-center p-3 md:p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
+                <div className="text-2xl md:text-4xl font-bold text-green-600 dark:text-green-400">
                   {quizStats.basic_stats.overall_accuracy || 0}%
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                <div className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1 md:mt-2">
                   전체 정답률
                 </div>
               </div>
               
-              <div className="text-center p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg">
-                <div className="text-4xl font-bold text-yellow-600 dark:text-yellow-400">
+              <div className="text-center p-3 md:p-6 bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-lg">
+                <div className="text-2xl md:text-4xl font-bold text-yellow-600 dark:text-yellow-400">
                   {quizStats.basic_stats.highest_score || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                <div className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1 md:mt-2">
                   최고 점수
                 </div>
               </div>
               
-              <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg">
-                <div className="text-4xl font-bold text-purple-600 dark:text-purple-400">
+              <div className="text-center p-3 md:p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg">
+                <div className="text-2xl md:text-4xl font-bold text-purple-600 dark:text-purple-400">
                   {quizStats.engagement_stats?.total_points || 0}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
@@ -398,5 +401,6 @@ export default function StatsPage({ user }: StatsPageProps) {
         </div>
       </div>
     </div>
+  </div>
   )
 } 

@@ -87,7 +87,7 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="h-screen bg-gray-100 overflow-hidden">
         {!user ? (
           <>
             <WelcomePage onLoginClick={handleLoginClick} />
@@ -98,36 +98,38 @@ function App() {
             />
           </>
         ) : (
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+          <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex flex-col overflow-hidden">
             <ProfileHeader user={user} onLogout={handleLogout} />
-            <Routes>
-              <Route path="/" element={<HomePage user={user} />} />
-              <Route 
-                path="/profile" 
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage user={user} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/stats" 
-                element={
-                  <ProtectedRoute>
-                    <StatsPage user={user} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route 
-                path="/admin" 
-                element={
-                  <ProtectedRoute adminOnly={true}>
-                    <AdminPage user={user} />
-                  </ProtectedRoute>
-                } 
-              />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <div className="flex-1 overflow-hidden">
+              <Routes>
+                <Route path="/" element={<HomePage user={user} />} />
+                <Route 
+                  path="/profile" 
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/stats" 
+                  element={
+                    <ProtectedRoute>
+                      <StatsPage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute adminOnly={true}>
+                      <AdminPage user={user} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
           </div>
         )}
       </div>

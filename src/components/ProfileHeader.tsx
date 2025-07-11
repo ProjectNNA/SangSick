@@ -73,12 +73,19 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
     setShowDropdown(false)
   }
 
+  const handleNavigateToHome = () => {
+    navigate('/')
+  }
+
   return (
     <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and App Name */}
-          <div className="flex items-center space-x-3">
+          <button 
+            onClick={handleNavigateToHome}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <span className="w-10 h-10 block">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" fill="#6366F1"/>
@@ -98,7 +105,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                 상식 퀴즈 플랫폼
               </p>
             </div>
-          </div>
+          </button>
 
           {/* User Stats Summary (visible on larger screens) */}
           {engagementStats?.basic_stats && (

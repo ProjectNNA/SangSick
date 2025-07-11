@@ -3,4 +3,71 @@
   text-align: center;
 }
 
+/* Prevent double scroll and ensure proper viewport containment */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Height Optimization */
+@media (max-height: 800px) {
+  .mobile-compact {
+    padding: 0.5rem !important;
+  }
+  
+  .mobile-compact-text {
+    font-size: 0.875rem !important;
+  }
+  
+  .mobile-compact-spacing {
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+@media (max-height: 700px) {
+  .mobile-ultra-compact {
+    padding: 0.25rem !important;
+  }
+  
+  .mobile-ultra-compact-text {
+    font-size: 0.75rem !important;
+  }
+  
+  .mobile-ultra-compact-spacing {
+    margin-bottom: 0.5rem !important;
+  }
+}
+
+/* Ensure proper mobile viewport handling */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Prevent horizontal scrolling on mobile */
+  .container {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Optimize button sizes for mobile */
+  button {
+    min-height: 44px; /* iOS touch target minimum */
+    touch-action: manipulation;
+  }
+  
+  /* Improve mobile scrolling performance */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    height: 100vh;
+    max-height: 100vh;
+  }
+}
+
 /* Custom styles can be added here if needed */

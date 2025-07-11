@@ -1,12 +1,12 @@
 import { supabase } from './supabase'
 
 export async function fetchRandomQuestions(count = 10) {
-  // 🚀 Performance Optimization: Use SQL RANDOM() instead of fetching all questions
+  // 🚀 Performance Optimization: Fetch questions and randomize client-side
+  // Note: Supabase PostgREST doesn't support RANDOM() in order clause
   const { data, error } = await supabase
     .from('questions')
     .select('*')
-    .order('RANDOM()')  // Use database-level randomization
-    .limit(count)       // Only fetch the number we need
+    .limit(count * 3)  // Fetch more than needed for better randomization
 
   if (error) {
     console.error('Error fetching questions:', error)
@@ -18,7 +18,9 @@ export async function fetchRandomQuestions(count = 10) {
     return []
   }
 
-  return data
+  // Client-side randomization
+  const shuffled = [...data].sort(() => 0.5 - Math.random())
+  return shuffled.slice(0, count)
 }
 
 // 🆕 Advanced: Fetch questions with category balance
@@ -54,15 +56,16 @@ export async function fetchBalancedRandomQuestions(count = 10) {
         .from('questions')
         .select('*')
         .eq('category', category)
-        .order('RANDOM()')
-        .limit(categoryCount)
+        .limit(categoryCount * 2) // Fetch more for better randomization
 
       if (error) {
         console.error(`Error fetching questions for category ${category}:`, error)
         continue
       }
 
-      allQuestions = [...allQuestions, ...(categoryQuestions || [])]
+      // Shuffle category questions client-side
+      const shuffledCategoryQuestions = [...(categoryQuestions || [])].sort(() => 0.5 - Math.random())
+      allQuestions = [...allQuestions, ...shuffledCategoryQuestions.slice(0, categoryCount)]
     }
 
     // If we don't have enough questions, fill with random ones
@@ -71,11 +74,11 @@ export async function fetchBalancedRandomQuestions(count = 10) {
       const { data: additionalQuestions, error } = await supabase
         .from('questions')
         .select('*')
-        .order('RANDOM()')
-        .limit(additionalNeeded)
+        .limit(additionalNeeded * 2) // Fetch more for randomization
 
       if (!error && additionalQuestions) {
-        allQuestions = [...allQuestions, ...additionalQuestions]
+        const shuffledAdditional = [...additionalQuestions].sort(() => 0.5 - Math.random())
+        allQuestions = [...allQuestions, ...shuffledAdditional.slice(0, additionalNeeded)]
       }
     }
 
@@ -103,11 +106,13 @@ export async function fetchDifficultyBalancedQuestions(count = 10) {
         .from('questions')
         .select('*')
         .in('difficulty', difficulties)
-        .order('RANDOM()')
-        .limit(targetCount)
+        .limit(targetCount * 2) // Fetch more for better randomization
 
       if (error) throw error
-      return data || []
+      
+      // Client-side randomization
+      const shuffled = [...(data || [])].sort(() => 0.5 - Math.random())
+      return shuffled.slice(0, targetCount)
     }
 
     const [easyQuestions, mediumQuestions, hardQuestions] = await Promise.all([
