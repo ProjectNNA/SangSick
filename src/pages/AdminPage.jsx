@@ -11,19 +11,45 @@ export default function AdminPage({ user }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [editingQuestion, setEditingQuestion] = useState(null)
   const [showEditModal, setShowEditModal] = useState(false)
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalQuestions, setTotalQuestions] = useState(0)
+  const [itemsPerPage] = useState(20) // Fixed at 20 items per page
 
-  // Load questions
-  const loadQuestions = async () => {
+  // Load questions with pagination and search
+  const loadQuestions = async (page = 1, searchQuery = '') => {
     setLoading(true)
     try {
-      const { data, error } = await supabase
+      const offset = (page - 1) * itemsPerPage
+      
+      // Build the query with pagination
+      let query = supabase
         .from('questions')
-        .select('*')
+        .select('*', { count: 'exact' })
         .order('id', { ascending: true })
+        .range(offset, offset + itemsPerPage - 1)
+      
+      // Add search filters if search query exists
+      if (searchQuery.trim()) {
+        query = query.or(`question.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%,subcategory.ilike.%${searchQuery}%,explanation.ilike.%${searchQuery}%,reflection.ilike.%${searchQuery}%`)
+      }
+      
+      const { data, error, count } = await query
 
       if (error) throw error
-      setAllQuestions(data || [])
+      
+      // Update pagination state
       setQuestions(data || [])
+      setTotalQuestions(count || 0)
+      setTotalPages(Math.ceil((count || 0) / itemsPerPage))
+      setCurrentPage(page)
+      
+      // Keep allQuestions for local operations (edit/delete)
+      if (!searchQuery.trim() && page === 1) {
+        setAllQuestions(data || [])
+      }
     } catch (error) {
       console.error('Error loading questions:', error)
     } finally {
@@ -31,23 +57,11 @@ export default function AdminPage({ user }) {
     }
   }
 
-  // Filter questions based on search query
-  const filterQuestions = (query, questionsToFilter = allQuestions) => {
-    if (!query.trim()) {
-      setQuestions(questionsToFilter)
-      return
+  // Handle page change
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      loadQuestions(page, searchQuery)
     }
-    
-    const filtered = questionsToFilter.filter(question => 
-      question.question.toLowerCase().includes(query.toLowerCase()) ||
-      question.category.toLowerCase().includes(query.toLowerCase()) ||
-      question.subcategory?.toLowerCase().includes(query.toLowerCase()) ||
-      question.explanation?.toLowerCase().includes(query.toLowerCase()) ||
-      question.reflection?.toLowerCase().includes(query.toLowerCase()) ||
-      question.options.some(option => option.toLowerCase().includes(query.toLowerCase()))
-    )
-    
-    setQuestions(filtered)
   }
 
   // Load users with roles
@@ -67,7 +81,7 @@ export default function AdminPage({ user }) {
 
   useEffect(() => {
     if (activeTab === 'questions') {
-      loadQuestions()
+      loadQuestions(1, searchQuery)
     } else if (activeTab === 'users') {
       loadUsers()
     }
@@ -101,9 +115,8 @@ export default function AdminPage({ user }) {
 
       if (error) throw error
       
-      const updatedQuestions = allQuestions.filter(q => q.id !== questionId)
-      setAllQuestions(updatedQuestions)
-      filterQuestions(searchQuery, updatedQuestions) // Re-apply current search with updated data
+      // Reload current page after deletion
+      loadQuestions(currentPage, searchQuery)
       alert('문제가 삭제되었습니다.')
     } catch (error) {
       console.error('Error deleting question:', error)
@@ -136,12 +149,8 @@ export default function AdminPage({ user }) {
 
       if (error) throw error
 
-      // Update local state
-      const updatedAllQuestions = allQuestions.map(q => 
-        q.id === updatedQuestion.id ? { ...q, ...updatedQuestion } : q
-      )
-      setAllQuestions(updatedAllQuestions)
-      filterQuestions(searchQuery, updatedAllQuestions) // Re-apply current search with updated data
+      // Reload current page after edit
+      loadQuestions(currentPage, searchQuery)
       
       setShowEditModal(false)
       setEditingQuestion(null)
@@ -156,7 +165,7 @@ export default function AdminPage({ user }) {
   const handleSearch = (e) => {
     const query = e.target.value
     setSearchQuery(query)
-    filterQuestions(query)
+    loadQuestions(1, query) // Reset to page 1 when searching
   }
 
   return (
@@ -211,7 +220,11 @@ export default function AdminPage({ user }) {
             onSearch={handleSearch}
             onDelete={handleDeleteQuestion}
             onEdit={handleEditQuestion}
-            onRefresh={loadQuestions}
+            onRefresh={() => loadQuestions(1, searchQuery)}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalQuestions={totalQuestions}
+            onPageChange={handlePageChange}
           />
         ) : (
           <UsersTab
@@ -457,12 +470,12 @@ function EditQuestionModal({ question, onSave, onClose }) {
 }
 
 // Questions Tab Component
-function QuestionsTab({ questions, searchQuery, onSearch, onDelete, onEdit, onRefresh }) {
+function QuestionsTab({ questions, searchQuery, onSearch, onDelete, onEdit, onRefresh, currentPage, totalPages, totalQuestions, onPageChange }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
         <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          전체 문제 ({questions.length}개)
+          전체 문제 ({totalQuestions}개)
         </h3>
         <button
           onClick={onRefresh}
@@ -493,13 +506,24 @@ function QuestionsTab({ questions, searchQuery, onSearch, onDelete, onEdit, onRe
         </div>
         {searchQuery && (
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            "{searchQuery}" 검색 결과: {questions.length}개 문제 발견
+            "{searchQuery}" 검색 결과: {totalQuestions}개 문제 발견
           </p>
         )}
       </div>
 
       <div className="grid gap-6">
-        {questions.map((question) => (
+        {questions.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 dark:text-gray-500 text-6xl mb-4">📝</div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+              {searchQuery ? '검색 결과가 없습니다' : '문제가 없습니다'}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              {searchQuery ? '다른 키워드로 검색해보세요' : '새로운 문제를 추가해보세요'}
+            </p>
+          </div>
+        ) : (
+          questions.map((question) => (
           <div
             key={question.id}
             className="border dark:border-gray-700 rounded-xl p-6 bg-white dark:bg-gray-900 shadow-lg"
@@ -513,8 +537,13 @@ function QuestionsTab({ questions, searchQuery, onSearch, onDelete, onEdit, onRe
                   <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
                     {question.category}
                   </span>
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-sm">
-                    난이도 {question.difficulty}
+                  {question.subcategory && (
+                    <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">
+                      {question.subcategory}
+                    </span>
+                  )}
+                  <span className="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded-full text-sm font-medium">
+                    {'★'.repeat(question.difficulty || 0)}{'☆'.repeat(5 - (question.difficulty || 0))}
                   </span>
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
@@ -567,8 +596,65 @@ function QuestionsTab({ questions, searchQuery, onSearch, onDelete, onEdit, onRe
               </div>
             </div>
           </div>
-        ))}
+        )))}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              페이지 {currentPage} / {totalPages} (총 {totalQuestions}개)
+            </span>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            {/* Previous Button */}
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              이전
+            </button>
+            
+            {/* Page Numbers */}
+            <div className="flex space-x-1">
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const pageStart = Math.max(1, currentPage - 2)
+                const pageEnd = Math.min(totalPages, pageStart + 4)
+                const adjustedStart = Math.max(1, pageEnd - 4)
+                const pageNumber = adjustedStart + i
+                
+                if (pageNumber > totalPages) return null
+                
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => onPageChange(pageNumber)}
+                    className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                      pageNumber === currentPage
+                        ? 'bg-indigo-600 text-white'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                )
+              })}
+            </div>
+            
+            {/* Next Button */}
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              다음
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getUserRole } from '../lib/roleUtils'
+import { getUserQuizStats, calculateUserLevel, getLevelProgress } from '../lib/quizTracking'
+import Avatar from './Avatar'
 
 export default function ProfileHeader({ user, onLogout }) {
   const nickname = user.user_metadata?.nickname || user.email?.split('@')[0]
@@ -13,6 +15,8 @@ export default function ProfileHeader({ user, onLogout }) {
   })
   const [menuOpen, setMenuOpen] = useState(false)
   const [userRole, setUserRole] = useState('user')
+  const [engagementStats, setEngagementStats] = useState(null)
+  const [statsLoading, setStatsLoading] = useState(true)
   const menuRef = useRef(null)
   const navigate = useNavigate()
 
@@ -37,6 +41,24 @@ export default function ProfileHeader({ user, onLogout }) {
     fetchUserRole()
   }, [user?.id])
 
+  // Fetch engagement stats for widgets
+  useEffect(() => {
+    async function fetchEngagementStats() {
+      if (!user?.id) return
+      
+      setStatsLoading(true)
+      try {
+        const stats = await getUserQuizStats(user.id)
+        setEngagementStats(stats)
+      } catch (error) {
+        console.error('Error fetching engagement stats:', error)
+      } finally {
+        setStatsLoading(false)
+      }
+    }
+    fetchEngagementStats()
+  }, [user?.id])
+
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event) {
@@ -53,6 +75,20 @@ export default function ProfileHeader({ user, onLogout }) {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [menuOpen])
+
+  // Calculate engagement widget data
+  const userLevel = engagementStats?.engagement_stats?.total_points 
+    ? calculateUserLevel(engagementStats.engagement_stats.total_points)
+    : 1
+  
+  const levelProgress = engagementStats?.engagement_stats?.total_points
+    ? getLevelProgress(engagementStats.engagement_stats.total_points)
+    : { level: 1, progress: 0, needed: 100, percentage: 0 }
+
+  const currentStreak = engagementStats?.engagement_stats?.current_streak || 0
+  const totalPoints = engagementStats?.engagement_stats?.total_points || 0
+  const perfectSessions = engagementStats?.achievements?.perfect_sessions || 0
+  const overallAccuracy = engagementStats?.basic_stats?.overall_accuracy || 0
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
@@ -79,6 +115,111 @@ export default function ProfileHeader({ user, onLogout }) {
             </span>
           </button>
         </div>
+
+        {/* Center: Engagement Widgets */}
+        {statsLoading ? (
+          <div className="hidden md:flex items-center space-x-4">
+            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-20 rounded-full"></div>
+            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-16 rounded-full"></div>
+            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-6 w-18 rounded-full"></div>
+          </div>
+        ) : engagementStats?.basic_stats && (
+          <div className="hidden md:flex items-center space-x-4">
+            {/* Streak Counter */}
+            {currentStreak > 0 && (
+              <button
+                onClick={() => navigate('/stats')}
+                className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
+                title={`현재 ${currentStreak}일 연속 학습 중! 클릭하여 상세 통계 보기`}
+              >
+                <span className="text-lg">🔥</span>
+                <span>{currentStreak}일 연속</span>
+              </button>
+            )}
+
+            {/* Level Badge */}
+            <button
+              onClick={() => navigate('/stats')}
+              className="flex items-center space-x-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
+              title={`레벨 ${userLevel} (${levelProgress.progress}/${levelProgress.needed} 포인트)`}
+            >
+              <span className="text-lg">🎖️</span>
+              <span>LV.{userLevel}</span>
+              <div className="w-8 bg-white/20 rounded-full h-1.5 ml-1">
+                <div 
+                  className="bg-white h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${levelProgress.percentage}%` }}
+                ></div>
+              </div>
+            </button>
+
+            {/* Achievement Badge */}
+            {perfectSessions > 0 && (
+              <button
+                onClick={() => navigate('/stats')}
+                className="flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
+                title={`${perfectSessions}개의 완벽한 퀴즈 세션 달성!`}
+              >
+                <span className="text-lg">🏆</span>
+                <span>{perfectSessions}개 완벽</span>
+              </button>
+            )}
+
+            {/* Accuracy Badge */}
+            {overallAccuracy > 0 && (
+              <button
+                onClick={() => navigate('/stats')}
+                className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold transition-all duration-200 transform hover:scale-105"
+                title={`전체 정답률 ${overallAccuracy}%`}
+              >
+                <span className="text-lg">📊</span>
+                <span>{overallAccuracy}% 정답률</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Mobile: Compact Engagement Indicators */}
+        {statsLoading ? (
+          <div className="flex md:hidden items-center space-x-2">
+            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-5 w-12 rounded"></div>
+            <div className="bg-gray-200 dark:bg-gray-700 animate-pulse h-5 w-10 rounded"></div>
+          </div>
+        ) : engagementStats?.basic_stats && (
+          <div className="flex md:hidden items-center space-x-2">
+            {/* Mobile Level Badge */}
+            <button
+              onClick={() => navigate('/stats')}
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
+              title={`레벨 ${userLevel}`}
+            >
+              LV.{userLevel}
+            </button>
+            
+            {/* Mobile Streak */}
+            {currentStreak > 0 && (
+              <button
+                onClick={() => navigate('/stats')}
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
+                title={`${currentStreak}일 연속`}
+              >
+                🔥{currentStreak}
+              </button>
+            )}
+
+            {/* Mobile Achievement Count */}
+            {perfectSessions > 0 && (
+              <button
+                onClick={() => navigate('/stats')}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200"
+                title={`${perfectSessions}개 완벽`}
+              >
+                🏆{perfectSessions}
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Right: All icons and user area */}
         <div className="flex items-center space-x-4">
           {/* Dark/Light mode toggle */}
@@ -106,11 +247,11 @@ export default function ProfileHeader({ user, onLogout }) {
               aria-haspopup="true"
               aria-expanded={menuOpen}
             >
-              <div className="w-10 h-10 bg-indigo-600 dark:bg-yellow-400 rounded-full flex items-center justify-center">
-                <span className="text-white dark:text-gray-900 font-semibold text-lg">
-                  {nickname?.charAt(0).toUpperCase()}
-                </span>
-              </div>
+              <Avatar 
+                avatarUrl={user.user_metadata?.avatar_url}
+                fallback={nickname}
+                size="md"
+              />
               <span className="text-base font-semibold text-gray-900 dark:text-yellow-200">
                 {nickname}님
               </span>
@@ -130,6 +271,12 @@ export default function ProfileHeader({ user, onLogout }) {
                     관리
                   </button>
                 )}
+                <button
+                  className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  onClick={() => { setMenuOpen(false); navigate('/stats'); }}
+                >
+                  📊 통계
+                </button>
                 <button
                   className="w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   onClick={() => { setMenuOpen(false); navigate('/profile'); }}

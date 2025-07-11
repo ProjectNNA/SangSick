@@ -7,8 +7,10 @@ import {
   saveStatistics, 
   loadStatistics 
 } from '../utils/statistics.js'
+import { startQuizSession, completeQuizSession, recordQuestionAttempt } from '../lib/quizTracking.js'
+import { supabase } from '../lib/supabase.js'
 
-export default function QuizGame({ onComplete }) {
+export default function QuizGame({ onComplete, user }) {
   const [questions, setQuestions] = useState([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState(null)
@@ -17,6 +19,16 @@ export default function QuizGame({ onComplete }) {
   const [showResult, setShowResult] = useState(false)
   const [isAnswered, setIsAnswered] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [sessionId, setSessionId] = useState(null)
+  const [startTime, setStartTime] = useState(null)
+  const [correctAnswers, setCorrectAnswers] = useState(0)
+  
+  // 🆕 Enhanced tracking state
+  const [questionStartTime, setQuestionStartTime] = useState(null)
+  const [responseTimes, setResponseTimes] = useState([])
+  const [currentStreak, setCurrentStreak] = useState(0)
+  const [bestStreak, setBestStreak] = useState(0)
+  const [questionAttempts, setQuestionAttempts] = useState([])
 
   // Function to randomly select 10 questions from all available questions
   const selectRandomQuestions = (allQuestions, count = 10) => {
@@ -35,6 +47,14 @@ export default function QuizGame({ onComplete }) {
         const questionsWithStats = loadStatistics(fetched)
         const randomQuestions = selectRandomQuestions(questionsWithStats, 10)
         setQuestions(randomQuestions)
+        
+        // Start quiz session tracking
+        if (user?.id) {
+          const currentTime = new Date().toISOString()
+          setStartTime(currentTime)
+          const newSessionId = await startQuizSession(user.id)
+          setSessionId(newSessionId)
+        }
       } catch (error) {
         console.error("Failed to load questions:", error)
         setQuestions([])
@@ -43,7 +63,14 @@ export default function QuizGame({ onComplete }) {
       }
     }
     loadQuestions()
-  }, [])
+  }, [user?.id])
+
+  // 🆕 Start timing when question loads
+  useEffect(() => {
+    if (questions.length > 0 && !isAnswered) {
+      setQuestionStartTime(Date.now())
+    }
+  }, [currentQuestionIndex, questions, isAnswered])
 
   const currentQuestion = questions[currentQuestionIndex]
 
@@ -64,11 +91,45 @@ export default function QuizGame({ onComplete }) {
 
   const handleAnswerSelect = async (answerIndex) => {
     if (isAnswered) return
+    
+    // 🆕 Calculate response time
+    const responseTime = questionStartTime ? Date.now() - questionStartTime : 0
+    setResponseTimes(prev => [...prev, responseTime])
+    
     setSelectedAnswer(answerIndex)
     setIsAnswered(true)
     setShowResult(true)
     
-    // Update global statistics in Supabase
+    // 🆕 Record detailed question attempt
+    const isCorrect = answerIndex === currentQuestion.correctAnswer
+    if (sessionId && user?.id) {
+      await recordQuestionAttempt(
+        sessionId,
+        user.id,
+        currentQuestion,
+        answerIndex,
+        responseTime
+      )
+    }
+    
+    // 🆕 Update streak tracking
+    if (isCorrect) {
+      const newStreak = currentStreak + 1
+      setCurrentStreak(newStreak)
+      setBestStreak(prev => Math.max(prev, newStreak))
+    } else {
+      setCurrentStreak(0)
+    }
+    
+    // Store question attempt for summary
+    setQuestionAttempts(prev => [...prev, {
+      question: currentQuestion,
+      selectedAnswer: answerIndex,
+      isCorrect,
+      responseTime
+    }])
+    
+    // Update global statistics in Supabase (legacy support)
     try {
       await updateQuestionStats(currentQuestion.id, answerIndex)
       
@@ -82,14 +143,15 @@ export default function QuizGame({ onComplete }) {
       setQuestions(updatedQuestions)
     }
     
-    // Calculate score based on difficulty
+    // Calculate score based on difficulty and track correct answers
     if (answerIndex === currentQuestion.correctAnswer) {
       const points = currentQuestion.difficulty * 10
       setScore(prev => prev + points)
+      setCorrectAnswers(prev => prev + 1)
     }
   }
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1)
       setSelectedAnswer(null)
@@ -97,9 +159,61 @@ export default function QuizGame({ onComplete }) {
       setShowResult(false)
       setIsAnswered(false)
     } else {
-      // Quiz completed
-      onComplete(score)
+      // 🆕 Calculate enhanced quiz metrics
+      const averageResponseTime = responseTimes.length > 0 
+        ? Math.round(responseTimes.reduce((sum, time) => sum + time, 0) / responseTimes.length)
+        : 0
+      
+      // Quiz completed - save session data
+      if (sessionId && startTime) {
+        const quizResults = {
+          score,
+          correctAnswers,
+          totalQuestions: questions.length,
+          startTime,
+          // 🆕 Enhanced metrics
+          bestStreak,
+          averageResponseTime
+        }
+        
+        await completeQuizSession(sessionId, quizResults)
+      }
+      
+      // 🆕 Pass enhanced quiz data to completion handler
+      onComplete({
+        score,
+        correctAnswers,
+        totalQuestions: questions.length,
+        accuracy: Math.round((correctAnswers / questions.length) * 100),
+        // Enhanced metrics
+        bestStreak,
+        averageResponseTime,
+        responseTimes,
+        questionAttempts,
+        categoryBreakdown: calculateCategoryBreakdown(questionAttempts)
+      })
     }
+  }
+
+  // 🆕 Calculate category performance breakdown
+  const calculateCategoryBreakdown = (attempts) => {
+    const breakdown = {}
+    attempts.forEach(attempt => {
+      const category = attempt.question.category
+      if (!breakdown[category]) {
+        breakdown[category] = {
+          total: 0,
+          correct: 0,
+          points: 0
+        }
+      }
+      breakdown[category].total++
+      if (attempt.isCorrect) {
+        breakdown[category].correct++
+        breakdown[category].points += attempt.question.difficulty * 10
+      }
+    })
+    return breakdown
   }
 
   const getAnswerButtonClass = (answerIndex) => {
@@ -148,9 +262,17 @@ export default function QuizGame({ onComplete }) {
           <span className="text-sm font-bold text-gray-800 dark:text-gray-100 bg-white/70 dark:bg-gray-700/70 px-3 py-1 rounded-full">
             문제 {currentQuestionIndex + 1} / {questions.length}
           </span>
-          <span className={`text-2xl font-bold ${getTimerColor()} bg-white/70 dark:bg-gray-700/70 px-3 py-1 rounded-full`}>
-            {timeLeft}초
-          </span>
+          <div className="flex items-center space-x-4">
+            {/* 🆕 Current streak indicator */}
+            {currentStreak > 0 && (
+              <span className="text-sm font-bold text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/30 px-3 py-1 rounded-full">
+                🔥 {currentStreak}연속
+              </span>
+            )}
+            <span className={`text-2xl font-bold ${getTimerColor()} bg-white/70 dark:bg-gray-700/70 px-3 py-1 rounded-full`}>
+              {timeLeft}초
+            </span>
+          </div>
         </div>
         <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 shadow-inner">
           <div 
@@ -172,9 +294,14 @@ export default function QuizGame({ onComplete }) {
                 {currentQuestion?.subcategory}
               </span>
             </div>
-            <div className="text-yellow-500 text-lg">
-              {/* Auto-generate stars from difficulty (1-5) */}
-              {"★".repeat(currentQuestion?.difficulty || 1)}{"☆".repeat(5 - (currentQuestion?.difficulty || 1))}
+            <div className="flex items-center space-x-2">
+              <div className="text-yellow-500 text-lg">
+                {/* Auto-generate stars from difficulty (1-5) */}
+                {"★".repeat(currentQuestion?.difficulty || 1)}{"☆".repeat(5 - (currentQuestion?.difficulty || 1))}
+              </div>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {(currentQuestion?.difficulty || 1) * 10}점
+              </span>
             </div>
           </div>
           
@@ -236,19 +363,11 @@ export default function QuizGame({ onComplete }) {
                 onClick={handleNextQuestion}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg transition-colors text-lg"
               >
-                {currentQuestionIndex < questions.length - 1 ? '다음 문제' : '결과 보기'}
+                {currentQuestionIndex < questions.length - 1 ? '다음 문제' : '완료'}
               </button>
             </div>
           </div>
         )}
-      </div>
-
-      {/* Current Score */}
-      <div className="text-center">
-        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 inline-block">
-          <span className="text-gray-600 dark:text-gray-300 text-sm">현재 점수</span>
-          <div className="text-2xl font-bold text-indigo-600 dark:text-yellow-300">{score}점</div>
-        </div>
       </div>
     </div>
   )

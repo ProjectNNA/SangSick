@@ -10,8 +10,13 @@ export default function HomePage({ user }) {
     setScore(0)
   }
 
-  const handleQuizComplete = (finalScore) => {
-    setScore(finalScore)
+  const handleQuizComplete = (quizResults) => {
+    // Handle both old format (just score) and new format (object with details)
+    if (typeof quizResults === 'number') {
+      setScore(quizResults)
+    } else {
+      setScore(quizResults.score)
+    }
     setGameState('finished')
   }
 
@@ -169,7 +174,7 @@ export default function HomePage({ user }) {
       )}
 
       {gameState === 'playing' && (
-        <QuizGame onComplete={handleQuizComplete} />
+        <QuizGame onComplete={handleQuizComplete} user={user} />
       )}
 
       {gameState === 'finished' && (

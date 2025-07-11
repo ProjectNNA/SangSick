@@ -7,6 +7,7 @@ import LoginModal from './components/LoginModal'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
+import StatsPage from './pages/StatsPage'
 import AdminPage from './pages/AdminPage'
 import './App.css'
 
@@ -24,8 +25,12 @@ function App() {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      // Log the event for debugging
+      if (event === 'USER_UPDATED') {
+        console.log('User metadata updated:', session?.user)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -102,6 +107,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage user={user} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/stats" 
+                element={
+                  <ProtectedRoute>
+                    <StatsPage user={user} />
                   </ProtectedRoute>
                 } 
               />
