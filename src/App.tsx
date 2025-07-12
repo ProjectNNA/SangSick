@@ -87,7 +87,7 @@ function App() {
 
   return (
     <Router>
-      <div className="h-screen bg-gray-100 overflow-hidden">
+      <div className="h-screen overflow-hidden">
         {!user ? (
           <>
             <WelcomePage onLoginClick={handleLoginClick} />

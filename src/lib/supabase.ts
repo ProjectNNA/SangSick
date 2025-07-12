@@ -187,19 +187,35 @@ export const cacheInvalidation = {
 // 📊 Connection monitoring (development only) - Privacy Safe
 if (import.meta.env.DEV) {
   let connectionCount = 0
+  let lastLogTime = 0
+  const LOG_INTERVAL = 5000 // Log summary every 5 seconds instead of every query
+
   const originalFrom = supabase.from.bind(supabase)
   const originalRpc = supabase.rpc.bind(supabase)
 
   supabase.from = function(table: string) {
     connectionCount++
-    console.log(`[Supabase] Query #${connectionCount}: ${table}`)
+    const now = Date.now()
+    
+    // Only log summary periodically to avoid spam
+    if (now - lastLogTime > LOG_INTERVAL) {
+      console.log(`[Supabase] ${connectionCount} queries executed (last: ${table})`)
+      lastLogTime = now
+    }
+    
     return originalFrom(table)
   }
 
   supabase.rpc = function(fn: string, args?: any) {
     connectionCount++
-    // Only log function name, not sensitive arguments
-    console.log(`[Supabase] RPC #${connectionCount}: ${fn}`)
+    const now = Date.now()
+    
+    // Only log summary periodically to avoid spam
+    if (now - lastLogTime > LOG_INTERVAL) {
+      console.log(`[Supabase] ${connectionCount} queries executed (last RPC: ${fn})`)
+      lastLogTime = now
+    }
+    
     return originalRpc(fn, args)
   }
 } 

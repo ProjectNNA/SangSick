@@ -56,7 +56,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
             setSessionId(newSessionId)
             
             // Prefetch next set of questions for better performance
-            prefetchQuestions('difficulty', 10)
+            prefetchQuestions(10)
             
             console.log(`🎯 Quiz started with ${algorithm} algorithm, session: ${newSessionId}`)
           } else {
@@ -385,11 +385,11 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900 overflow-hidden">
-      <div className="h-full max-w-4xl mx-auto p-2 md:p-8 pt-4 md:pt-20 flex flex-col">
+    <div className=" bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
+      <div className="w-full p-2 md:p-4 pt-2 md:pt-4 flex flex-col">
                 {/* Modern Progress Header */}
         <div className="mb-3 md:mb-6 flex-shrink-0">
-          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl shadow-lg p-3 md:p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-3 md:p-4">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               {/* Progress Info */}
               <div className="flex items-center space-x-4">
@@ -435,11 +435,9 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
             <div className="mt-3">
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 shadow-inner">
                 <div 
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-sm relative overflow-hidden"
+                  className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-sm"
                   style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                </div>
+                ></div>
               </div>
             </div>
           </div>
@@ -447,11 +445,10 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
 
         {/* Question Card */}
         <div className="flex-1 overflow-y-auto">
-          <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden">
             {/* Question Header */}
-            <div className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 p-3 md:p-6 text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 via-purple-600/20 to-pink-600/20 animate-pulse"></div>
-              <div className="relative z-10">
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 p-3 md:p-6 text-white">
+              <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 md:gap-4 mb-3 md:mb-4">
                   <div className="flex items-center space-x-2 md:space-x-3">
                     <div className="bg-white/20 backdrop-blur-sm px-2 md:px-4 py-1 md:py-2 rounded-full text-xs md:text-sm font-semibold">
