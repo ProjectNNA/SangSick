@@ -38,8 +38,6 @@ export function useDifficultyBalancedQuestionsQuery(count: number = 10) {
 
 // 📊 Update Question Statistics Mutation
 export function useUpdateQuestionStatsMutation() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: async ({ 
       questionId, 
