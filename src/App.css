@@ -6,6 +6,10 @@
 /* Prevent double scroll and ensure proper viewport containment */
 html, body, #root {
   height: 100%;
+}
+
+/* Only hide overflow when logged in (for quiz interface) */
+.logged-in {
   overflow: hidden;
 }
 

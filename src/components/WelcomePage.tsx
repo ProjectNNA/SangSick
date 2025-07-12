@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { WelcomePageProps } from '../types'
 
 export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
@@ -10,16 +10,29 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
     return false
   })
 
+  // Apply initial dark mode on mount
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
+
   const toggleDarkMode = () => {
     const newDarkMode = !darkMode
     setDarkMode(newDarkMode)
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
+    
+    // Use setTimeout to ensure state update completes
+    setTimeout(() => {
+      if (newDarkMode) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
+    }, 0)
   }
 
   return (
@@ -50,8 +63,9 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
             {/* Dark/Light mode toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors touch-manipulation"
               aria-label="Toggle dark mode"
+              style={{ touchAction: 'manipulation' }}
             >
               {darkMode ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
