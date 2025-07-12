@@ -385,10 +385,10 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
   }
 
   return (
-    <div className=" bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
-      <div className="w-full p-2 md:p-4 pt-2 md:pt-4 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900" style={{ touchAction: 'pan-y' }}>
+      <div className="w-full p-2 md:p-4 pt-2 md:pt-4">
                 {/* Modern Progress Header */}
-        <div className="mb-3 md:mb-6 flex-shrink-0">
+        <div className="mb-3 md:mb-6">
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-3 md:p-4">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               {/* Progress Info */}
@@ -444,7 +444,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
         </div>
 
         {/* Question Card */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="mb-4">
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden">
             {/* Question Header */}
             <div className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 p-3 md:p-6 text-white">
@@ -540,6 +540,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
                 <button
                   onClick={handleNextQuestion}
                   className="group relative px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-sm md:text-base font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-600"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   <span className="relative z-10 flex items-center justify-center space-x-2">
                     <span>{currentQuestionIndex < questions.length - 1 ? '다음 문제로' : '퀴즈 완료'}</span>
