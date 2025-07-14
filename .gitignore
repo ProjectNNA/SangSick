@@ -30,6 +30,8 @@ dist-ssr
 .env.test.local
 .env.production.local
 
+# MCP configuration (contains sensitive tokens)
+.cursor/mcp.json
 # SQL files (contains sensitive database schema)
 sql/
 

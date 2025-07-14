@@ -107,41 +107,6 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
             </div>
           </button>
 
-          {/* User Stats Summary (visible on larger screens) */}
-          {engagementStats?.basic_stats && (
-            <div className="hidden md:flex items-center space-x-6 text-sm">
-              <div className="text-center">
-                <div className="font-bold text-indigo-600 dark:text-indigo-400">
-                  Lv.{userLevel}
-                </div>
-                <div className="text-gray-500 dark:text-gray-400">레벨</div>
-              </div>
-              
-              <div className="text-center">
-                <div className="font-bold text-yellow-600 dark:text-yellow-400">
-                  {totalPoints}
-                </div>
-                <div className="text-gray-500 dark:text-gray-400">포인트</div>
-              </div>
-              
-              {currentStreak > 0 && (
-                <div className="text-center">
-                  <div className="font-bold text-orange-600 dark:text-orange-400">
-                    🔥 {currentStreak}
-                  </div>
-                  <div className="text-gray-500 dark:text-gray-400">연속</div>
-                </div>
-              )}
-              
-              <div className="text-center">
-                <div className="font-bold text-green-600 dark:text-green-400">
-                  {Math.round(overallAccuracy)}%
-                </div>
-                <div className="text-gray-500 dark:text-gray-400">정확도</div>
-              </div>
-            </div>
-          )}
-
           {/* Right Side - Dark Mode Toggle, User Menu */}
           <div className="flex items-center space-x-4">
             {/* Dark Mode Toggle */}
@@ -160,6 +125,10 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                 </svg>
               )}
             </button>
+
+            <div className="font-bold text-indigo-600 dark:text-indigo-400">
+              Lv.{userLevel}
+            </div>
 
             {/* User Menu */}
             <div className="relative" ref={menuRef}>
