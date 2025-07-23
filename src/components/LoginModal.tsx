@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { createDefaultUserRole } from '../lib/roleUtils'
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
         }, 1000)
       } else {
         // Sign up
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -52,6 +53,12 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
           }
         })
         if (error) throw error
+        
+        // Create default user role if signup was successful
+        if (data.user) {
+          await createDefaultUserRole(data.user.id)
+        }
+        
         setMessage('회원가입이 완료되었습니다! 이메일을 확인해주세요.')
       }
     } catch (error: any) {
@@ -156,7 +163,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                 type="password"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
-                placeholder="비밀번호를 입력하세요"
+                placeholder="**********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -173,7 +180,7 @@ export default function LoginModal({ isOpen, onClose, onLoginSuccess }: LoginMod
                     type="password"
                     required
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
-                    placeholder="비밀번호를 다시 입력하세요"
+                    placeholder="**********"
                     value={passwordConfirm}
                     onChange={(e) => setPasswordConfirm(e.target.value)}
                   />

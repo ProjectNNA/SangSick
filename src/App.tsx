@@ -4,7 +4,7 @@ import { supabase } from './lib/supabase'
 import { useUserRole } from './lib/hooks'
 import WelcomePage from './components/WelcomePage'
 import LoginModal from './components/LoginModal'
-import ProfileHeader from './components/ProfileHeader'
+import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StatsPage from './pages/StatsPage'
@@ -53,6 +53,8 @@ function App() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    // Force redirect to welcome page
+    window.location.href = '/'
   }
 
   // Protected Route Component
@@ -99,7 +101,7 @@ function App() {
           </>
         ) : (
           <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex flex-col overflow-hidden">
-            <ProfileHeader user={user} onLogout={handleLogout} />
+            <Navbar user={user} onLogout={handleLogout} />
             <div className="flex-1 overflow-hidden">
               <Routes>
                 <Route path="/" element={<HomePage user={user} />} />

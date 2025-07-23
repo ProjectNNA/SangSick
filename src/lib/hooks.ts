@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { getUserRole } from './roleUtils'
 import { getUserQuizStats } from './quizTracking'
 import type { User, QuizStats } from '../types'
@@ -220,4 +220,31 @@ export function useQueryDeduplication() {
   }
 
   return { executeQuery }
+} 
+
+// Shared dark mode hook
+export const useDarkMode = () => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true' || 
+        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    }
+    return false
+  })
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [isDarkMode])
+
+  const toggleDarkMode = useCallback(() => {
+    const newDarkMode = !isDarkMode
+    setIsDarkMode(newDarkMode)
+    localStorage.setItem('darkMode', newDarkMode.toString())
+  }, [isDarkMode])
+
+  return { isDarkMode, toggleDarkMode }
 } 

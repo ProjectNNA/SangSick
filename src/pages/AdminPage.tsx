@@ -195,8 +195,9 @@ export default function AdminPage({ user }: AdminPageProps) {
   }, [debouncedSearchQuery, currentPage])
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="h-full overflow-y-auto">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -270,6 +271,7 @@ export default function AdminPage({ user }: AdminPageProps) {
           />
         )}
       </div>
+    </div>
     </div>
   )
 }

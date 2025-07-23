@@ -150,10 +150,7 @@ export interface ProfilePageProps {
   user: User;
 }
 
-export interface ProfileHeaderProps {
-  user: User;
-  onLogout: () => void;
-}
+
 
 export interface WelcomePageProps {
   onLoginClick: () => void;

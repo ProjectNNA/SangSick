@@ -1,95 +1,12 @@
-import { useState, useEffect } from 'react'
 import type { WelcomePageProps } from '../types'
+import Navbar from './Navbar'
 
 export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') === 'dark' ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme'))
-    }
-    return false
-  })
-
-  // Apply initial dark mode on mount
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [])
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode
-    setDarkMode(newDarkMode)
-    
-    // Use setTimeout to ensure state update completes
-    setTimeout(() => {
-      if (newDarkMode) {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('theme', 'light')
-      }
-    }, 0)
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       {/* Navbar */}
-      <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Left: Logo and App Name */}
-          <button 
-            onClick={() => window.location.reload()}
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
-          >
-            <span className="w-10 h-10 block">
-              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="20" cy="20" r="20" fill="#6366F1"/>
-                <g>
-                  <ellipse cx="20" cy="16" rx="8" ry="9" fill="#FDE047"/>
-                  <rect x="16" y="25" width="8" height="4" rx="2" fill="#FDE047"/>
-                  <rect x="18" y="29" width="4" height="3" rx="1.5" fill="#FDE047"/>
-                  <path d="M15 16l3 3 5-5" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </g>
-              </svg>
-            </span>
-            <span className="text-2xl font-bold text-indigo-700 dark:text-yellow-300 tracking-tight select-none">
-              상식퀴즈
-            </span>
-          </button>
-
-          {/* Right: Dark mode toggle + Login Button */}
-          <div className="flex items-center space-x-4">
-            {/* Dark/Light mode toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors touch-manipulation"
-              aria-label="Toggle dark mode"
-              style={{ touchAction: 'manipulation' }}
-            >
-              {darkMode ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <circle cx="12" cy="12" r="5" fill="currentColor" />
-                  <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95 7.07l-1.41-1.41M6.34 6.34L4.93 4.93m12.02 0l-1.41 1.41M6.34 17.66l-1.41 1.41" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z" />
-                </svg>
-              )}
-            </button>
-            <button
-              onClick={onLoginClick}
-              className="bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white px-6 py-2 rounded-lg transition-colors text-sm font-medium"
-            >
-              로그인
-            </button>
-          </div>
-        </div>
-      </header>
+      <Navbar onLoginClick={onLoginClick} />
 
       {/* Welcome Content */}
       <div className="container mx-auto px-4 py-12">

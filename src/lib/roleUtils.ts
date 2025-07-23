@@ -13,14 +13,21 @@ export async function getUserRole(userId: string): Promise<string | null> {
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error('Error fetching user role:', error)
       return 'user' // Default role
     }
 
-    return data?.role || 'user'
+    // If no role found, create a default role and return 'user'
+    if (!data) {
+      console.log(`No role found for user ${userId}, creating default role`)
+      await createDefaultUserRole(userId)
+      return 'user'
+    }
+
+    return data.role
   } catch (error) {
     console.error('Unexpected error fetching user role:', error)
     return 'user'
@@ -130,3 +137,5 @@ export async function getAllUsersWithRoles(adminUserId: string): Promise<any[] |
     return null
   }
 } 
+
+ 
