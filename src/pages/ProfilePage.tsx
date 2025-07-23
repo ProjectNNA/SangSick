@@ -7,8 +7,9 @@ import {
   getLevelProgress
 } from '../lib/quizTracking'
 import { useQuizStats } from '../lib/hooks'
+import type { User } from '../types'
 
-export default function ProfilePage({ user }: { user: any }) {
+export default function ProfilePage({ user }: { user: User }) {
   const [nickname, setNickname] = useState(user.user_metadata?.nickname || '')
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -106,7 +107,7 @@ export default function ProfilePage({ user }: { user: any }) {
             </p>
             
             {/* Level Progress Bar */}
-            {quizStats?.engagement_stats?.total_points && quizStats.engagement_stats.total_points > 0 && (
+            {quizStats?.engagement_stats?.total_points && quizStats.engagement_stats.total_points > 0 ? (
               <div className="mt-3 md:mt-4 max-w-xs mx-auto">
                 <div className="flex justify-between text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-1">
                   <span>다음 레벨까지</span>
@@ -117,6 +118,12 @@ export default function ProfilePage({ user }: { user: any }) {
                     className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${levelProgress.percentage}%` }}
                   ></div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3 md:mt-4 max-w-xs mx-auto">
+                <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 text-center">
+                  첫 퀴즈를 완료하면 레벨 진행률이 표시됩니다
                 </div>
               </div>
             )}
@@ -170,7 +177,7 @@ export default function ProfilePage({ user }: { user: any }) {
                   <div>
                     <span className="text-gray-500 dark:text-gray-400">최근 로그인:</span>
                     <span className="ml-2 text-gray-900 dark:text-white">
-                      {new Date(user.last_sign_in_at).toLocaleDateString('ko-KR')}
+                      {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString('ko-KR') : '정보 없음'}
                     </span>
                   </div>
                 </div>

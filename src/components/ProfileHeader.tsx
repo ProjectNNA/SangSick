@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { calculateUserLevel } from '../lib/quizTracking'
-import { useUserRole, useQuizStats } from '../lib/hooks'
+import { useUserRole, useQuizStats, invalidateQuizStatsCache } from '../lib/hooks'
 import Avatar from './Avatar'
 import type { ProfileHeaderProps } from '../types'
 
@@ -20,6 +20,15 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
   // Use optimized hooks to prevent duplicate queries
   const { userRole } = useUserRole(user)
   const { quizStats: engagementStats } = useQuizStats(user)
+
+  // Force refresh stats when dropdown is opened
+  const handleDropdownToggle = () => {
+    if (!showDropdown && user?.id) {
+      // Invalidate cache to force fresh data when opening dropdown
+      invalidateQuizStatsCache(user.id)
+    }
+    setShowDropdown(!showDropdown)
+  }
 
   // Handle clicks outside menu
   useEffect(() => {
@@ -107,24 +116,8 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
             </div>
           </button>
 
-          {/* Right Side - Dark Mode Toggle, User Menu */}
+          {/* Right Side - User Menu */}
           <div className="flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-              title={isDarkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            >
-              {isDarkMode ? (
-                <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                </svg>
-              )}
-            </button>
 
             <div className="font-bold text-indigo-600 dark:text-indigo-400">
               Lv.{userLevel}
@@ -133,7 +126,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
             {/* User Menu */}
             <div className="relative" ref={menuRef}>
               <button
-                onClick={() => setShowDropdown(!showDropdown)}
+                onClick={handleDropdownToggle}
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 {/* User Avatar */}
@@ -161,20 +154,20 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
 
               {/* Dropdown Menu */}
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <div className="absolute right-0 sm:right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 max-w-[calc(100vw-2rem)]">
                   {/* User Profile Section */}
-                  <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center space-x-3">
+                  <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
                       <Avatar 
                         avatarUrl={user?.user_metadata?.avatar_url}
                         fallback={user?.user_metadata?.nickname || user?.email?.split('@')[0] || 'User'}
                         size="lg"
                       />
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">
+                      <div className="min-w-0 flex-1">
+                        <div className="font-semibold text-gray-900 dark:text-white truncate">
                           {user?.user_metadata?.nickname || '사용자'}
                         </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
                           {user?.email}
                         </div>
                         <div className="text-xs text-indigo-600 dark:text-indigo-400">
@@ -186,30 +179,30 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
 
                   {/* Stats Section */}
                   {engagementStats?.basic_stats && (
-                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 dark:border-gray-700">
                       <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
                         학습 현황
                       </div>
-                      <div className="grid grid-cols-2 gap-3 text-sm">
-                        <div className="text-center p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                        <div className="text-center p-1.5 sm:p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
                           <div className="font-bold text-indigo-600 dark:text-indigo-400">
                             Lv.{userLevel}
                           </div>
                           <div className="text-gray-500 dark:text-gray-400 text-xs">레벨</div>
                         </div>
-                        <div className="text-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <div className="text-center p-1.5 sm:p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                           <div className="font-bold text-yellow-600 dark:text-yellow-400">
                             {totalPoints}
                           </div>
                           <div className="text-gray-500 dark:text-gray-400 text-xs">포인트</div>
                         </div>
-                        <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <div className="text-center p-1.5 sm:p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
                           <div className="font-bold text-green-600 dark:text-green-400">
                             {Math.round(overallAccuracy)}%
                           </div>
                           <div className="text-gray-500 dark:text-gray-400 text-xs">정확도</div>
                         </div>
-                        <div className="text-center p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                        <div className="text-center p-1.5 sm:p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
                           <div className="font-bold text-orange-600 dark:text-orange-400">
                             🔥 {currentStreak}
                           </div>
@@ -223,7 +216,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                   <div className="py-1">
                     <button
                       onClick={handleNavigateToProfile}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
+                      className="flex items-center w-full px-3 sm:px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                     >
                       <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -233,7 +226,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                     
                     <button
                       onClick={handleNavigateToStats}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
+                      className="flex items-center w-full px-3 sm:px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                     >
                       <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -244,7 +237,7 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
                     {userRole === 'admin' && (
                       <button
                         onClick={handleNavigateToAdmin}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
+                        className="flex items-center w-full px-3 sm:px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
                       >
                         <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -256,9 +249,26 @@ export default function ProfileHeader({ user, onLogout }: ProfileHeaderProps) {
 
                     <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
                     
+                    {/* Dark Mode Toggle */}
+                    <button
+                      onClick={toggleDarkMode}
+                      className="flex items-center w-full px-3 sm:px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
+                    >
+                      {isDarkMode ? (
+                        <svg className="w-4 h-4 mr-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4 mr-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                        </svg>
+                      )}
+                      {isDarkMode ? '라이트 모드' : '다크 모드'}
+                    </button>
+                    
                     <button
                       onClick={onLogout}
-                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      className="flex items-center w-full px-3 sm:px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
                       <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

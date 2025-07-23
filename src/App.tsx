@@ -31,7 +31,7 @@ function App() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user as User | null ?? null)
       // Log the event for debugging
-      if (event === 'USER_UPDATED') {
+      if (event === 'USER_UPDATED' && import.meta.env.DEV) {
         console.log('User metadata updated:', session?.user)
       }
     })

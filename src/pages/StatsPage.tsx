@@ -1,15 +1,14 @@
+import { useState, useEffect } from 'react'
 import { 
   formatDuration, 
   getPerformanceRating,
   calculateUserLevel,
   getLevelProgress,
-  formatResponseTime
+  formatResponseTime,
+  getCategoryPerformance,
+  getRecentQuizSessions
 } from '../lib/quizTracking'
-import { 
-  useUserStatsQuery, 
-  useCategoryPerformanceQuery, 
-  useRecentSessionsQuery 
-} from '../queries/userQueries'
+import { useQuizStats } from '../lib/hooks'
 import CategoryPerformance from '../components/CategoryPerformance'
 import TimeInsights from '../components/TimeInsights'
 import Leaderboard from '../components/Leaderboard'
@@ -20,22 +19,34 @@ interface StatsPageProps {
 }
 
 export default function StatsPage({ user }: StatsPageProps) {
-  // 🚀 Use TanStack Query for optimized data fetching
-  const { 
-    data: quizStats, 
-    isLoading: statsLoading, 
-    error: statsError 
-  } = useUserStatsQuery(user?.id || '')
+  // Use custom hooks for optimized data fetching
+  const { quizStats, loading: statsLoading } = useQuizStats(user)
+  const [categoryPerformance, setCategoryPerformance] = useState<any[]>([])
+  const [recentSessions, setRecentSessions] = useState<QuizSession[]>([])
+  const [categoryLoading, setCategoryLoading] = useState(true)
+  const [sessionsLoading, setSessionsLoading] = useState(true)
 
-  const { 
-    data: categoryPerformance = [], 
-    isLoading: categoryLoading 
-  } = useCategoryPerformanceQuery(user?.id || '')
-
-  const { 
-    data: recentSessions = [], 
-    isLoading: sessionsLoading 
-  } = useRecentSessionsQuery(user?.id || '', 10)
+  // Fetch category performance and recent sessions
+  useEffect(() => {
+    if (user?.id) {
+      const fetchData = async () => {
+        try {
+          const [categoryData, sessionsData] = await Promise.all([
+            getCategoryPerformance(user.id),
+            getRecentQuizSessions(user.id, 10)
+          ])
+          setCategoryPerformance(categoryData || [])
+          setRecentSessions(sessionsData || [])
+        } catch (error) {
+          console.error('Error fetching stats data:', error)
+        } finally {
+          setCategoryLoading(false)
+          setSessionsLoading(false)
+        }
+      }
+      fetchData()
+    }
+  }, [user?.id])
 
   // Calculate user level and progress
   const userLevel = quizStats?.engagement_stats?.total_points 
@@ -47,7 +58,7 @@ export default function StatsPage({ user }: StatsPageProps) {
     : { level: 1, progress: 0, needed: 100, percentage: 0 }
 
   // Show error state if any critical data fails to load
-  if (statsError) {
+  if (!quizStats && !statsLoading) {
       return (
     <div className="h-full overflow-y-auto">
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
@@ -292,7 +303,9 @@ export default function StatsPage({ user }: StatsPageProps) {
             categories={categoryPerformance}
             onCategoryClick={(category: string) => {
               // Could implement category-specific quiz filtering here
-              console.log('Category clicked:', category)
+              if (import.meta.env.DEV) {
+                console.log('Category clicked:', category)
+              }
             }}
           />
 

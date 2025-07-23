@@ -15,6 +15,21 @@ export default function AuthForm() {
     setLoading(true)
     setMessage('')
 
+    // Client-side email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setMessage('올바른 이메일 형식을 입력해주세요.')
+      setLoading(false)
+      return
+    }
+
+    // Check for common problematic patterns
+    if (email.includes(' ') || email.length > 254) {
+      setMessage('이메일 주소에 공백이 포함되어 있거나 너무 깁니다.')
+      setLoading(false)
+      return
+    }
+
     try {
       if (isLogin) {
         // Login
@@ -46,6 +61,12 @@ export default function AuthForm() {
       }
     } catch (error: any) {
       console.error('Auth error:', error)
+      // More detailed error logging
+      if (error.message) {
+        console.log('Error message:', error.message)
+        console.log('Error code:', error.status)
+        console.log('Error details:', error)
+      }
       setMessage(`오류: ${error.message || '알 수 없는 오류가 발생했습니다.'}`)
     } finally {
       setLoading(false)

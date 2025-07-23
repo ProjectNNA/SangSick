@@ -41,7 +41,10 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
       <header className="bg-white dark:bg-gray-900 shadow-sm border-b dark:border-gray-800">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           {/* Left: Logo and App Name */}
-          <div className="flex items-center space-x-3">
+          <button 
+            onClick={() => window.location.reload()}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <span className="w-10 h-10 block">
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="20" cy="20" r="20" fill="#6366F1"/>
@@ -56,7 +59,7 @@ export default function WelcomePage({ onLoginClick }: WelcomePageProps) {
             <span className="text-2xl font-bold text-indigo-700 dark:text-yellow-300 tracking-tight select-none">
               상식퀴즈
             </span>
-          </div>
+          </button>
 
           {/* Right: Dark mode toggle + Login Button */}
           <div className="flex items-center space-x-4">

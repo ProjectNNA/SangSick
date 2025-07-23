@@ -1,30 +1,32 @@
 import { useState, useEffect } from 'react'
-import { 
-  useSmartQuestionSelection,
-  usePrefetchQuizQuestions
-} from '../queries/questionQueries'
-import {
-  useRecordQuestionAttemptMutation,
-  useCompleteQuizMutation
-} from '../queries/userQueries'
+import { fetchRandomQuestions } from '../lib/fetchQuestions'
+import { completeQuizSession, recordQuestionAttempt } from '../lib/quizTracking'
 import { startQuizSession } from '../lib/quizTracking'
+import { invalidateQuizStatsCache } from '../lib/hooks'
 import type { QuizResults, QuizGameProps, QuestionAttempt } from '../types'
 
 export default function QuizGame({ onComplete, user }: QuizGameProps) {
-  // 🚀 Use Smart Question Selection with TanStack Query
-  const { 
-    questions, 
-    isLoading: questionsLoading, 
-    error: questionsError,
-    algorithm 
-  } = useSmartQuestionSelection(10)
-
-  // TanStack Query Mutations
-  const recordAttemptMutation = useRecordQuestionAttemptMutation()
-  const completeQuizMutation = useCompleteQuizMutation()
+  // Use direct function calls instead of TanStack Query
+  const [questions, setQuestions] = useState<any[]>([])
+  const [questionsLoading, setQuestionsLoading] = useState(true)
+  const [questionsError, setQuestionsError] = useState<Error | null>(null)
+  const algorithm = 'simple-random'
   
-  // Prefetch functionality for performance
-  const { prefetchQuestions } = usePrefetchQuizQuestions()
+  // Load questions on component mount
+  useEffect(() => {
+    const loadQuestions = async () => {
+      try {
+        setQuestionsLoading(true)
+        const fetchedQuestions = await fetchRandomQuestions(10)
+        setQuestions(fetchedQuestions)
+      } catch (error) {
+        setQuestionsError(error as Error)
+      } finally {
+        setQuestionsLoading(false)
+      }
+    }
+    loadQuestions()
+  }, [])
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -55,10 +57,9 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
             setStartTime(currentTime)
             setSessionId(newSessionId)
             
-            // Prefetch next set of questions for better performance
-            prefetchQuestions(10)
-            
-            console.log(`🎯 Quiz started with ${algorithm} algorithm, session: ${newSessionId}`)
+            if (import.meta.env.DEV) {
+              console.log(`🎯 Quiz started with ${algorithm} algorithm, session: ${newSessionId}`)
+            }
           } else {
             console.error('Failed to create quiz session')
           }
@@ -69,7 +70,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
       
       initializeQuizSession()
     }
-  }, [questions.length, sessionId, prefetchQuestions, algorithm, user?.id])
+      }, [questions.length, sessionId, algorithm, user?.id])
 
   // 🆕 Start timing when question loads
   useEffect(() => {
@@ -106,18 +107,21 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
       responseTimeMs: responseTime
     }])
 
-    // 🚀 Record the attempt using TanStack Query mutation
+    // Record the attempt using direct function call
     if (sessionId && user?.id) {
-      recordAttemptMutation.mutate({
-        sessionId,
-        userId: user.id,
-        questionData: currentQuestion,
-        selectedAnswer: answerIndex,
-        responseTimeMs: responseTime
-      })
-      
-      // Note: Questions are now read-only from cache, updateAnswerStatistics 
-      // will be handled by the mutation and cache invalidation
+      try {
+        await recordQuestionAttempt(
+          sessionId,
+          user.id,
+          currentQuestion,
+          answerIndex,
+          responseTime
+        )
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error('Failed to record question attempt:', error)
+        }
+      }
     }
 
     if (answerIndex === currentQuestion.correctAnswer) {
@@ -169,8 +173,16 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
     }
 
     if (user?.id) {
-      // 🚀 Complete quiz using TanStack Query mutation
-      completeQuizMutation.mutate({ sessionId, quizResults })
+      // Complete quiz using direct function call
+      try {
+        await completeQuizSession(sessionId, quizResults)
+        // Invalidate cache to update stats immediately
+        invalidateQuizStatsCache(user.id)
+      } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error('Failed to complete quiz:', error)
+        }
+      }
     }
 
     onComplete(quizResults)
@@ -290,7 +302,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
   // Handle loading states
   if (questionsLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
+      <div className="h-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
         <div className="max-w-4xl mx-auto p-8 pt-20">
           <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-3xl shadow-2xl p-12">
             <div className="text-center py-16">
@@ -321,7 +333,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
   // Handle error states
   if (questionsError || questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-red-900">
+      <div className="h-full bg-gradient-to-br from-red-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-red-900">
         <div className="max-w-4xl mx-auto p-8 pt-20">
           <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-3xl shadow-2xl p-12">
             <div className="text-center py-16">
@@ -347,7 +359,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
+      <div className="h-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900">
         <div className="max-w-4xl mx-auto p-8 pt-20">
           <div className="text-center py-16">
             <div className="text-6xl animate-pulse">🤔</div>
@@ -362,7 +374,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
 
   if (gameOver) {
     return (
-      <div className="h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-900 dark:to-green-900 overflow-hidden">
+      <div className="h-full bg-gradient-to-br from-green-50 via-white to-emerald-50 dark:from-gray-900 dark:via-gray-900 dark:to-green-900 overflow-hidden">
         <div className="h-full max-w-4xl mx-auto p-4 pt-8 md:p-8 md:pt-20 flex items-center justify-center">
           <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-3xl shadow-2xl p-6 md:p-12 text-center max-w-2xl w-full">
             <div className="text-6xl md:text-8xl mb-6 md:mb-8 animate-bounce">🎉</div>
@@ -385,69 +397,66 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900" style={{ touchAction: 'pan-y' }}>
-      <div className="w-full p-2 md:p-4 pt-2 md:pt-4">
-                {/* Modern Progress Header */}
-        <div className="mb-3 md:mb-6">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-3 md:p-4">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              {/* Progress Info */}
-              <div className="flex items-center space-x-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-gray-900 dark:text-white">
-                    {currentQuestionIndex + 1} / {questions.length}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    문제
-                  </div>
+    <div className="quiz-container h-full max-h-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-indigo-900 p-2 md:p-4 pt-2 md:pt-4" style={{ touchAction: 'pan-y' }}>
+      {/* Modern Progress Header */}
+      <div className="mb-3 md:mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 p-3 md:p-4">
+            {/* Progress Info */}
+            <div className="flex items-center space-x-4">
+              <div className="text-center">
+                <div className="text-lg font-bold text-gray-900 dark:text-white">
+                  {currentQuestionIndex + 1} / {questions.length}
                 </div>
-                <div className="w-px h-8 bg-gray-300 dark:bg-gray-600"></div>
-                <div className="text-center">
-                  <div className="text-base font-bold text-indigo-600 dark:text-indigo-400">
-                    {score}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    점수
-                  </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  문제
                 </div>
-                {currentStreak > 0 && (
-                  <>
-                    <div className="w-px h-8 bg-gray-300 dark:bg-gray-600"></div>
-                    <div className="text-center">
-                      <div className="text-base font-bold text-orange-600 dark:text-orange-400">
-                        🔥 {currentStreak}
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
-                        연속
-                      </div>
+              </div>
+              <div className="w-px h-8 bg-gray-300 dark:bg-gray-600"></div>
+              <div className="text-center">
+                <div className="text-base font-bold text-indigo-600 dark:text-indigo-400">
+                  {score}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  점수
+                </div>
+              </div>
+              {currentStreak > 0 && (
+                <>
+                  <div className="w-px h-8 bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="text-center">
+                    <div className="text-base font-bold text-orange-600 dark:text-orange-400">
+                      🔥 {currentStreak}
                     </div>
-                  </>
-                )}
-              </div>
-
-              {/* Timer */}
-              <div className="flex items-center">
-                {getTimerDisplay()}
-              </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      연속
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
-            
-            {/* Progress Bar */}
-            <div className="mt-3">
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 shadow-inner">
-                <div 
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-sm"
-                  style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                ></div>
-              </div>
+
+            {/* Timer */}
+            <div className="flex items-center">
+              {getTimerDisplay()}
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mt-3">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 shadow-inner">
+              <div 
+                className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-500 shadow-sm"
+                style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+              ></div>
             </div>
           </div>
         </div>
 
         {/* Question Card */}
         <div className="mb-4">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden">
+          <div className="overflow-hidden">
             {/* Question Header */}
-            <div className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 p-3 md:p-6 text-white">
+            <div className="bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500 p-3 md:p-6 text-white rounded-2xl shadow-lg">
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 md:gap-4 mb-3 md:mb-4">
                   <div className="flex items-center space-x-2 md:space-x-3">
@@ -478,7 +487,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
             </div>
             
                         {/* Answer Options */}
-            <div className="p-3 md:p-6 space-y-2 md:space-y-3 flex flex-col items-center">
+            <div className="p-3 md:p-6 space-y-2 md:space-y-3 flex flex-col items-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-b-2xl">
               {currentQuestion?.options.map((option: string, index: number) => (
                 <button
                   key={index}
@@ -507,7 +516,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
 
                          {/* Results Section */}
              {showResult && (
-               <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-3 md:p-6">
+               <div className="border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-3 md:p-6">
                  {(currentQuestion?.totalCount && currentQuestion.totalCount > 0) ? (
                    <div className="text-center mb-3 md:mb-6">
                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
@@ -536,7 +545,7 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
 
             {/* Next Button */}
             {showResult && (
-              <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 md:p-6 text-center">
+              <div className="border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-3 md:p-6 text-center">
                 <button
                   onClick={handleNextQuestion}
                   className="group relative px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-sm md:text-base font-semibold rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-600"
@@ -554,7 +563,6 @@ export default function QuizGame({ onComplete, user }: QuizGameProps) {
             )}
           </div>
         </div>
-      </div>
     </div>
   )
 } 

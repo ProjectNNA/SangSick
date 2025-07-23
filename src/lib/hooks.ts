@@ -27,7 +27,9 @@ export function useUserRole(user: User | null) {
       // Check cache first
       const cached = userRoleCache.get(user.id)
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-        console.log(`[Query Cache] User role served from cache for user ${user.id}`)
+        if (import.meta.env.DEV) {
+          console.log(`[Query Cache] User role served from cache for user ${user.id}`)
+        }
         setUserRole(cached.role)
         setLoading(false)
         return
@@ -38,7 +40,9 @@ export function useUserRole(user: User | null) {
         let rolePromise = activeRoleQueries.get(user.id)
         
         if (!rolePromise) {
-          console.log(`[Query Start] Starting new user role query for user ${user.id}`)
+          if (import.meta.env.DEV) {
+            console.log(`[Query Start] Starting new user role query for user ${user.id}`)
+          }
           // Create new query promise
           rolePromise = getUserRole(user.id).then(role => {
             const roleValue = role || 'user'
@@ -56,7 +60,9 @@ export function useUserRole(user: User | null) {
           
           activeRoleQueries.set(user.id, rolePromise)
         } else {
-          console.log(`[Query Deduplication] Reusing existing user role query for user ${user.id}`)
+          if (import.meta.env.DEV) {
+            console.log(`[Query Deduplication] Reusing existing user role query for user ${user.id}`)
+          }
         }
 
         const role = await rolePromise
@@ -78,6 +84,24 @@ export function useUserRole(user: User | null) {
 // Cache for quiz stats to prevent duplicate queries
 const quizStatsCache = new Map<string, { stats: QuizStats; timestamp: number }>()
 
+// Function to invalidate quiz stats cache
+export const invalidateQuizStatsCache = (userId: string) => {
+  quizStatsCache.delete(userId)
+  activeStatsQueries.delete(userId)
+  if (import.meta.env.DEV) {
+    console.log(`[Cache Invalidation] Quiz stats cache cleared for user ${userId}`)
+  }
+}
+
+// Function to invalidate user role cache
+export const invalidateUserRoleCache = (userId: string) => {
+  userRoleCache.delete(userId)
+  activeRoleQueries.delete(userId)
+  if (import.meta.env.DEV) {
+    console.log(`[Cache Invalidation] User role cache cleared for user ${userId}`)
+  }
+}
+
 // Optimized hook for quiz stats that prevents duplicate queries
 export function useQuizStats(user: User | null) {
   const [quizStats, setQuizStats] = useState<QuizStats | null>(null)
@@ -94,7 +118,9 @@ export function useQuizStats(user: User | null) {
       // Check cache first
       const cached = quizStatsCache.get(user.id)
       if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-        console.log(`[Query Cache] Quiz stats served from cache for user ${user.id}`)
+        if (import.meta.env.DEV) {
+          console.log(`[Query Cache] Quiz stats served from cache for user ${user.id}`)
+        }
         setQuizStats(cached.stats)
         setLoading(false)
         return
@@ -105,7 +131,9 @@ export function useQuizStats(user: User | null) {
         let statsPromise = activeStatsQueries.get(user.id)
         
         if (!statsPromise) {
-          console.log(`[Query Start] Starting new quiz stats query for user ${user.id}`)
+          if (import.meta.env.DEV) {
+            console.log(`[Query Start] Starting new quiz stats query for user ${user.id}`)
+          }
           // Create new query promise
           statsPromise = getUserQuizStats(user.id).then(stats => {
             // Cache the result
@@ -124,7 +152,9 @@ export function useQuizStats(user: User | null) {
           
           activeStatsQueries.set(user.id, statsPromise)
         } else {
-          console.log(`[Query Deduplication] Reusing existing quiz stats query for user ${user.id}`)
+          if (import.meta.env.DEV) {
+            console.log(`[Query Deduplication] Reusing existing quiz stats query for user ${user.id}`)
+          }
         }
 
         const stats = await statsPromise
@@ -170,7 +200,9 @@ export function useQueryDeduplication() {
   ): Promise<T | null> => {
     // If query is already in progress, skip
     if (activeQueries.current.has(queryKey)) {
-      console.log(`[Query Deduplication] Skipping duplicate query: ${queryKey}`)
+      if (import.meta.env.DEV) {
+        console.log(`[Query Deduplication] Skipping duplicate query: ${queryKey}`)
+      }
       return null
     }
 
