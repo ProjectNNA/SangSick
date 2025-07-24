@@ -9,6 +9,7 @@ import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import StatsPage from './pages/StatsPage'
 import AdminPage from './pages/AdminPage'
+import TemporaryPage from './pages/TemporaryPage'
 import type { User } from './types'
 import './App.css'
 
@@ -89,52 +90,57 @@ function App() {
 
   return (
     <Router>
-      <div className={user ? "h-screen logged-in" : ""}>
-        {!user ? (
-          <>
-            <WelcomePage onLoginClick={handleLoginClick} />
-            <LoginModal 
-              isOpen={showLoginModal} 
-              onClose={handleLoginClose} 
-              onLoginSuccess={handleLoginSuccess}
-            />
-          </>
-        ) : (
-          <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex flex-col overflow-hidden">
-            <Navbar user={user} onLogout={handleLogout} />
-            <div className="flex-1 overflow-hidden">
-              <Routes>
-                <Route path="/" element={<HomePage user={user} />} />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage user={user} />
-                    </ProtectedRoute>
-                  } 
+      <Routes>
+        <Route path="/temporary" element={<TemporaryPage />} />
+        <Route path="*" element={
+          <div className={user ? "h-screen logged-in" : ""}>
+            {!user ? (
+              <>
+                <WelcomePage onLoginClick={handleLoginClick} />
+                <LoginModal 
+                  isOpen={showLoginModal} 
+                  onClose={handleLoginClose} 
+                  onLoginSuccess={handleLoginSuccess}
                 />
-                <Route 
-                  path="/stats" 
-                  element={
-                    <ProtectedRoute>
-                      <StatsPage user={user} />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute adminOnly={true}>
-                      <AdminPage user={user} />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </div>
+              </>
+            ) : (
+              <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex flex-col overflow-hidden">
+                <Navbar user={user} onLogout={handleLogout} />
+                <div className="flex-1 overflow-hidden">
+                  <Routes>
+                    <Route path="/" element={<HomePage user={user} />} />
+                    <Route 
+                      path="/profile" 
+                      element={
+                        <ProtectedRoute>
+                          <ProfilePage user={user} />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/stats" 
+                      element={
+                        <ProtectedRoute>
+                          <StatsPage user={user} />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route 
+                      path="/admin" 
+                      element={
+                        <ProtectedRoute adminOnly={true}>
+                          <AdminPage user={user} />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        } />
+      </Routes>
     </Router>
   )
 }
